@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Map;
+
 @Getter
 @Setter
 @ToString
@@ -22,5 +24,6 @@ public class Customer {
     private String surname;
     @Column(name="address")
     private String address;
+//    private Map<String,Double> purchaseHistory;
 
 }

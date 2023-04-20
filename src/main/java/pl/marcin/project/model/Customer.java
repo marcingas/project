@@ -1,4 +1,4 @@
-package pl.marcin.project.clientModel;
+package pl.marcin.project.model;
 
 
 import jakarta.persistence.*;
@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name="client_tbl")
-public class Client {
+public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

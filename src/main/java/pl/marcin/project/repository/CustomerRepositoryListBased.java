@@ -9,13 +9,12 @@ import java.util.List;
 public class CustomerRepositoryListBased implements CustomerRepository{
     List<Customer> customers = new ArrayList<>();
     @Override
-    public String saveCustomer(Customer customer) {
+    public void saveCustomer(Customer customer) {
         customers.add(customer);
-        return "Customer " + customer + " added";
     }
 
     @Override
-    public String updateCustomer(int customerId, Customer customer) {
+    public void updateCustomer(int customerId, Customer customer) {
         for(Customer searchedCust : customers){
             if(searchedCust.getId()==customerId){
                 customers.add(searchedCust);
@@ -23,7 +22,6 @@ public class CustomerRepositoryListBased implements CustomerRepository{
                 throw new RuntimeException("There is no Customer with id " + customerId);
             }
         }
-        return null;
     }
 
     @Override

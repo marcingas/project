@@ -15,7 +15,7 @@ public class CupsRepositoryListBased implements CupsRepository {
     }
 
     @Override
-    public String updateCup(int cupId, Cup cup) {
+    public void updateCup(int cupId, Cup cup) {
         for (Cup element : cups) {
             if (element.getId() == cupId) {
                 cups.add(cup);
@@ -23,7 +23,7 @@ public class CupsRepositoryListBased implements CupsRepository {
                 throw new RuntimeException("There is no cup with id: " + cupId);
             }
         }
-        return "Cup with id:" + cupId + " updated";
+
     }
 
     @Override

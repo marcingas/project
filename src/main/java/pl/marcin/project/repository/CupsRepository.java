@@ -12,5 +12,5 @@ public interface CupsRepository {
 
     public void deleteCup(int cupId);
     public List<Cup>findCups();
-    public Cup findCup(Cup cup);
+    public Cup findCup(int id);
 }

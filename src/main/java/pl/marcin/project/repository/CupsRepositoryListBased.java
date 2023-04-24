@@ -38,12 +38,12 @@ public class CupsRepositoryListBased implements CupsRepository {
     }
 
     @Override
-    public Cup findCup(Cup cup) {
+    public Cup findCup(int cupId) {
         for (Cup searchedCup : cups) {
-            if (searchedCup.equals(cup)) {
+            if (searchedCup.getId()==cupId) {
                 return searchedCup;
             } else {
-                throw new RuntimeException("There is no such cup");
+                throw new RuntimeException("There is no such cup with id " + cupId );
             }
         }
         return null;

@@ -6,24 +6,21 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
 import java.util.Map;
 
-@Getter
-@Setter
-@ToString
-@Entity
-@Table(name="client_tbl")
+
 public class Customer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-    @Column(name="name")
+
+
     private String name;
-    @Column(name="surname")
+
     private String surname;
-    @Column(name="address")
+
     private String address;
-//    private Map<String,Double> purchaseHistory;
+    private List<Purchase> purchaseHistory;
+
+
+
 
 }

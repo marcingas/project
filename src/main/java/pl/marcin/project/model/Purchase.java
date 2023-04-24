@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class Purchase {
+    private int id;
     private Customer customer;
     private List<Cup>cups;
     private BigDecimal purchaseCost;
@@ -14,4 +15,11 @@ public class Purchase {
         this.purchaseCost = purchaseCost; //implement discount
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
 }

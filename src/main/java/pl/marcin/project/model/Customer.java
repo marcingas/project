@@ -1,13 +1,7 @@
 package pl.marcin.project.model;
 
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.util.List;
-import java.util.Map;
 
 
 public class Customer {
@@ -19,8 +13,15 @@ public class Customer {
     private String surname;
 
     private String address;
-
     private List<Purchase> purchaseHistory;
+
+    public Customer(int id, String name, String surname, String address) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.address = address;
+    }
+
 
     public int getId() {
         return id;

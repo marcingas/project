@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Stockroom {
     CupsRepository cupsRepository;
-    public String addCup(Cup cup) {
+    public String buyCup(Cup cup) {
         cupsRepository.saveCup(cup);
         return "Cup " + cup.getId() + " saved";
     }
@@ -17,16 +17,16 @@ public class Stockroom {
         return "Cup with id " + cupId + " updated";
     }
 
-    public String deleteCus(int cupId) {
+    public String sellCup(int cupId) {
         cupsRepository.deleteCup(cupId);
         return "Cup with id " + cupId + " deleted";
     }
 
-    public List<Cup> getAllCups() {
+    public List<Cup> showAllCups() {
         return cupsRepository.findCups();
     }
 
-    public Cup getCup(int cupId) {
+    public Cup showCup(int cupId) {
         return cupsRepository.findCup(cupId);
     }
 

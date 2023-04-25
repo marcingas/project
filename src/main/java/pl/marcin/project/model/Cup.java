@@ -13,6 +13,13 @@ public class Cup {
     private String shape;
     private BigDecimal price;
 
+    public Cup(int id, String color, String shape, BigDecimal price) {
+        this.id = id;
+        this.color = color;
+        this.shape = shape;
+        this.price = price;
+    }
+
     public int getId() {
         return id;
     }

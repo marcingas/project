@@ -6,7 +6,11 @@ import pl.marcin.project.repository.CupRepository;
 import java.util.List;
 
 public class CupService {
-    CupRepository cupRepository;
+    private CupRepository cupRepository;
+
+    public CupService(CupRepository cupRepository) {
+        this.cupRepository = cupRepository;
+    }
 
     public String addCup(Cup cup) {
         cupRepository.saveCup(cup);

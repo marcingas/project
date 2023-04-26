@@ -12,7 +12,11 @@ import java.util.List;
 public class CustomerService {
 
 
-    CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
+
+    public CustomerService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
 
     public String addCustomer(Customer customer) {
         customerRepository.saveCustomer(customer);
@@ -37,9 +41,5 @@ public class CustomerService {
         return customerRepository.findCustomer(customerId);
     }
 
-    public Purchase buyCup(Purchase purchase) {//change
-        purchase.getCustomer().getPurchaseHistory().add(purchase);
-        return purchase;
-    }
 
 }

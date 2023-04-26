@@ -40,6 +40,6 @@ public class Purchase {
         return "Purchase\n" +
                 "customer:" + " id: " + customer.getId() + ", " + customer.getName() + " " + customer.getSurname() +
                 "\ncups: " + cups +
-                "\npurchaseCost: " + purchaseCost;
+                "\npurchaseCost: " + purchaseCost + " USD";
     }
 }

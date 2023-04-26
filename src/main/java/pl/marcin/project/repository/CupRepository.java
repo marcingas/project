@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface CupRepository {
 //    save, update, delete, find, findAll, -> save do listy w impl
-    public String saveCup(Cup cup);
+    String saveCup(Cup cup);
 
     void updateCup(int cupId, Cup cup);
 
-    public void deleteCup(int cupId);
-    public List<Cup>findCups();
-    public Cup findCup(int id);
+    void deleteCup(int cupId);
+    List<Cup>findCups();
+    Cup findCup(int id);
 }

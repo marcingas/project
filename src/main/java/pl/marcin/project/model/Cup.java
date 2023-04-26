@@ -38,8 +38,8 @@ public class Cup {
 
     @Override
     public String toString() {
-        return "id: " +id + "\ncolor: " + color +
-                "\nshape: " + shape +
-                "\nprice: " + price;
+        return "id: " +id + ", color: " + color +
+                ", shape: " + shape +
+                ", price: " + price + " USD";
     }
 }

@@ -31,21 +31,23 @@ public class Shop {
         List<Cup> cupOrder3 = new ArrayList<>();
         cupOrder3.add(new Cup(7,"Orange","circle", BigDecimal.valueOf(9)));
         cupOrder3.add(new Cup(8,"yellow","square", BigDecimal.valueOf(6)));
-        Purchase purchase = new Purchase(jas,cupOrder);
-        Purchase purchase2 = new Purchase(jas,cupOrder2);
-        Purchase purchase3 = new Purchase(jas,cupOrder3);
 
+        buyCups(purchaseService,new Purchase(jas,cupOrder));
+        buyCups(purchaseService,new Purchase(jas,cupOrder2));
+        buyCups(purchaseService,new Purchase(jas,cupOrder3));
 
-        System.out.println(purchaseService.savePurchase(purchase));
-        System.out.println(purchaseService.savePurchase(purchase2));
-        System.out.println(purchaseService.savePurchase(purchase3));
-        System.out.println(purchaseService.purchaseHistoryByCustomerId(1));
         System.out.println(summaryOfTransactionsById(purchaseService,1));
 
 
     }
+    public static void buyCups(PurchaseService purchaseService,Purchase purchase){
+        System.out.println("Cups order processing....\n" + purchaseService.savePurchase(purchase) + ", cups bought!");
+
+    }
     public static String summaryOfTransactionsById(PurchaseService purchaseService, int id){
-       return "Customer with id " + id + " made: "
+        System.out.println("\n======Summary of transaction:========");
+        System.out.println("\n----1. Customer's purchase history:----\n" + purchaseService.purchaseHistoryByCustomerId(id));
+       return "----2. number of Transactions: -----" + "\nCustomer with id " + id + " made: "
                + purchaseService.purchaseHistoryByCustomerId(id).size() + " purchases";
 
     }

@@ -65,6 +65,7 @@ public class Shop {
         }
         purchaseService.savePurchase(purchase);
         customer.updatePurchaseHistory(purchase);
+        System.out.println("====Customer order confirmation=====\n" + purchase);
 
     }
 
@@ -73,6 +74,7 @@ public class Shop {
     }
 
     public static List<Cup> viewStock(CupService cupService) {
+        System.out.println("==========Actual stock availability: ===========");
         return cupService.showAllCups();
 
     }

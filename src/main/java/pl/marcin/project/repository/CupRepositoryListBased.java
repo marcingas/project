@@ -27,8 +27,8 @@ public class CupRepositoryListBased implements CupRepository {
     }
 
     @Override
-    public void deleteCup(int cupId) {
-        cups.removeIf(s -> s.getId() == cupId);
+    public void deleteCup(Cup cup) {
+        cups.removeIf(s -> s.equals(cup));
 
     }
 

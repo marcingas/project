@@ -38,8 +38,7 @@ public class Purchase {
     @Override
     public String toString() {
         return "Purchase\n" +
-                "customer:" + " id: " + customer.getId() + ", " + customer.getName() + " " + customer.getSurname() +
-                "\ncups: " + cups +
+                "cups: " + cups +
                 "\npurchaseCost: " + purchaseCost + " USD";
     }
 }

@@ -22,9 +22,9 @@ public class CupService {
         return "Cup with id " + cupId + " updated";
     }
 
-    public String sellCup(int cupId) {
-        cupRepository.deleteCup(cupId);
-        return "Cup with id " + cupId + " deleted";
+    public String sellCup(Cup cup) {
+        cupRepository.deleteCup(cup);
+        return "Cup with id " + cup + " deleted";
     }
 
     public List<Cup> showAllCups() {

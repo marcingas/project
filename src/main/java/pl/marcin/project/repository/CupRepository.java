@@ -10,7 +10,7 @@ public interface CupRepository {
 
     void updateCup(int cupId, Cup cup);
 
-    void deleteCup(int cupId);
+    void deleteCup(Cup cup);
     List<Cup>findCups();
     Cup findCup(int id);
 }

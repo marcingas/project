@@ -1,33 +1,34 @@
-package pl.marcin.project.departments;
+package pl.marcin.project.service;
 
 import pl.marcin.project.model.Cup;
-import pl.marcin.project.repository.CupsRepository;
+import pl.marcin.project.repository.CupRepository;
 
 import java.util.List;
 
-public class Stockroom {
-    CupsRepository cupsRepository;
-    public String buyCup(Cup cup) {
-        cupsRepository.saveCup(cup);
+public class CupService {
+    CupRepository cupRepository;
+
+    public String addCup(Cup cup) {
+        cupRepository.saveCup(cup);
         return "Cup " + cup.getId() + " saved";
     }
 
     public String updateCup(int cupId, Cup cup) {
-        cupsRepository.updateCup(cupId,cup);
+        cupRepository.updateCup(cupId, cup);
         return "Cup with id " + cupId + " updated";
     }
 
     public String sellCup(int cupId) {
-        cupsRepository.deleteCup(cupId);
+        cupRepository.deleteCup(cupId);
         return "Cup with id " + cupId + " deleted";
     }
 
     public List<Cup> showAllCups() {
-        return cupsRepository.findCups();
+        return cupRepository.findCups();
     }
 
     public Cup showCup(int cupId) {
-        return cupsRepository.findCup(cupId);
+        return cupRepository.findCup(cupId);
     }
 
 

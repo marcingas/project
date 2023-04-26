@@ -4,7 +4,7 @@ import pl.marcin.project.model.Cup;
 
 import java.util.List;
 
-public interface CupsRepository {
+public interface CupRepository {
 //    save, update, delete, find, findAll, -> save do listy w impl
     public String saveCup(Cup cup);
 

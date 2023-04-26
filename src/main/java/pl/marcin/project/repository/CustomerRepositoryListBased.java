@@ -6,8 +6,9 @@ import pl.marcin.project.model.Customer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerRepositoryListBased implements CustomerRepository{
+public class CustomerRepositoryListBased implements CustomerRepository {
     List<Customer> customers = new ArrayList<>();
+
     @Override
     public void saveCustomer(Customer customer) {
         customers.add(customer);
@@ -15,10 +16,10 @@ public class CustomerRepositoryListBased implements CustomerRepository{
 
     @Override
     public void updateCustomer(int customerId, Customer customer) {
-        for(Customer searchedCust : customers){
-            if(searchedCust.getId()==customerId){
+        for (Customer searchedCust : customers) {
+            if (searchedCust.getId() == customerId) {
                 customers.add(searchedCust);
-            }else {
+            } else {
                 throw new RuntimeException("There is no Customer with id " + customerId);
             }
         }
@@ -26,7 +27,7 @@ public class CustomerRepositoryListBased implements CustomerRepository{
 
     @Override
     public void deleteCustomer(int customerId) {
-        customers.removeIf(s -> s.getId()==customerId);
+        customers.removeIf(s -> s.getId() == customerId);
 
     }
 
@@ -38,7 +39,7 @@ public class CustomerRepositoryListBased implements CustomerRepository{
     @Override
     public Customer findCustomer(int customerId) {
         for (Customer searchedCustomer : customers) {
-            if (searchedCustomer.getId()==customerId) {
+            if (searchedCustomer.getId() == customerId) {
                 return searchedCustomer;
             } else {
                 throw new RuntimeException("There is no such cup");

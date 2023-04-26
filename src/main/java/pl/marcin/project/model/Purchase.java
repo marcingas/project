@@ -9,11 +9,15 @@ public class Purchase {
     private List<Cup> cups;
     private BigDecimal purchaseCost;
 
-    public Purchase(Customer customer, List<Cup> cups, BigDecimal purchaseCost) {
+    public Purchase(Customer customer, List<Cup> cups) {
         this.customer = customer;
         this.cups = cups;
+        BigDecimal purchaseCost = BigDecimal.ZERO;
+        for (var cup : cups) {
+            purchaseCost = purchaseCost.add(cup.getPrice());
+        }
         if (customer.getPurchaseHistory().size() > 4) {
-            this.purchaseCost = purchaseCost.multiply(BigDecimal.valueOf(0.9));
+            this.purchaseCost = this.purchaseCost.multiply(BigDecimal.valueOf(0.9));
         } else {
             this.purchaseCost = purchaseCost;
         }
@@ -34,7 +38,7 @@ public class Purchase {
     @Override
     public String toString() {
         return "Purchase\n" +
-                "customer:" + " id: "+customer.getId() + ", " + customer.getName() + " " + customer.getSurname() +
+                "customer:" + " id: " + customer.getId() + ", " + customer.getName() + " " + customer.getSurname() +
                 "\ncups: " + cups +
                 "\npurchaseCost: " + purchaseCost;
     }

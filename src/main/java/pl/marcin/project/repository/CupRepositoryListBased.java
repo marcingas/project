@@ -5,7 +5,7 @@ import pl.marcin.project.model.Cup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CupsRepositoryListBased implements CupsRepository {
+public class CupRepositoryListBased implements CupRepository {
     private List<Cup> cups = new ArrayList<>();
 
     @Override

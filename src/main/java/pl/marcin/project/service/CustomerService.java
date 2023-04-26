@@ -1,4 +1,4 @@
-package pl.marcin.project.departments;
+package pl.marcin.project.service;
 
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.model.Customer;
@@ -9,17 +9,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Shop {
-//    public static void main(String[] args) {
-//        Shop shop = new Shop();
-//        Customer poul = new Customer(1,"Poul","Kowalski","Kraków");
-//       List<Cup> cupOrder = new ArrayList<>();
-//       cupOrder.add(new Cup(1,"blue","square", BigDecimal.valueOf(5)));
-//       cupOrder.add(new Cup(2,"Orange","circle", BigDecimal.valueOf(9)));
-//       cupOrder.add(new Cup(3,"yellow","square", BigDecimal.valueOf(6)));
-//        System.out.println(shop.buyCup(new Purchase(poul,cupOrder,BigDecimal.valueOf(5.20))));
-//
-//    }
+public class CustomerService {
+
 
     CustomerRepository customerRepository;
 
@@ -45,9 +36,10 @@ public class Shop {
     public Customer getCustomer(int customerId) {
         return customerRepository.findCustomer(customerId);
     }
-    public Purchase buyCup(Purchase purchase){
+
+    public Purchase buyCup(Purchase purchase) {//change
         purchase.getCustomer().getPurchaseHistory().add(purchase);
-       return purchase;
+        return purchase;
     }
 
 }

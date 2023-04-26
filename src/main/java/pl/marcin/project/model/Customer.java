@@ -1,6 +1,7 @@
 package pl.marcin.project.model;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,6 +21,7 @@ public class Customer {
         this.name = name;
         this.surname = surname;
         this.address = address;
+        this.purchaseHistory= new ArrayList<>();
     }
 
 

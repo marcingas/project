@@ -50,9 +50,9 @@ public class Shop {
         List<Cup> cupOrder3 = new ArrayList<>();
         cupOrder3.add(cup6);
 
-//        buyCups(purchaseService,customerService,cupService,new Purchase(jas,cupOrder),jas);
-//        buyCups(purchaseService,customerService,cupService,new Purchase(jas,cupOrder2),jas);
-//        buyCups(purchaseService,customerService,cupService,new Purchase(jas,cupOrder3),jas);
+        buyCups(purchaseService,customerService,cupService,new Purchase(jas,cupOrder),jas);
+        buyCups(purchaseService,customerService,cupService,new Purchase(jas,cupOrder2),jas);
+        buyCups(purchaseService,customerService,cupService,new Purchase(jas,cupOrder3),jas);
         summaryOfCustomerTransactions(purchaseService, customerService, jas);
 
 
@@ -64,8 +64,7 @@ public class Shop {
             cupService.sellCup(cup);
         }
         purchaseService.savePurchase(purchase);
-        customerService.getCustomer(customer.getId())
-                .updatePurchaseHistory(purchase);
+        customer.updatePurchaseHistory(purchase);
 
     }
 

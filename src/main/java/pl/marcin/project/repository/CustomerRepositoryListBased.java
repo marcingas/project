@@ -2,6 +2,7 @@ package pl.marcin.project.repository;
 
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.model.Customer;
+import pl.marcin.project.model.Purchase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,5 +47,14 @@ public class CustomerRepositoryListBased implements CustomerRepository {
             }
         }
         return null;
+    }
+
+    @Override
+    public void updatePurchaseHistory(Purchase purchase,Customer customer) {
+        for(Customer c : customers){
+            if(c.getId()== customer.getId()){
+                c.updatePurchaseHistory(purchase);
+            }
+        }
     }
 }

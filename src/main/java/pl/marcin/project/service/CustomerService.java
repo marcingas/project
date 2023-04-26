@@ -40,6 +40,10 @@ public class CustomerService {
     public Customer getCustomer(int customerId) {
         return customerRepository.findCustomer(customerId);
     }
+    public String updatePurchaseHistory(Purchase purchase, Customer customer){
+        customerRepository.updatePurchaseHistory(purchase,customer);
+        return "History updated";
+    }
 
 
 }

@@ -21,6 +21,9 @@ public class Shop {
         CustomerService customerService = new CustomerService(new CustomerRepositoryListBased());
         CupService cupService = new CupService(new CupRepositoryListBased());
 
+        Customer jas = new Customer(1, "Jaś", "Kowalski", "Kraków");
+        addCustomer(customerService,jas);
+
         Cup cup1 = new Cup(1, "Blue", "square", BigDecimal.valueOf(4.22));
         Cup cup2 = new Cup(2, "Yellow", "circle", BigDecimal.valueOf(5.22));
         Cup cup3 = new Cup(3, "Orange", "long", BigDecimal.valueOf(6.22));
@@ -37,8 +40,6 @@ public class Shop {
 
         System.out.println(viewStock(cupService));
 
-
-        Customer jas = new Customer(1, "Jaś", "Kowalski", "Kraków");
         List<Cup> cupOrder = new ArrayList<>();
         cupOrder.add(cup1);
         cupOrder.add(cup2);
@@ -53,9 +54,13 @@ public class Shop {
         buyCups(purchaseService,customerService,cupService,new Purchase(jas,cupOrder),jas);
         buyCups(purchaseService,customerService,cupService,new Purchase(jas,cupOrder2),jas);
         buyCups(purchaseService,customerService,cupService,new Purchase(jas,cupOrder3),jas);
-        summaryOfCustomerTransactions(purchaseService, customerService, jas);
+        System.out.println(summaryOfCustomerTransactions(purchaseService, customerService, jas));
 
 
+    }
+    public static void addCustomer(CustomerService customerService,Customer customer){
+        customerService.addCustomer(customer);
+        System.out.println("Customer " +customer.getName()+ " added to shop's database");
     }
 
     public static void buyCups(PurchaseService purchaseService, CustomerService customerService,
@@ -64,8 +69,8 @@ public class Shop {
             cupService.sellCup(cup);
         }
         purchaseService.savePurchase(purchase);
-        customer.updatePurchaseHistory(purchase);
-        System.out.println("====Customer order confirmation=====\n" + purchase);
+        customerService.updatePurchaseHistory(purchase, customer);
+        System.out.println("====Customer "+ customer.getName() +"' order confirmation=====\n" + purchase);
 
     }
 

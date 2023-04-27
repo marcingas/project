@@ -8,6 +8,7 @@ public class Purchase {
     private Customer customer;
     private List<Cup> cups;
     private BigDecimal purchaseCost;
+    private String discountInfo = "";
 
     public Purchase(Customer customer, List<Cup> cups) {
         this.customer = customer;
@@ -16,8 +17,9 @@ public class Purchase {
         for (var cup : cups) {
             purchaseCost = purchaseCost.add(cup.getPrice());
         }
-        if (customer.getPurchaseHistory().size() > 4) {
-            this.purchaseCost = this.purchaseCost.multiply(BigDecimal.valueOf(0.9));
+        if (customer.getPurchaseHistory().size() >= 3) {
+            this.purchaseCost = purchaseCost.multiply(BigDecimal.valueOf(0.9));
+            discountInfo = "!!!10% Discount included!!!: ";
         } else {
             this.purchaseCost = purchaseCost;
         }
@@ -39,6 +41,7 @@ public class Purchase {
     public String toString() {
         return "Purchase\n" +
                 "cups: " + cups +
-                "\npurchaseCost: " + purchaseCost + " USD";
+                "\npurchaseCost: " + discountInfo + "" + purchaseCost + " USD" +
+                "\ncustomer: " + customer.getName() + "\n";
     }
 }

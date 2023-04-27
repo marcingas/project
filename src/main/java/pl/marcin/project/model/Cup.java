@@ -20,6 +20,7 @@ public class Cup {
         this.price = price;
     }
 
+
     public int getId() {
         return id;
     }

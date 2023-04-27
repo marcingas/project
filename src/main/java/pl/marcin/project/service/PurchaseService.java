@@ -20,4 +20,7 @@ public class PurchaseService {
     public List<Purchase> purchaseHistoryByCustomerId(int id) {
         return purchaseRepository.findPurchaseByCustomerId(id);
     }
+    public List<Purchase> AllPurchasesHistory(){
+        return purchaseRepository.findAllPurchases();
+    }
 }

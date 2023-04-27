@@ -23,4 +23,9 @@ public class PurchaseRepositoryListBased implements PurchaseRepository {
         }
         return purchaseHistory;
     }
+
+    @Override
+    public List<Purchase> findAllPurchases() {
+        return purchases;
+    }
 }

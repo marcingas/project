@@ -2,12 +2,17 @@ package pl.marcin.project.service;
 
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.repository.CupRepository;
+import pl.marcin.project.repository.CupRepositoryFileBased;
+import pl.marcin.project.repository.CupRepositoryListBased;
 
 import java.util.List;
 
 public class CupService {
     private CupRepository cupRepository;
-
+    private CupRepositoryFileBased cupRepositoryFileBased;
+    public CupService(CupRepositoryFileBased cupRepositoryFileBased) {
+        this.cupRepositoryFileBased = cupRepositoryFileBased;
+    }
     public CupService(CupRepository cupRepository) {
         this.cupRepository = cupRepository;
     }
@@ -15,6 +20,10 @@ public class CupService {
     public String addCup(Cup cup) {
         cupRepository.saveCup(cup);
         return "Cup " + cup.getId() + " saved";
+    }
+    public String addCupToFile(Cup cup){
+        cupRepositoryFileBased.saveCup(cup);
+        return "Cup added to file";
     }
 
     public String updateCup(int cupId, Cup cup) {

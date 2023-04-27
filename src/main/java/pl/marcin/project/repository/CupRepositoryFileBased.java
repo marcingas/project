@@ -2,15 +2,29 @@ package pl.marcin.project.repository;
 
 import pl.marcin.project.model.Cup;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CupRepositoryListBased implements CupRepository {
+public class CupRepositoryFileBased implements CupRepository {
     private List<Cup> cups = new ArrayList<>();
 
     @Override
     public void saveCup(Cup cup) {
-        cups.add(cup);
+        try{
+            File file = new File("cups.txt");
+            if(!file.exists()){
+                file.createNewFile();
+            }
+        FileWriter fileWriter = new FileWriter(file,true);
+            fileWriter.write(cup.getId() + ","+ cup.getColor() + "," + cup.getShape() + "," +
+                    cup.getPrice() + "\n");
+            fileWriter.close();
+    }catch (IOException e){
+        e.getMessage();
+        }
     }
 
     @Override

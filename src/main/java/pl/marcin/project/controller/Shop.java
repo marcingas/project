@@ -3,6 +3,7 @@ package pl.marcin.project.controller;
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.model.Customer;
 import pl.marcin.project.model.Purchase;
+import pl.marcin.project.repository.CupRepositoryFileBased;
 import pl.marcin.project.repository.CupRepositoryListBased;
 import pl.marcin.project.repository.CustomerRepositoryListBased;
 import pl.marcin.project.repository.PurchaseRepositoryListBased;
@@ -76,7 +77,8 @@ public class Shop {
         System.out.println(viewStock(cupService));
         System.out.println(purchaseHistory(purchaseService));
 
-
+        CupRepositoryFileBased cupRepositoryFileBased = new CupRepositoryFileBased();
+        cupRepositoryFileBased.saveCup(cup1);
     }
 
     public static void createCustomerAccount(CustomerService customerService, Customer customer) {
@@ -92,9 +94,9 @@ public class Shop {
                 temporaryCup = cup;
             }
         }
-        if(temporaryCup==null){
+        if (temporaryCup == null) {
             return "Cup currently unavailable";
-        }else{
+        } else {
             cupService.sellCup(temporaryCup);
             orderList.add(temporaryCup);
             return "Cup successfully added to orderList";
@@ -106,7 +108,6 @@ public class Shop {
         purchaseService.savePurchase(purchase);
         customerService.updatePurchaseHistory(purchase, customer);
         System.out.println("====Customer " + customer.getName() + "'s order confirmation=====\n" + purchase);
-
     }
 
     public static void addToStock(CupService cupService, Cup cup) {
@@ -118,7 +119,6 @@ public class Shop {
     public static List<Cup> viewStock(CupService cupService) {
         System.out.println("==========Actual stock availability: ===========");
         return cupService.showAllCups();
-
     }
 
     public static String summaryOfCustomerTransactions(PurchaseService purchaseService,
@@ -130,10 +130,10 @@ public class Shop {
                 + customer.getPurchaseHistory());
         return "----2. number of Transactions: -----" + "\nCustomer with id " + customer.getId() + " made: "
                 + customer.getPurchaseHistory().size() + " purchases";
-
     }
-    public static List<Purchase> purchaseHistory(PurchaseService purchaseService){
+
+    public static List<Purchase> purchaseHistory(PurchaseService purchaseService) {
         System.out.println("====All Purchases (history)======\n");
-       return purchaseService.AllPurchasesHistory();
+        return purchaseService.AllPurchasesHistory();
     }
 }

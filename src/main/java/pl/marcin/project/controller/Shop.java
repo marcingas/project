@@ -11,12 +11,16 @@ import pl.marcin.project.service.CupService;
 import pl.marcin.project.service.CustomerService;
 import pl.marcin.project.service.PurchaseService;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Shop {
     public static void main(String[] args) {
+        File file = new File("cups.txt");
+        file.delete();
+
 
         PurchaseService purchaseService = new PurchaseService(new PurchaseRepositoryListBased());
         CustomerService customerService = new CustomerService(new CustomerRepositoryListBased());
@@ -27,14 +31,14 @@ public class Shop {
         Customer stas = new Customer(2, "Staszek", "Buła", "Żywiec");
         createCustomerAccount(customerService, stas);
 
-        Cup cup1 = new Cup(1, "Blue", "square", BigDecimal.valueOf(4.22));
-        Cup cup2 = new Cup(2, "Yellow", "circle", BigDecimal.valueOf(5.22));
-        Cup cup3 = new Cup(3, "Orange", "long", BigDecimal.valueOf(6.22));
-        Cup cup4 = new Cup(4, "White", "thin", BigDecimal.valueOf(2.22));
-        Cup cup5 = new Cup(5, "Orange", "Square", BigDecimal.valueOf(3.22));
-        Cup cup6 = new Cup(6, "Khaki", "square", BigDecimal.valueOf(4.88));
-        Cup cup7 = new Cup(7, "Orange", "long", BigDecimal.valueOf(3.14));
-        Cup cup8 = new Cup(8, "Orange", "long and circle", BigDecimal.valueOf(31.14));
+        Cup cup1 = new Cup(1, "Blue", "square", BigDecimal.valueOf(1.2));
+        Cup cup2 = new Cup(2, "Yellow", "circle", BigDecimal.valueOf(3.2));
+        Cup cup3 = new Cup(3, "Orange", "long", BigDecimal.valueOf(2.33));
+        Cup cup4 = new Cup(4, "White", "thin", BigDecimal.valueOf(2.23));
+        Cup cup5 = new Cup(5, "Orange", "Square", BigDecimal.valueOf(32.12));
+        Cup cup6 = new Cup(6, "Khaki", "square", BigDecimal.valueOf(2.1));
+        Cup cup7 = new Cup(7, "Orange", "long", BigDecimal.valueOf(1.2));
+        Cup cup8 = new Cup(8, "Orange", "long and circle", BigDecimal.valueOf(1.2));
 
         addToStock(cupService, cup1);
         addToStock(cupService, cup2);
@@ -79,6 +83,14 @@ public class Shop {
 
         CupRepositoryFileBased cupRepositoryFileBased = new CupRepositoryFileBased();
         cupRepositoryFileBased.saveCup(cup1);
+        cupRepositoryFileBased.saveCup(cup2);
+        cupRepositoryFileBased.saveCup(cup3);
+
+        System.out.println(cupRepositoryFileBased.findCup(1));
+        cupRepositoryFileBased.updateCup(1,new Cup(1,"no","no",BigDecimal.valueOf(1.22)));
+        System.out.println(cupRepositoryFileBased.findCups());
+
+
     }
 
     public static void createCustomerAccount(CustomerService customerService, Customer customer) {

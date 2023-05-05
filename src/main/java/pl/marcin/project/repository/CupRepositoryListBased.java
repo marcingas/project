@@ -36,13 +36,16 @@ public class CupRepositoryListBased implements CupRepository {
 
     @Override
     public Cup findCup(int cupId) {
+        Cup cup = null;
         for (Cup searchedCup : cups) {
             if (searchedCup.getId() == cupId) {
-                return searchedCup;
-            } else {
-                throw new RuntimeException("There is no such cup with id " + cupId);
+                cup = searchedCup;
             }
         }
-        return null;
+        if(cup == null){
+            throw new RuntimeException("There is no cup with this id");
+        }else{
+        return cup;
+        }
     }
 }

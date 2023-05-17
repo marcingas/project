@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class CupRepositoryFileBased implements CupRepository {
-    private List<Cup> cups = new ArrayList<>();
 
     @Override
     public void saveCup(Cup cup) {
@@ -30,10 +29,11 @@ public class CupRepositoryFileBased implements CupRepository {
 
     @Override
     public void updateCup(int cupId, Cup cup) {
+        File file = new File("cups.txt");
         File tempFile = new File("cupstemp.txt");
         Scanner scanner = null;
         try {
-            scanner = new Scanner(new FileReader("cups.txt"));
+            scanner = new Scanner(new FileReader(file));
             scanner.useDelimiter(",");
             while (scanner.hasNextLine()) {
                 String[] cupData = scanner.nextLine().split(",");
@@ -52,6 +52,16 @@ public class CupRepositoryFileBased implements CupRepository {
                 }
                 fileWriter.close();
             }
+            if(file.delete()){
+                System.out.println("File removed");
+            }else{
+                System.out.println("File couldn't be removed");
+            }
+            if(tempFile.renameTo(new File("cups.txt"))){
+                System.out.println("ok");
+            }else {
+                System.out.println("not ok");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -62,7 +72,30 @@ public class CupRepositoryFileBased implements CupRepository {
 
     @Override
     public void deleteCup(Cup cup) {
-        cups.removeIf(s -> s.equals(cup));
+        File tempFile = new File("cupstemp1.txt");
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(new FileReader("cups.txt"));
+            scanner.useDelimiter(",");
+            while (scanner.hasNextLine()) {
+                String[] cupData = scanner.nextLine().split(",");
+                int id = Integer.parseInt(cupData[0]);
+                String color = cupData[1];
+                String shape = cupData[2];
+                double price = Double.parseDouble(cupData[3]);
+
+                FileWriter fileWriter = new FileWriter(tempFile, true);
+                if (id != cup.getId()) {
+                    fileWriter.write(id + "," + color + "," + shape + "," +
+                            price + "\n");
+                }
+                fileWriter.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            scanner.close();
+        }
     }
 
     @Override
@@ -85,7 +118,6 @@ public class CupRepositoryFileBased implements CupRepository {
         } catch (IOException e) {
 
         }
-
         return cups;
     }
 

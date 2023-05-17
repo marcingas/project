@@ -17,8 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Shop {
+    public static final File file = new File("cups.txt");
     public static void main(String[] args) {
-        File file = new File("cups.txt");
+
         file.delete();
 
 
@@ -89,6 +90,9 @@ public class Shop {
         System.out.println(cupRepositoryFileBased.findCup(1));
         cupRepositoryFileBased.updateCup(1,new Cup(1,"no","no",BigDecimal.valueOf(1.22)));
         System.out.println(cupRepositoryFileBased.findCups());
+        cupRepositoryFileBased.deleteCup(cup1);
+
+
 
 
     }

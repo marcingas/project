@@ -3,13 +3,14 @@ package pl.marcin.project.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
-@Table(name = "address")
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
+@Entity
+@Table(name = "address")
 public class AddressEntity {
     @Id
     @SequenceGenerator(name = "address_seq", sequenceName = "address_seq", allocationSize = 1)

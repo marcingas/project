@@ -26,7 +26,7 @@ public class CupEntity {
     private String shape;
     @Column(name = "price")
     private BigDecimal price;
-    @ManyToMany(mappedBy = "cups")
-    @JsonIgnore
-    private List<PurchaseEntity> purchases;
+    @ManyToOne
+    @JoinColumn(name = "purchase_id",referencedColumnName = "purchase_id")
+    private PurchaseEntity purchase;
 }

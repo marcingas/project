@@ -23,6 +23,7 @@ public class CustomerEntity {
     private String name;
     @Column(name = "surname")
     private String surname;
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private AddressEntity address;
     @OneToMany(mappedBy = "customer")

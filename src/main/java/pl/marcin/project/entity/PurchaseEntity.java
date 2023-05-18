@@ -19,11 +19,12 @@ public class PurchaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "purchase_seq")
     @Column(name = "purchase_id")
     private Long purchaseId;
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")
     private CustomerEntity customer;
     @Column(name = "purchase_cost")
     private BigDecimal purchaseCost;
-    @ManyToMany(mappedBy = "purchases")
+    @OneToMany(mappedBy = "purchase")
     private List<CupEntity> cups;
 
 

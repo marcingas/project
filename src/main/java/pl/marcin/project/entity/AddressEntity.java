@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name="address")
+@Table(name = "address")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -12,13 +12,13 @@ import lombok.*;
 @Builder
 public class AddressEntity {
     @Id
-    @SequenceGenerator(name= "address_seq", sequenceName = "address_seq",allocationSize = 1)
+    @SequenceGenerator(name = "address_seq", sequenceName = "address_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_seq")
-    @Column(name="address_id")
+    @Column(name = "address_id")
     private Long address_id;
     @Column(name = "street")
     private String street;
-    @Column(name="number")
+    @Column(name = "number")
     private int number;
     @Column(name = "town")
     private String town;

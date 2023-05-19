@@ -15,6 +15,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Shop {
     public static final File file = new File("cups.txt");
@@ -28,9 +29,9 @@ public class Shop {
         CupService cupService = new CupService(new CupRepositoryListBased());
 
         Customer jas = new Customer(1, "Jaś", "Kowalski", "Kraków");
-        createCustomerAccount(customerService, jas);
+        addCustomer(customerService, jas);
         Customer stas = new Customer(2, "Staszek", "Buła", "Żywiec");
-        createCustomerAccount(customerService, stas);
+        addCustomer(customerService, stas);
 
         Cup cup1 = new Cup(1, "Blue", "square", BigDecimal.valueOf(1.2));
         Cup cup2 = new Cup(2, "Yellow", "circle", BigDecimal.valueOf(3.2));
@@ -53,24 +54,36 @@ public class Shop {
         System.out.println(viewStock(cupService));
 
         List<Cup> cupBasket = new ArrayList<>();
-        System.out.println(addCupToBasket(cupService, cupBasket, cup1));
-        System.out.println(addCupToBasket(cupService, cupBasket, cup1));
+        addCupToBasket(cupService, cupBasket, cup1);
+        try {
+            addCupToBasket(cupService, cupBasket, cup1);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
 
         List<Cup> cupBasket2 = new ArrayList<>();
-        System.out.println(addCupToBasket(cupService, cupBasket2, cup4));
-        System.out.println(addCupToBasket(cupService, cupBasket2, cup5));
+        addCupToBasket(cupService, cupBasket2, cup4);
+        addCupToBasket(cupService, cupBasket2, cup5);
 
 
         List<Cup> cupBasket3 = new ArrayList<>();
-        System.out.println(addCupToBasket(cupService, cupBasket3, cup6));
+        addCupToBasket(cupService, cupBasket3, cup6);
         List<Cup> cupBasket4 = new ArrayList<>();
-        System.out.println(addCupToBasket(cupService, cupBasket4, cup8));
+        addCupToBasket(cupService, cupBasket4, cup8);
 
         List<Cup> cupBasket5 = new ArrayList<>();
-        System.out.println(addCupToBasket(cupService, cupBasket5, cup7));
-        System.out.println(addCupToBasket(cupService, cupBasket5, cup6));
-        System.out.println(addCupToBasket(cupService, cupBasket5, cup6));
-        System.out.println(addCupToBasket(cupService, cupBasket5, cup6));
+        addCupToBasket(cupService, cupBasket5, cup7);
+        try {
+            addCupToBasket(cupService, cupBasket5, cup6);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            addCupToBasket(cupService, cupBasket5, cup6);
+            addCupToBasket(cupService, cupBasket5, cup6);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
 
 
         buyCups(purchaseService, customerService, cupService, new Purchase(jas, cupBasket), jas);
@@ -97,12 +110,12 @@ public class Shop {
 
     }
 
-    public static void createCustomerAccount(CustomerService customerService, Customer customer) {
+    public static void addCustomer(CustomerService customerService, Customer customer) {
         customerService.addCustomer(customer);
-        System.out.println(customer.getName() + " Your account has been created. Now You can order Cups!");
+        System.out.println("Customer " + customer.getName() + " added to shop's database");
     }
 
-    public static String addCupToBasket(CupService cupService, List<Cup> orderList, Cup cup) {
+    public static void addCupToBasket(CupService cupService, List<Cup> orderList, Cup cup) {
         System.out.println("====add to Basket processing....====");
         Cup temporaryCup = null;
         for (Cup cupOnStock : cupService.showAllCups()) {
@@ -111,11 +124,11 @@ public class Shop {
             }
         }
         if (temporaryCup == null) {
-            return "Cup currently unavailable";
+            throw new NoSuchElementException("Cup currently unavailable");
         } else {
             cupService.sellCup(temporaryCup);
             orderList.add(temporaryCup);
-            return "Cup successfully added to orderList";
+
         }
     }
 

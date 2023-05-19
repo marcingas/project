@@ -16,9 +16,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class Shop {
     public static final File file = new File("cups.txt");
+
     public static void main(String[] args) {
 
         file.delete();
@@ -101,11 +103,9 @@ public class Shop {
         cupRepositoryFileBased.saveCup(cup3);
 
         System.out.println(cupRepositoryFileBased.findCup(1));
-        cupRepositoryFileBased.updateCup(1,new Cup(1,"no","no",BigDecimal.valueOf(1.22)));
+        cupRepositoryFileBased.updateCup(1, new Cup(1, "no", "no", BigDecimal.valueOf(1.22)));
         System.out.println(cupRepositoryFileBased.findCups());
         cupRepositoryFileBased.deleteCup(cup1);
-
-
 
 
     }
@@ -117,18 +117,14 @@ public class Shop {
 
     public static void addCupToBasket(CupService cupService, List<Cup> orderList, Cup cup) {
         System.out.println("====add to Basket processing....====");
-        Cup temporaryCup = null;
-        for (Cup cupOnStock : cupService.showAllCups()) {
-            if (cup.getId() == cupOnStock.getId()) {
-                temporaryCup = cup;
-            }
-        }
-        if (temporaryCup == null) {
-            throw new NoSuchElementException("Cup currently unavailable");
+        Optional<Cup> searchedCup = cupService.showAllCups().stream()
+                .filter(c -> c.getId() == cup.getId())
+                .findFirst();
+        if (searchedCup.isPresent()) {
+            cupService.sellCup(searchedCup.get());
+            orderList.add(searchedCup.get());
         } else {
-            cupService.sellCup(temporaryCup);
-            orderList.add(temporaryCup);
-
+            throw new NoSuchElementException("Cup currently unavailable");
         }
     }
 

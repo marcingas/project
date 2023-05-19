@@ -24,7 +24,10 @@ public class PurchaseEntity {
     private CustomerEntity customer;
     @Column(name = "purchase_cost")
     private BigDecimal purchaseCost;
-    @OneToMany(mappedBy = "purchase")
+    @ManyToMany
+    @JoinTable(name = "purchase_cups",
+            joinColumns = @JoinColumn(name = "purchase_id"),
+            inverseJoinColumns = @JoinColumn(name = "cup_id") )
     private List<CupEntity> cups;
 
 

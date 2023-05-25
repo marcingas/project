@@ -1,5 +1,6 @@
 package pl.marcin.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class CustomerEntity {
     private String surname;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
+    @JsonIgnore
     private AddressEntity address;
     @OneToMany(mappedBy = "customer")
     private List<PurchaseEntity> purchaseHistory;

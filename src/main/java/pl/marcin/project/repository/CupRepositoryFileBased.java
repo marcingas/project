@@ -32,6 +32,7 @@ public class CupRepositoryFileBased implements CupRepository {
         File file = new File("cups.txt");
         File tempFile = new File("cupstemp.txt");
         Scanner scanner = null;
+        FileWriter fileWriter = null;
         try {
             scanner = new Scanner(new FileReader(file));
             scanner.useDelimiter(",");
@@ -42,7 +43,7 @@ public class CupRepositoryFileBased implements CupRepository {
                 String shape = cupData[2];
                 double price = Double.parseDouble(cupData[3]);
 
-                FileWriter fileWriter = new FileWriter(tempFile, true);
+                fileWriter = new FileWriter(tempFile, true);
                 if (id == cupId) {
                     fileWriter.write(cup.getId() + "," + cup.getColor() + "," + cup.getShape() + "," +
                             cup.getPrice() + "\n");
@@ -50,22 +51,25 @@ public class CupRepositoryFileBased implements CupRepository {
                     fileWriter.write(id + "," + color + "," + shape + "," +
                             price + "\n");
                 }
-                fileWriter.close();
+
             }
-            if(file.delete()){
-                System.out.println("File removed");
-            }else{
-                System.out.println("File couldn't be removed");
-            }
-            if(tempFile.renameTo(new File("cups.txt"))){
-                System.out.println("ok");
-            }else {
-                System.out.println("not ok");
-            }
+            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+
+
             scanner.close();
+        }
+        if (file.delete()) {
+            System.out.println("File removed");
+        } else {
+            System.out.println("File couldn't be removed");
+        }
+        if (tempFile.renameTo(new File("cups.txt"))) {
+            System.out.println("ok");
+        } else {
+            System.out.println("not ok");
         }
     }
 

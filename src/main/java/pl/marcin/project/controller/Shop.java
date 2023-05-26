@@ -3,6 +3,7 @@ package pl.marcin.project.controller;
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.model.Customer;
 import pl.marcin.project.model.Purchase;
+import pl.marcin.project.repository.CupRepository;
 import pl.marcin.project.repository.CupRepositoryFileBased;
 import pl.marcin.project.repository.CupRepositoryListBased;
 import pl.marcin.project.repository.CustomerRepositoryListBased;
@@ -19,11 +20,11 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class Shop {
-    public static final File file = new File("cups.txt");
+   // public static final File file = new File("cups.txt");
 
     public static void main(String[] args) {
 
-        file.delete();
+    //    file.delete();
 
 
         PurchaseService purchaseService = new PurchaseService(new PurchaseRepositoryListBased());
@@ -97,17 +98,15 @@ public class Shop {
         System.out.println(viewStock(cupService));
         System.out.println(purchaseHistory(purchaseService));
 
-        CupRepositoryFileBased cupRepositoryFileBased = new CupRepositoryFileBased();
+        CupRepository cupRepositoryFileBased = new CupRepositoryFileBased();
         cupRepositoryFileBased.saveCup(cup1);
         cupRepositoryFileBased.saveCup(cup2);
         cupRepositoryFileBased.saveCup(cup3);
 
-        System.out.println(cupRepositoryFileBased.findCup(1));
+        System.out.println(cupRepositoryFileBased.findCups());
         cupRepositoryFileBased.updateCup(1, new Cup(1, "no", "no", BigDecimal.valueOf(1.22)));
         System.out.println(cupRepositoryFileBased.findCups());
-        cupRepositoryFileBased.deleteCup(cup1);
-
-
+        //cupRepositoryFileBased.deleteCup(cup1);
     }
 
     public static void addCustomer(CustomerService customerService, Customer customer) {

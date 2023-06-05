@@ -1,5 +1,9 @@
 package pl.marcin.project.repository;
 
+import java.util.logging.Logger;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.logging.LogLevel;
 import pl.marcin.project.model.Cup;
 
 import java.io.File;
@@ -9,7 +13,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
+@Slf4j
 public class CupRepositoryFileBased implements CupRepository {
+    //private static Logger logger = Logger.getLogger(CupRepositoryFileBased.class.getName());
+//    private static final File FILE = new File("cups.txt");
 
     @Override
     public void saveCup(Cup cup) {
@@ -22,8 +29,17 @@ public class CupRepositoryFileBased implements CupRepository {
             fileWriter.write(cup.getId() + "," + cup.getColor() + "," + cup.getShape() + "," +
                     cup.getPrice() + "\n");
             fileWriter.close();
+
+            // info
+            // error
+            // warn
+            // debug
+            // trace
+            // fatal
+
+            log.info("new cup saved with id {}", cup.getId());
         } catch (IOException e) {
-            e.getMessage();
+            log.warn("cannot save cup with id {} because of: {}", cup.getId(), e.getMessage());
         }
     }
 
@@ -32,6 +48,7 @@ public class CupRepositoryFileBased implements CupRepository {
         File file = new File("cups.txt");
         File tempFile = new File("cupstemp.txt");
         Scanner scanner = null;
+        FileWriter tempFileWriter = null;
         try {
             scanner = new Scanner(new FileReader(file));
             scanner.useDelimiter(",");
@@ -42,30 +59,31 @@ public class CupRepositoryFileBased implements CupRepository {
                 String shape = cupData[2];
                 double price = Double.parseDouble(cupData[3]);
 
-                FileWriter fileWriter = new FileWriter(tempFile, true);
+                tempFileWriter = new FileWriter(tempFile, true);
                 if (id == cupId) {
-                    fileWriter.write(cup.getId() + "," + cup.getColor() + "," + cup.getShape() + "," +
+                    tempFileWriter.write(cup.getId() + "," + cup.getColor() + "," + cup.getShape() + "," +
                             cup.getPrice() + "\n");
                 } else {
-                    fileWriter.write(id + "," + color + "," + shape + "," +
+                    tempFileWriter.write(id + "," + color + "," + shape + "," +
                             price + "\n");
                 }
-                fileWriter.close();
+
             }
-            if(file.delete()){
-                System.out.println("File removed");
-            }else{
-                System.out.println("File couldn't be removed");
-            }
-            if(tempFile.renameTo(new File("cups.txt"))){
-                System.out.println("ok");
-            }else {
-                System.out.println("not ok");
-            }
+            tempFileWriter.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // log...
         } finally {
             scanner.close();
+        }
+        if (file.delete()) {
+            System.out.println("File removed");
+        } else {
+            System.out.println("File couldn't be removed");
+        }
+        if (tempFile.renameTo(file)) {
+            System.out.println("ok");
+        } else {
+            System.out.println("not ok");
         }
     }
 

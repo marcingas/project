@@ -3,6 +3,7 @@ package pl.marcin.project.controller;
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.model.Customer;
 import pl.marcin.project.model.Purchase;
+import pl.marcin.project.repository.CupRepository;
 import pl.marcin.project.repository.CupRepositoryFileBased;
 import pl.marcin.project.repository.CupRepositoryListBased;
 import pl.marcin.project.repository.CustomerRepositoryListBased;
@@ -15,12 +16,15 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class Shop {
-    public static final File file = new File("cups.txt");
+   // public static final File file = new File("cups.txt");
+
     public static void main(String[] args) {
 
-        file.delete();
+    //    file.delete();
 
 
         PurchaseService purchaseService = new PurchaseService(new PurchaseRepositoryListBased());
@@ -28,9 +32,9 @@ public class Shop {
         CupService cupService = new CupService(new CupRepositoryListBased());
 
         Customer jas = new Customer(1, "Jaś", "Kowalski", "Kraków");
-        createCustomerAccount(customerService, jas);
+        addCustomer(customerService, jas);
         Customer stas = new Customer(2, "Staszek", "Buła", "Żywiec");
-        createCustomerAccount(customerService, stas);
+        addCustomer(customerService, stas);
 
         Cup cup1 = new Cup(1, "Blue", "square", BigDecimal.valueOf(1.2));
         Cup cup2 = new Cup(2, "Yellow", "circle", BigDecimal.valueOf(3.2));
@@ -53,24 +57,36 @@ public class Shop {
         System.out.println(viewStock(cupService));
 
         List<Cup> cupBasket = new ArrayList<>();
-        System.out.println(addCupToBasket(cupService, cupBasket, cup1));
-        System.out.println(addCupToBasket(cupService, cupBasket, cup1));
+        addCupToBasket(cupService, cupBasket, cup1);
+        try {
+            addCupToBasket(cupService, cupBasket, cup1);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
 
         List<Cup> cupBasket2 = new ArrayList<>();
-        System.out.println(addCupToBasket(cupService, cupBasket2, cup4));
-        System.out.println(addCupToBasket(cupService, cupBasket2, cup5));
+        addCupToBasket(cupService, cupBasket2, cup4);
+        addCupToBasket(cupService, cupBasket2, cup5);
 
 
         List<Cup> cupBasket3 = new ArrayList<>();
-        System.out.println(addCupToBasket(cupService, cupBasket3, cup6));
+        addCupToBasket(cupService, cupBasket3, cup6);
         List<Cup> cupBasket4 = new ArrayList<>();
-        System.out.println(addCupToBasket(cupService, cupBasket4, cup8));
+        addCupToBasket(cupService, cupBasket4, cup8);
 
         List<Cup> cupBasket5 = new ArrayList<>();
-        System.out.println(addCupToBasket(cupService, cupBasket5, cup7));
-        System.out.println(addCupToBasket(cupService, cupBasket5, cup6));
-        System.out.println(addCupToBasket(cupService, cupBasket5, cup6));
-        System.out.println(addCupToBasket(cupService, cupBasket5, cup6));
+        addCupToBasket(cupService, cupBasket5, cup7);
+        try {
+            addCupToBasket(cupService, cupBasket5, cup6);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            addCupToBasket(cupService, cupBasket5, cup6);
+            addCupToBasket(cupService, cupBasket5, cup6);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
 
 
         buyCups(purchaseService, customerService, cupService, new Purchase(jas, cupBasket), jas);
@@ -82,40 +98,32 @@ public class Shop {
         System.out.println(viewStock(cupService));
         System.out.println(purchaseHistory(purchaseService));
 
-        CupRepositoryFileBased cupRepositoryFileBased = new CupRepositoryFileBased();
+        CupRepository cupRepositoryFileBased = new CupRepositoryFileBased();
         cupRepositoryFileBased.saveCup(cup1);
         cupRepositoryFileBased.saveCup(cup2);
         cupRepositoryFileBased.saveCup(cup3);
 
-        System.out.println(cupRepositoryFileBased.findCup(1));
-        cupRepositoryFileBased.updateCup(1,new Cup(1,"no","no",BigDecimal.valueOf(1.22)));
         System.out.println(cupRepositoryFileBased.findCups());
-        cupRepositoryFileBased.deleteCup(cup1);
-
-
-
-
+        cupRepositoryFileBased.updateCup(1, new Cup(1, "no", "no", BigDecimal.valueOf(1.22)));
+        System.out.println(cupRepositoryFileBased.findCups());
+        //cupRepositoryFileBased.deleteCup(cup1);
     }
 
-    public static void createCustomerAccount(CustomerService customerService, Customer customer) {
+    public static void addCustomer(CustomerService customerService, Customer customer) {
         customerService.addCustomer(customer);
-        System.out.println(customer.getName() + " Your account has been created. Now You can order Cups!");
+        System.out.println("Customer " + customer.getName() + " added to shop's database");
     }
 
-    public static String addCupToBasket(CupService cupService, List<Cup> orderList, Cup cup) {
+    public static void addCupToBasket(CupService cupService, List<Cup> orderList, Cup cup) {
         System.out.println("====add to Basket processing....====");
-        Cup temporaryCup = null;
-        for (Cup cupOnStock : cupService.showAllCups()) {
-            if (cup.getId() == cupOnStock.getId()) {
-                temporaryCup = cup;
-            }
-        }
-        if (temporaryCup == null) {
-            return "Cup currently unavailable";
+        Optional<Cup> searchedCup = cupService.showAllCups().stream()
+                .filter(c -> c.getId() == cup.getId())
+                .findFirst();
+        if (searchedCup.isPresent()) {
+            cupService.sellCup(searchedCup.get());
+            orderList.add(searchedCup.get());
         } else {
-            cupService.sellCup(temporaryCup);
-            orderList.add(temporaryCup);
-            return "Cup successfully added to orderList";
+            throw new NoSuchElementException("Cup currently unavailable");
         }
     }
 

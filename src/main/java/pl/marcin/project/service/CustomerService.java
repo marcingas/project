@@ -1,13 +1,12 @@
 package pl.marcin.project.service;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.marcin.project.model.Cup;
+
 import pl.marcin.project.model.Customer;
 import pl.marcin.project.model.Purchase;
 import pl.marcin.project.repository.CustomerRepository;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Slf4j
@@ -24,14 +23,16 @@ public class CustomerService {
         return customer.getId();
     }
 
-    public String updateCustomer(int customerId, Customer customer) {
+    public int updateCustomer(int customerId, Customer customer) {
         customerRepository.updateCustomer(customerId, customer);
-        return "Customer with id " + customerId + " updated";
+        log.info("Customer with id " + customerId + " updated");
+        return customer.getId();
     }
 
-    public String deleteCustomer(int customerId) {
+    public int deleteCustomer(int customerId) {
         customerRepository.deleteCustomer(customerId);
-        return "Customer with id " + customerId + " deleted";
+        log.info("Customer with id " + customerId + " deleted");
+        return -1;
     }
 
     public List<Customer> getAllCustomers() {
@@ -42,9 +43,10 @@ public class CustomerService {
         return customerRepository.findCustomer(customerId);
     }
 
-    public String updatePurchaseHistory(Purchase purchase, Customer customer){
-        customerRepository.updatePurchaseHistory(purchase,customer);
-        return "History updated";
+    public int updatePurchaseHistory(Purchase purchase, Customer customer) {
+        customerRepository.updatePurchaseHistory(purchase, customer);
+        log.info("Customers id: " + customer.getId() + " purchase history updated");
+        return customer.getId();
     }
 
 

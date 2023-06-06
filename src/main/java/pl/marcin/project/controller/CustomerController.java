@@ -53,8 +53,23 @@ public class CustomerController {
 
     @PutMapping("customers/{id}")
     public ResponseEntity<CustomerEntity> updateCustomer(
-            @PathVariable Long id, @Valid @RequestBody CustomerEntity customer) {
+            @PathVariable Long id, @Valid @RequestBody CustomerRequest customerRequest) {
+        AddressEntity address = new AddressEntity();
+        address.setAddress_id(id);
+        address.setStreet(customerRequest.getStreet());
+        address.setTown(customerRequest.getTown());
+        address.setNumber(customerRequest.getNumber());
+        address.setCode(customerRequest.getCode());
+        address = addressEntityRepository.save(address);
+
+        CustomerEntity customer = new CustomerEntity();
         customer.setCustomer_id(id);
+        customer.setName((customerRequest.getName()));
+        customer.setSurname(customerRequest.getSurname());
+        customer.setAddress(address);
+        customer = customerEntityRepository.save(customer);
+
+
         return new ResponseEntity<CustomerEntity>(customerEntityService.updateCustomer(customer), HttpStatus.OK);
     }
 

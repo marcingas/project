@@ -27,5 +27,6 @@ public class CupEntity {
     @Column(name = "price")
     private BigDecimal price;
     @ManyToMany(mappedBy = "cups")
+    @JsonIgnore
     private List<PurchaseEntity> purchases;
 }

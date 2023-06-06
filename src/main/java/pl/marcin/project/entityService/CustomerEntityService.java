@@ -14,7 +14,7 @@ import java.util.Optional;
 public class CustomerEntityService {
 
     private final CustomerEntityRepository customerEntityRepository;
-    private final CupEntityRepository cupEntityRepository;
+
 
     public List<CustomerEntity> getAllCustomers() {
         return customerEntityRepository.findAll();

@@ -9,8 +9,10 @@ import pl.marcin.project.database.AddressEntityRepository;
 import pl.marcin.project.database.CustomerEntityRepository;
 import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
+import pl.marcin.project.entity.PurchaseEntity;
 import pl.marcin.project.entityService.CustomerEntityService;
 import pl.marcin.project.request.CustomerRequest;
+import pl.marcin.project.request.PurchaseRequest;
 
 
 import java.util.List;
@@ -50,6 +52,7 @@ public class CustomerController {
         customerEntityService.addCustomer(customer);
         return new ResponseEntity<CustomerEntity>(customer, HttpStatus.CREATED);
     }
+
 
     @PutMapping("customers/{id}")
     public ResponseEntity<CustomerEntity> updateCustomer(

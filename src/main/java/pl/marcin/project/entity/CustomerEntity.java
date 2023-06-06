@@ -28,5 +28,6 @@ public class CustomerEntity {
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private AddressEntity address;
     @OneToMany(mappedBy = "customer")
+
     private List<PurchaseEntity> purchaseHistory;
 }

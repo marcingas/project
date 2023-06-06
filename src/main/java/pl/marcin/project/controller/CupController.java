@@ -6,15 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.marcin.project.entity.CupEntity;
-import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entityService.CupEntityService;
-import pl.marcin.project.request.CustomerRequest;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class CupsController {
+public class CupController {
     private final CupEntityService cupEntityService;
 
     @GetMapping("/cups")

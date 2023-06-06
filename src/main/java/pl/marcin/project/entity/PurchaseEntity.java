@@ -1,5 +1,6 @@
 package pl.marcin.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import pl.marcin.project.model.Customer;
@@ -20,7 +21,8 @@ public class PurchaseEntity {
     @Column(name = "purchase_id")
     private Long purchaseId;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id",referencedColumnName = "customer_id")
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
+    @JsonIgnore
     private CustomerEntity customer;
     @Column(name = "purchase_cost")
     private BigDecimal purchaseCost;
@@ -28,6 +30,7 @@ public class PurchaseEntity {
     @JoinTable(name = "purchase_cups",
             joinColumns = @JoinColumn(name = "purchase_id"),
             inverseJoinColumns = @JoinColumn(name = "cup_id") )
+
     private List<CupEntity> cups;
 
 

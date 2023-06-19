@@ -1,5 +1,5 @@
 package pl.marcin.project;
 
-public interface ApplicationRunner {
+public interface AppRunner {
     void runApplication();
 }

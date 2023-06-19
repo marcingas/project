@@ -14,7 +14,7 @@ public class AppRunnerConfig implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        String runningWay = "web";
+        String runningWay = "shop";
         if (runningWay.equals("web")) {
             appRunner = new WebAppRunner();
         } else if (runningWay.equals("shop")) {

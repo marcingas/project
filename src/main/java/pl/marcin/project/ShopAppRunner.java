@@ -1,8 +1,10 @@
 package pl.marcin.project;
 
+import pl.marcin.project.controller.Shop;
+
 public class ShopAppRunner implements AppRunner {
     @Override
     public void runApplication() {
-        System.out.println("Shop is running...");
+        Shop.main(new String[]{});
     }
 }

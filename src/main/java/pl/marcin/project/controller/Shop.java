@@ -20,13 +20,14 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class Shop {
-   // public static final File file = new File("cups.txt");
+    public static final File file = new File("cups.txt");
 
     public static void main(String[] args) {
 
-    //    file.delete();
+    }
 
-
+    public static void shopRunner() {
+        file.delete();
         PurchaseService purchaseService = new PurchaseService(new PurchaseRepositoryListBased());
         CustomerService customerService = new CustomerService(new CustomerRepositoryListBased());
         CupService cupService = new CupService(new CupRepositoryListBased());
@@ -106,7 +107,6 @@ public class Shop {
         System.out.println(cupRepositoryFileBased.findCups());
         cupRepositoryFileBased.updateCup(1, new Cup(1, "no", "no", BigDecimal.valueOf(1.22)));
         System.out.println(cupRepositoryFileBased.findCups());
-        //cupRepositoryFileBased.deleteCup(cup1);
     }
 
     public static void addCustomer(CustomerService customerService, Customer customer) {

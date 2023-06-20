@@ -3,7 +3,6 @@ package pl.marcin.project.service;
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.repository.CupRepository;
 import pl.marcin.project.repository.CupRepositoryFileBased;
-import pl.marcin.project.repository.CupRepositoryListBased;
 
 import java.util.List;
 

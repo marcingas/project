@@ -1,11 +1,12 @@
 package pl.marcin.project.runners;
 
-import pl.marcin.project.runners.AppRunner;
+import org.springframework.boot.SpringApplication;
+import pl.marcin.project.ProjectApplication;
 
 public class WebAppRunner implements AppRunner {
 
     @Override
     public void runApplication() {
-
+        SpringApplication.run(ProjectApplication.class);
     }
 }

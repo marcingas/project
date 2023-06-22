@@ -1,10 +1,7 @@
-package pl.marcin.project;
+package pl.marcin.project.runners;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import pl.marcin.project.runners.AppRunner;
-import pl.marcin.project.runners.ShopAppRunner;
-import pl.marcin.project.runners.WebAppRunner;
 
 import java.util.Scanner;
 

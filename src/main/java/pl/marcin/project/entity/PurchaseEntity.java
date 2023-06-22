@@ -29,9 +29,12 @@ public class PurchaseEntity {
     @ManyToMany
     @JoinTable(name = "purchase_cups",
             joinColumns = @JoinColumn(name = "purchase_id"),
-            inverseJoinColumns = @JoinColumn(name = "cup_id") )
-
+            inverseJoinColumns = @JoinColumn(name = "cup_id"))
     private List<CupEntity> cups;
 
-
+    public PurchaseEntity(CustomerEntity customer, BigDecimal purchaseCost, List<CupEntity> cups) {
+        this.customer = customer;
+        this.purchaseCost = purchaseCost;
+        this.cups = cups;
+    }
 }

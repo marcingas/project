@@ -22,11 +22,7 @@ import java.util.Optional;
 public class Shop {
     public static final File file = new File("cups.txt");
 
-    public static void main(String[] args) {
-
-    }
-
-    public static void shopRunner() {
+    public void shopRunner() {
         file.delete();
         PurchaseService purchaseService = new PurchaseService(new PurchaseRepositoryListBased());
         CustomerService customerService = new CustomerService(new CustomerRepositoryListBased());

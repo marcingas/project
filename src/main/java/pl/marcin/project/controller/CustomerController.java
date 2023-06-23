@@ -50,7 +50,7 @@ public class CustomerController {
         customer = customerEntityRepository.save(customer);
 
         customerEntityService.addCustomer(customer);
-        return new ResponseEntity<CustomerEntity>(customer, HttpStatus.CREATED);
+            return new ResponseEntity<CustomerEntity>(customer, HttpStatus.CREATED);
     }
 
 

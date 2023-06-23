@@ -29,4 +29,11 @@ public class CupEntity {
     @ManyToMany(mappedBy = "cups")
     @JsonIgnore
     private List<PurchaseEntity> purchases;
+
+    public CupEntity(String color, String shape, BigDecimal price, List<PurchaseEntity> purchases) {
+        this.color = color;
+        this.shape = shape;
+        this.price = price;
+        this.purchases = purchases;
+    }
 }

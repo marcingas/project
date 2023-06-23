@@ -42,17 +42,15 @@ public class CustomerRepositoryListBased implements CustomerRepository {
         for (Customer searchedCustomer : customers) {
             if (searchedCustomer.getId() == customerId) {
                 return searchedCustomer;
-            } else {
-                throw new RuntimeException("There is no such cup");
             }
         }
-        return null;
+        throw new RuntimeException("There is no such customer");
     }
 
     @Override
-    public void updatePurchaseHistory(Purchase purchase,Customer customer) {
-        for(Customer c : customers){
-            if(c.getId()== customer.getId()){
+    public void updatePurchaseHistory(Purchase purchase, Customer customer) {
+        for (Customer c : customers) {
+            if (c.getId() == customer.getId()) {
                 c.updatePurchaseHistory(purchase);
             }
         }

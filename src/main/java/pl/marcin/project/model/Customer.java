@@ -1,6 +1,8 @@
 package pl.marcin.project.model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import pl.marcin.project.repository.PurchaseRepositoryListBased;
 import pl.marcin.project.service.PurchaseService;
 
@@ -8,15 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
+@Builder
+@AllArgsConstructor
 public class Customer {
 
     private int id;
-
     private String name;
-
     private String surname;
-
     private String address;
     private List<Purchase> purchaseHistory;
 

@@ -10,8 +10,9 @@ public class CustomerRepositoryListBased implements CustomerRepository {
     List<Customer> customers = new ArrayList<>();
 
     @Override
-    public void saveCustomer(Customer customer) {
+    public int saveCustomer(Customer customer) {
         customers.add(customer);
+        return customer.getId();
     }
 
     @Override
@@ -28,8 +29,8 @@ public class CustomerRepositoryListBased implements CustomerRepository {
     }
 
     @Override
-    public void deleteCustomer(int customerId) {
-        customers.removeIf(s -> s.getId() == customerId);
+    public boolean deleteCustomer(int customerId) {
+        return customers.removeIf(s -> s.getId() == customerId);
 
     }
 

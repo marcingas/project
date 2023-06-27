@@ -7,7 +7,7 @@ import java.util.List;
 public interface CupRepository {
     void saveCup(Cup cup);
 
-    void updateCup(int cupId, Cup cup);
+    int updateCup(int cupId, Cup cup);
 
     void deleteCup(int cupId);
 

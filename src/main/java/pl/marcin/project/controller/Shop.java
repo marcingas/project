@@ -3,8 +3,6 @@ package pl.marcin.project.controller;
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.model.Customer;
 import pl.marcin.project.model.Purchase;
-import pl.marcin.project.repository.CupRepository;
-import pl.marcin.project.repository.CupRepositoryFileBased;
 import pl.marcin.project.repository.CupRepositoryListBased;
 import pl.marcin.project.repository.CustomerRepositoryListBased;
 import pl.marcin.project.repository.PurchaseRepositoryListBased;
@@ -16,8 +14,6 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 public class Shop {
     public static final File file = new File("cups.txt");
@@ -43,13 +39,15 @@ public class Shop {
 
         addCustomer(customerService, jas);
         addCustomer(customerService, stas);
+        addCustomer(customerService, jola);
         addCup(cupService, cup1);
         addCup(cupService, cup2);
+        addCup(cupService, cup5);
         addPurchase(purchaseService, purchase1);
         addPurchase(purchaseService, purchase2);
 
-//        updateCustomer(customerService,new Customer(1,"Janek","Kowalski","Warszawa"),1);
-//        updateCup(cupService,new Cup(1,"BLUE","square",BigDecimal.valueOf(2.43)),1);
+        updateCustomer(customerService, new Customer(1, "Janek", "Kowalski", "Warszawa"), 1);
+        updateCup(cupService, new Cup(1, "BLUE", "square", BigDecimal.valueOf(2.43)), 1);
 
         System.out.println(getAllCups(cupService));
         getAllCustomers(customerService);

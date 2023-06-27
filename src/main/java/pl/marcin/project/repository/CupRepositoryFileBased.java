@@ -44,7 +44,7 @@ public class CupRepositoryFileBased implements CupRepository {
     }
 
     @Override
-    public void updateCup(int cupId, Cup cup) {
+    public int updateCup(int cupId, Cup cup) {
         File file = new File("cups.txt");
         File tempFile = new File("cupstemp.txt");
         Scanner scanner = null;
@@ -85,6 +85,7 @@ public class CupRepositoryFileBased implements CupRepository {
         } else {
             System.out.println("not ok");
         }
+        return cupId;
     }
 
 

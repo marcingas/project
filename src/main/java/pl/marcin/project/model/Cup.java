@@ -6,7 +6,8 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 
-
+@Setter
+@Getter
 public class Cup {
     private int id;
     private String color;
@@ -18,23 +19,6 @@ public class Cup {
         this.color = color;
         this.shape = shape;
         this.price = price;
-    }
-
-
-    public int getId() {
-        return id;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public String getShape() {
-        return shape;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
     }
 
     @Override

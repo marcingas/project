@@ -1,6 +1,5 @@
 package pl.marcin.project.repository;
 
-import pl.marcin.project.model.Cup;
 import pl.marcin.project.model.Customer;
 import pl.marcin.project.model.Purchase;
 
@@ -16,14 +15,16 @@ public class CustomerRepositoryListBased implements CustomerRepository {
     }
 
     @Override
-    public void updateCustomer(int customerId, Customer customer) {
-        for (Customer searchedCustomer : customers) {
+    public int updateCustomer(int customerId, Customer customer) {
+        for (var searchedCustomer : customers) {
             if (searchedCustomer.getId() == customerId) {
-                customers.add(searchedCustomer);
-            } else {
-                throw new RuntimeException("There is no Customer with id " + customerId);
+                searchedCustomer.setName(customer.getName());
+                searchedCustomer.setSurname(customer.getSurname());
+                searchedCustomer.setAddress(customer.getAddress());
+                return customerId;
             }
         }
+        throw new RuntimeException("There is no Customer with id " + customerId);
     }
 
     @Override

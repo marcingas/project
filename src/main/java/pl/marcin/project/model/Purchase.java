@@ -1,8 +1,14 @@
 package pl.marcin.project.model;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.util.List;
 
+@Getter
+@Setter
 public class Purchase {
 
     private Customer customer;

@@ -1,6 +1,5 @@
 package pl.marcin.project.repository;
 
-import pl.marcin.project.model.Cup;
 import pl.marcin.project.model.Customer;
 import pl.marcin.project.model.Purchase;
 
@@ -16,14 +15,16 @@ public class CustomerRepositoryListBased implements CustomerRepository {
     }
 
     @Override
-    public void updateCustomer(int customerId, Customer customer) {
-        for (Customer searchedCust : customers) {
-            if (searchedCust.getId() == customerId) {
-                customers.add(searchedCust);
-            } else {
-                throw new RuntimeException("There is no Customer with id " + customerId);
+    public int updateCustomer(int customerId, Customer customer) {
+        for (var searchedCustomer : customers) {
+            if (searchedCustomer.getId() == customerId) {
+                searchedCustomer.setName(customer.getName());
+                searchedCustomer.setSurname(customer.getSurname());
+                searchedCustomer.setAddress(customer.getAddress());
+                return customerId;
             }
         }
+        throw new RuntimeException("There is no Customer with id " + customerId);
     }
 
     @Override
@@ -42,17 +43,15 @@ public class CustomerRepositoryListBased implements CustomerRepository {
         for (Customer searchedCustomer : customers) {
             if (searchedCustomer.getId() == customerId) {
                 return searchedCustomer;
-            } else {
-                throw new RuntimeException("There is no such cup");
             }
         }
-        return null;
+        throw new RuntimeException("There is no such customer");
     }
 
     @Override
-    public void updatePurchaseHistory(Purchase purchase,Customer customer) {
-        for(Customer c : customers){
-            if(c.getId()== customer.getId()){
+    public void updatePurchaseHistory(Purchase purchase, Customer customer) {
+        for (Customer c : customers) {
+            if (c.getId() == customer.getId()) {
                 c.updatePurchaseHistory(purchase);
             }
         }

@@ -1,11 +1,13 @@
 package pl.marcin.project.service;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.repository.CupRepository;
 import pl.marcin.project.repository.CupRepositoryFileBased;
 
 import java.util.List;
 
+@Slf4j
 public class CupService {
     private CupRepository cupRepository;
     private CupRepositoryFileBased cupRepositoryFileBased;
@@ -16,23 +18,28 @@ public class CupService {
         this.cupRepository = cupRepository;
     }
 
-    public String addCup(Cup cup) {
+    public int addCup(Cup cup) {
         cupRepository.saveCup(cup);
-        return "Cup " + cup.getId() + " saved";
+        log.info("Cup " + cup.getId() + " saved");
+        return cup.getId();
     }
-    public String addCupToFile(Cup cup){
+
+    public int addCupToFile(Cup cup) {
         cupRepositoryFileBased.saveCup(cup);
-        return "Cup added to file";
+        log.info("Cup " + cup.getId() + " saved");
+        return cup.getId();
     }
 
-    public String updateCup(int cupId, Cup cup) {
+    public int updateCup(int cupId, Cup cup) {
         cupRepository.updateCup(cupId, cup);
-        return "Cup with id " + cupId + " updated";
+        log.info("Cup with id " + cupId + " updated");
+        return cup.getId();
     }
 
-    public String sellCup(Cup cup) {
-        cupRepository.deleteCup(cup);
-        return "Cup with id " + cup + " deleted";
+    public int deleteCup(int cupId) {
+        cupRepository.deleteCup(cupId);
+        log.info("Cup with id " + cupId + " deleted");
+        return -1;
     }
 
     public List<Cup> showAllCups() {

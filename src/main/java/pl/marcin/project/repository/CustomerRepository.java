@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface CustomerRepository {
     void saveCustomer(Customer customer);
-    void updateCustomer(int customerId, Customer customer);
+
+    int updateCustomer(int customerId, Customer customer);
+
     void deleteCustomer(int cupId);
     List<Customer> getAllCustomers();
     Customer findCustomer(int id);

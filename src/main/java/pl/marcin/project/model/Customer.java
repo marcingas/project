@@ -1,6 +1,10 @@
 package pl.marcin.project.model;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import pl.marcin.project.repository.PurchaseRepositoryListBased;
 import pl.marcin.project.service.PurchaseService;
 
@@ -8,15 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
+@Builder
+@AllArgsConstructor
+@Setter
+@Getter
 public class Customer {
 
     private int id;
-
     private String name;
-
     private String surname;
-
     private String address;
     private List<Purchase> purchaseHistory;
 
@@ -30,26 +34,6 @@ public class Customer {
         this.purchaseHistory= new ArrayList<>();
     }
 
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public List<Purchase> getPurchaseHistory() {
-        return purchaseHistory;
-    }
     public void updatePurchaseHistory(Purchase purchase){
         purchaseHistory.add(purchase);
     }

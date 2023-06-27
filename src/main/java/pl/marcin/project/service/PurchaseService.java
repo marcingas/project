@@ -1,10 +1,12 @@
 package pl.marcin.project.service;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.marcin.project.model.Purchase;
 import pl.marcin.project.repository.PurchaseRepository;
 
 import java.util.List;
 
+@Slf4j
 public class PurchaseService {
     private PurchaseRepository purchaseRepository;
 
@@ -12,9 +14,10 @@ public class PurchaseService {
         this.purchaseRepository = purchaseRepository;
     }
 
-    public String savePurchase(Purchase purchase) {
+    public int savePurchase(Purchase purchase) {
         purchaseRepository.savePurchase(purchase);
-        return "Customer " + purchase.getCustomer().getName() + "'s purchase saved";
+        log.info("Purchase with cost:" + purchase.getPurchaseCost() + " saved");
+        return 1;
     }
 
     public List<Purchase> purchaseHistoryByCustomerId(int id) {

@@ -14,19 +14,21 @@ public class CupRepositoryListBased implements CupRepository {
     }
 
     @Override
-    public void updateCup(int cupId, Cup cup) {
-        for (Cup element : cups) {
-            if (element.getId() == cupId) {
-                cups.add(cup);
-            } else {
-                throw new RuntimeException("There is no cup with id: " + cupId);
+    public int updateCup(int cupId, Cup cup) {
+        for (Cup searchedCup : cups) {
+            if (searchedCup.getId() == cupId) {
+                searchedCup.setColor(cup.getColor());
+                searchedCup.setShape(cup.getShape());
+                searchedCup.setPrice(cup.getPrice());
+                return cupId;
             }
         }
+        throw new RuntimeException("There is no cup with id: " + cupId);
     }
 
     @Override
-    public void deleteCup(Cup cup) {
-        cups.removeIf(s -> s.equals(cup));
+    public void deleteCup(int cupId) {
+        cups.removeIf(s -> s.equals(cupId));
     }
 
     @Override

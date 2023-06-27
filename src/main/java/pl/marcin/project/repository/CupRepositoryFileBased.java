@@ -89,7 +89,7 @@ public class CupRepositoryFileBased implements CupRepository {
 
 
     @Override
-    public void deleteCup(Cup cup) {
+    public void deleteCup(int cupId) {
         File tempFile = new File("cupstemp1.txt");
         Scanner scanner = null;
         try {
@@ -103,7 +103,7 @@ public class CupRepositoryFileBased implements CupRepository {
                 double price = Double.parseDouble(cupData[3]);
 
                 FileWriter fileWriter = new FileWriter(tempFile, true);
-                if (id != cup.getId()) {
+                if (id != cupId) {
                     fileWriter.write(id + "," + color + "," + shape + "," +
                             price + "\n");
                 }

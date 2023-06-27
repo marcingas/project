@@ -17,9 +17,9 @@ public class CustomerRepositoryListBased implements CustomerRepository {
 
     @Override
     public void updateCustomer(int customerId, Customer customer) {
-        for (Customer searchedCust : customers) {
-            if (searchedCust.getId() == customerId) {
-                customers.add(searchedCust);
+        for (Customer searchedCustomer : customers) {
+            if (searchedCustomer.getId() == customerId) {
+                customers.add(searchedCustomer);
             } else {
                 throw new RuntimeException("There is no Customer with id " + customerId);
             }

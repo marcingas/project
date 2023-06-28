@@ -7,5 +7,7 @@ import java.util.List;
 public interface PurchaseRepository {
     void savePurchase(Purchase purchase);
     List<Purchase>findPurchaseByCustomerId(int id);
-    List<Purchase>findAllPurchases();
+    List<Purchase> findAllPurchases();
+
+    Purchase findPurchase(int id);
 }

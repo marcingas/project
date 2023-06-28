@@ -1,5 +1,6 @@
 package pl.marcin.project.repository;
 
+import pl.marcin.project.model.Customer;
 import pl.marcin.project.model.Purchase;
 
 import java.util.ArrayList;
@@ -27,5 +28,15 @@ public class PurchaseRepositoryListBased implements PurchaseRepository {
     @Override
     public List<Purchase> findAllPurchases() {
         return purchases;
+    }
+
+    @Override
+    public Purchase findPurchase(int id) {
+        for (Purchase searchedPurchase : purchases) {
+            if (searchedPurchase.getId() == id) {
+                return searchedPurchase;
+            }
+        }
+        throw new RuntimeException("There is no such Purchase");
     }
 }

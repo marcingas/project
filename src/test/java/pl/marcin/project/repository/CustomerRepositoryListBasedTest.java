@@ -95,7 +95,7 @@ class CustomerRepositoryListBasedTest {
         //when
         boolean ifDeleted = customerRepository.deleteCustomer(1);
         //then
-        Assertions.assertEquals(true, ifDeleted);
+        Assertions.assertTrue(ifDeleted);
     }
 
     @Test
@@ -107,7 +107,7 @@ class CustomerRepositoryListBasedTest {
         //when
         boolean ifDeleted = customerRepository.deleteCustomer(2);
         //then
-        Assertions.assertEquals(false, ifDeleted);
+        Assertions.assertFalse(ifDeleted);
     }
 
     @Test

@@ -15,112 +15,113 @@ import static org.junit.jupiter.api.Assertions.*;
 class PurchaseRepositoryListBasedTest {
     PurchaseRepository purchaseRepository = new PurchaseRepositoryListBased();
 
-//    @Test
-//    public void shouldReturnCupById() {
-//        //given
-//        int id = 1;
-//        Cup expectedCup = Cup.builder().id(id).build();
-//        cupRepository.saveCup(expectedCup);
-//
-//        //when
-//        Cup cup = cupRepository.findCup(id);
-//
-//        //then
-//        Assertions.assertEquals(id, cup.getId());
-//    }
+    @Test
+    public void shouldReturnPurchaseById() {
+        //given
+        int id = 1;
+        Purchase expectedPurchase = Purchase.builder().id(id).build();
+        purchaseRepository.savePurchase(expectedPurchase);
 
-//    @Test
-//    public void shouldReturnCupWithId2() {
-//        //given
-//        int id = 1;
-//        int id2 = 2;
-//        Cup expectedCup1 = Cup.builder().id(id).build();
-//        Cup expectedCup2 = Cup.builder().id(id2).build();
-//        cupRepository.saveCup(expectedCup1);
-//        cupRepository.saveCup(expectedCup2);
-//
-//        //when
-//        Cup cup = cupRepository.findCup(id2);
-//
-//        //then
-//        Assertions.assertEquals(id2, cup.getId());
-//    }
+        //when
+        Purchase purchase = purchaseRepository.findPurchase(id);
 
-//    @Test
-//    public void shouldThrowExceptionIfNotFindCupById() {
-//        //given
-//        int id = 1;
-//        int id2 = 2;
-//        //when:
-//        Cup cup2 = Cup.builder().id(id2).build();
-//        cupRepository.saveCup(cup2);
-//
-//        //then:
-//        assertThrows(RuntimeException.class, () -> {
-//            cupRepository.findCup(id);
-//        });
-//    }
+        //then
+        Assertions.assertEquals(id, purchase.getId());
+    }
 
-//    @Test
-//    public void shouldThrowExceptionMessageNoSuchCupById() {
-//        //given
-//        int id = 1;
-//        int id2 = 2;
-//        Cup expectedCup2 = Cup.builder().id(id2).build();
-//        cupRepository.saveCup(expectedCup2);
-//        //when
-//        Throwable exception = assertThrows(RuntimeException.class, () -> {
-//            cupRepository.findCup(id);
-//        });
-//
-//        //then
-//        Assertions.assertEquals("There is no cup with this id", exception.getMessage());
-//    }
+    @Test
+    public void shouldReturnPurchaseWithId2() {
+        //given
+        int id = 1;
+        int id2 = 2;
+        Purchase expectedPurchase1 = Purchase.builder().id(id).build();
+        Purchase expectedPurchase2 = Purchase.builder().id(id2).build();
+        purchaseRepository.savePurchase(expectedPurchase1);
+        purchaseRepository.savePurchase(expectedPurchase2);
 
-//    @Test
-//    void shouldEqualFindPurchaseWhenSavePurchase() {
-//        int customerId = 1;
-//        int purchaseId = 1;
-//        Customer customer = Customer.builder().id(customerId).build();
-//        Purchase purchase = Purchase.builder()
-//                .id(purchaseId)
-//                .customer(customer)
-//                .purchaseCost(BigDecimal.valueOf(12.34))
-//                .build();
-//        //when
-//        purchaseRepository.savePurchase(purchase);
-//
-//        //then
-//        Assertions.assertEquals(purchase,purchaseRepository.findPurchase(purchaseId));
-//    }
+        //when
+        Purchase purchase = purchaseRepository.findPurchase(2);
 
-//    @Test
-//    void shouldEqualExpectedlistWhenFindPurchaseByCustomerId() {
-//        //given
-//        int id = 1;
-//        int id2 = 2;
-//        Customer customer = Customer.builder().id(id).build();
-//        Customer customer2 = Customer.builder().id(id2).build();
-//        Purchase purchase = Purchase.builder()
-//                .customer(customer)
-//                .purchaseCost(BigDecimal.valueOf(12.34))
-//                .build();
-//        Purchase purchase2 = Purchase.builder()
-//                .customer(customer2)
-//                .purchaseCost(BigDecimal.valueOf(12.31))
-//                .build();
-//        purchaseRepository.savePurchase(purchase);
-//        purchaseRepository.savePurchase(purchase2);
-//
-//        List<Purchase>expectedPurchaseList = new ArrayList<>();
-//        expectedPurchaseList.add(purchase);
-//
-//        //when
-//        List<Purchase>purchaseList = purchaseRepository.findPurchaseByCustomerId(id);
-//
-//        //then
-//        Assertions.assertEquals(expectedPurchaseList,purchaseList );
-//    }
+        //then
+        Assertions.assertEquals(id2, purchase.getId());
+    }
+
+    @Test
+    public void shouldThrowExceptionIfNotFindPurchaseById() {
+        //given
+        int id = 1;
+        int id2 = 2;
+        //when:
+        Purchase expectedPurchase1 = Purchase.builder().id(id).build();
+        purchaseRepository.savePurchase(expectedPurchase1);
+
+        //then:
+        assertThrows(RuntimeException.class, () -> {
+            purchaseRepository.findPurchase(id2);
+        });
+    }
+
+    @Test
+    public void shouldThrowExceptionMessageNoSuchPurchaseById() {
+        //given
+        int id = 1;
+        int id2 = 2;
+        //when:
+        Purchase expectedPurchase1 = Purchase.builder().id(id).build();
+        purchaseRepository.savePurchase(expectedPurchase1);
+        //when
+        Throwable exception = assertThrows(RuntimeException.class, () -> {
+            purchaseRepository.findPurchase(id2);
+        });
+
+        //then
+        Assertions.assertEquals("There is no such Purchase", exception.getMessage());
+    }
+
+    @Test
+    void shouldEqualFindPurchaseWhenSavePurchase() {
+        int customerId = 1;
+        int purchaseId = 1;
+        Customer customer = Customer.builder().id(customerId).build();
+        Purchase purchase = Purchase.builder()
+                .id(purchaseId)
+                .customer(customer)
+                .purchaseCost(BigDecimal.valueOf(12.34))
+                .build();
+        //when
+        purchaseRepository.savePurchase(purchase);
+
+        //then
+        Assertions.assertEquals(purchase, purchaseRepository.findPurchase(purchaseId));
+    }
+
+    @Test
+    void shouldEqualExpectedlistWhenFindPurchaseByCustomerId() {
+        //given
+        int id = 1;
+        int id2 = 2;
+        Customer customer = Customer.builder().id(id).build();
+        Customer customer2 = Customer.builder().id(id2).build();
+        Purchase purchase = Purchase.builder()
+                .customer(customer)
+                .purchaseCost(BigDecimal.valueOf(12.34))
+                .build();
+        Purchase purchase2 = Purchase.builder()
+                .customer(customer2)
+                .purchaseCost(BigDecimal.valueOf(12.31))
+                .build();
+        purchaseRepository.savePurchase(purchase);
+        purchaseRepository.savePurchase(purchase2);
+
+        List<Purchase> expectedPurchaseList = new ArrayList<>();
+        expectedPurchaseList.add(purchase);
+
+        //when
+        List<Purchase> purchaseList = purchaseRepository.findPurchaseByCustomerId(id);
+
+        //then
+        Assertions.assertEquals(expectedPurchaseList, purchaseList);
+    }
 
     @Test
     void shouldEqualListOfAllPurchasesIfFindAllPurchases() {

@@ -24,7 +24,7 @@ CREATE TABLE customer (
 );
 -- customer foreign keys
 
---ALTER TABLE customer ADD CONSTRAINT FOREIGN KEY (address_id)REFERENCES address(address_id);
+ALTER TABLE customer ADD CONSTRAINT FOREIGN KEY (address_id)REFERENCES address(address_id);
 
 CREATE TABLE purchase (
 	purchase_id int NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE purchase (
 );
 -- purchase foreign keys
 
---ALTER TABLE purchase ADD CONSTRAINT FOREIGN KEY (customer_id) REFERENCES customer(customer_id);
+ALTER TABLE purchase ADD CONSTRAINT FOREIGN KEY (customer_id) REFERENCES customer(customer_id);
 
 CREATE TABLE purchase_cups (
 	purchase_id int NOT NULL,
@@ -44,5 +44,5 @@ CREATE TABLE purchase_cups (
 
 -- purchase_cups foreign keys
 
---ALTER TABLE purchase_cups ADD CONSTRAINT FOREIGN KEY (cup_id) REFERENCES cup(cup_id);
---ALTER TABLE purchase_cups ADD CONSTRAINT FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id);
+ALTER TABLE purchase_cups ADD CONSTRAINT FOREIGN KEY (cup_id) REFERENCES cup(cup_id);
+ALTER TABLE purchase_cups ADD CONSTRAINT FOREIGN KEY (purchase_id) REFERENCES purchase(purchase_id);

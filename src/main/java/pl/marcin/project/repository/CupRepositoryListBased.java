@@ -16,15 +16,19 @@ public class CupRepositoryListBased implements CupRepository {
 
     @Override
     public int updateCup(int cupId, Cup cup) {
-        for (var searchedCup : cups) {
-            if (searchedCup.getId() == cupId) {
-                searchedCup.setColor(cup.getColor());
-                searchedCup.setShape(cup.getShape());
-                searchedCup.setPrice(cup.getPrice());
-                return cupId;
-            }
+        Cup foundCup = cups.stream()
+                .filter(searchedCup -> searchedCup.getId() == cupId)
+                .findFirst()
+                .orElse(null);
+
+        if (foundCup != null) {
+            foundCup.setColor(cup.getColor());
+            foundCup.setShape(cup.getShape());
+            foundCup.setPrice(cup.getPrice());
+        } else {
+            throw new RuntimeException("Cup not found");
         }
-        throw new RuntimeException("There is no cup with id: " + cupId);
+        return cupId;
     }
 
     @Override

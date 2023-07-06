@@ -1,10 +1,19 @@
 package pl.marcin.project.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.util.List;
 
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
 public class Purchase {
-
+    private int id;
     private Customer customer;
     private List<Cup> cups;
     private BigDecimal purchaseCost;

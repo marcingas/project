@@ -19,7 +19,7 @@ public class CupRepositoryFileBased implements CupRepository {
 //    private static final File FILE = new File("cups.txt");
 
     @Override
-    public void saveCup(Cup cup) {
+    public int saveCup(Cup cup) {
         try {
             File file = new File("cups.txt");
             if (!file.exists()) {
@@ -41,6 +41,7 @@ public class CupRepositoryFileBased implements CupRepository {
         } catch (IOException e) {
             log.warn("cannot save cup with id {} because of: {}", cup.getId(), e.getMessage());
         }
+        return cup.getId();
     }
 
     @Override
@@ -90,7 +91,7 @@ public class CupRepositoryFileBased implements CupRepository {
 
 
     @Override
-    public void deleteCup(int cupId) {
+    public boolean deleteCup(int cupId) {
         File tempFile = new File("cupstemp1.txt");
         Scanner scanner = null;
         try {
@@ -112,9 +113,11 @@ public class CupRepositoryFileBased implements CupRepository {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         } finally {
             scanner.close();
         }
+        return true;
     }
 
     @Override

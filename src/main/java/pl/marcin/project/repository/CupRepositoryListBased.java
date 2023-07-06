@@ -9,13 +9,14 @@ public class CupRepositoryListBased implements CupRepository {
     private List<Cup> cups = new ArrayList<>();
 
     @Override
-    public void saveCup(Cup cup) {
+    public int saveCup(Cup cup) {
         cups.add(cup);
+        return cup.getId();
     }
 
     @Override
     public int updateCup(int cupId, Cup cup) {
-        for (Cup searchedCup : cups) {
+        for (var searchedCup : cups) {
             if (searchedCup.getId() == cupId) {
                 searchedCup.setColor(cup.getColor());
                 searchedCup.setShape(cup.getShape());
@@ -27,8 +28,9 @@ public class CupRepositoryListBased implements CupRepository {
     }
 
     @Override
-    public void deleteCup(int cupId) {
-        cups.removeIf(s -> s.equals(cupId));
+    public boolean deleteCup(int cupId) {
+        return cups.removeIf(s -> s.getId() == cupId);
+
     }
 
     @Override
@@ -44,10 +46,10 @@ public class CupRepositoryListBased implements CupRepository {
                 cup = searchedCup;
             }
         }
-        if(cup == null){
+        if (cup == null) {
             throw new RuntimeException("There is no cup with this id");
-        }else{
-        return cup;
+        } else {
+            return cup;
         }
     }
 }

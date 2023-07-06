@@ -99,7 +99,7 @@ class CustomerRepositoryListBasedTest {
 
         //then
 
-        Assertions.assertFalse(ifDeleted);
+        Assertions.assertTrue(ifDeleted);
         Assertions.assertFalse(ifNotDeleted);
     }
 

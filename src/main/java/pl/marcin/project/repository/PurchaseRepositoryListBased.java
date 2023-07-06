@@ -21,6 +21,7 @@ public class PurchaseRepositoryListBased implements PurchaseRepository {
         purchaseHistory = purchases.stream()
                 .filter(purchase -> purchase.getCustomer().getId() == id)
                 .collect(Collectors.toList());
+        if (purchaseHistory.isEmpty()) throw new RuntimeException("There is no such Purchase");
 
         return purchaseHistory;
     }
@@ -35,6 +36,6 @@ public class PurchaseRepositoryListBased implements PurchaseRepository {
         return purchases.stream()
                 .filter(purchase -> purchase.getId() == id)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException("There is no such Purchase"));
     }
 }

@@ -10,117 +10,82 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PurchaseRepositoryListBasedTest {
-    PurchaseRepository purchaseRepository = new PurchaseRepositoryListBased();
+    private int notExistingPurchaseId = 1;
+    private int expPurchaseId = 2;
+    private int expPurchaseId2 = 3;
+    private Purchase expPurchase = Purchase.builder().id(expPurchaseId).purchaseCost(BigDecimal.valueOf(12.34)).build();
+    private Purchase expPurchase2 = Purchase.builder().id(expPurchaseId2).purchaseCost(BigDecimal.valueOf(5)).build();
+    private PurchaseRepository purchaseRepository = new PurchaseRepositoryListBased();
 
     @Test
     public void shouldReturnPurchaseById() {
+
         //given
-        int id = 1;
-        Purchase expectedPurchase = Purchase.builder().id(id).build();
-        purchaseRepository.savePurchase(expectedPurchase);
+        purchaseRepository.savePurchase(expPurchase);
 
         //when
-        Purchase purchase = purchaseRepository.findPurchase(id);
+        Purchase purchase = purchaseRepository.findPurchase(expPurchaseId);
 
         //then
-        Assertions.assertEquals(id, purchase.getId());
-    }
-
-    @Test
-    public void shouldReturnPurchaseWithId2() {
-        //given
-        int id = 1;
-        int id2 = 2;
-        Purchase expectedPurchase1 = Purchase.builder().id(id).build();
-        Purchase expectedPurchase2 = Purchase.builder().id(id2).build();
-        purchaseRepository.savePurchase(expectedPurchase1);
-        purchaseRepository.savePurchase(expectedPurchase2);
-
-        //when
-        Purchase purchase = purchaseRepository.findPurchase(2);
-
-        //then
-        Assertions.assertEquals(id2, purchase.getId());
+        Assertions.assertEquals(expPurchaseId, purchase.getId());
     }
 
     @Test
     public void shouldThrowExceptionIfNotFindPurchaseById() {
-        //given
-        int id = 1;
-        int id2 = 2;
-        //when:
-        Purchase expectedPurchase1 = Purchase.builder().id(id).build();
-        purchaseRepository.savePurchase(expectedPurchase1);
 
-        //then:
-        assertThrows(RuntimeException.class, () -> {
-            purchaseRepository.findPurchase(id2);
-        });
-    }
-
-    @Test
-    public void shouldThrowExceptionMessageNoSuchPurchaseById() {
         //given
-        int id = 1;
-        int id2 = 2;
-        //when:
-        Purchase expectedPurchase1 = Purchase.builder().id(id).build();
-        purchaseRepository.savePurchase(expectedPurchase1);
-        //when
-        Throwable exception = assertThrows(RuntimeException.class, () -> {
-            purchaseRepository.findPurchase(id2);
-        });
+        purchaseRepository.savePurchase(expPurchase);
 
         //then
+        var exception = assertThrows(RuntimeException.class, () -> {
+            purchaseRepository.findPurchase(notExistingPurchaseId);
+        });
         Assertions.assertEquals("There is no such Purchase", exception.getMessage());
     }
 
     @Test
     void shouldEqualFindPurchaseWhenSavePurchase() {
-        int customerId = 1;
-        int purchaseId = 1;
-        Customer customer = Customer.builder().id(customerId).build();
-        Purchase purchase = Purchase.builder()
-                .id(purchaseId)
-                .customer(customer)
-                .purchaseCost(BigDecimal.valueOf(12.34))
-                .build();
+
         //when
-        purchaseRepository.savePurchase(purchase);
+        purchaseRepository.savePurchase(expPurchase);
 
         //then
-        Assertions.assertEquals(purchase, purchaseRepository.findPurchase(purchaseId));
+        Assertions.assertEquals(expPurchase, purchaseRepository.findPurchase(expPurchaseId));
     }
 
     @Test
     void shouldEqualExpectedlistWhenFindPurchaseByCustomerId() {
+
         //given
-        int id = 1;
-        int id2 = 2;
-        Customer customer = Customer.builder().id(id).build();
-        Customer customer2 = Customer.builder().id(id2).build();
-        Purchase purchase = Purchase.builder()
-                .customer(customer)
+        int customerId = 1;
+        int customerId2 = 2;
+        Customer expectedCustomer = Customer.builder().id(customerId).build();
+        Customer customer2 = Customer.builder().id(customerId2).build();
+
+        Purchase expectedCustomersPurchase = Purchase.builder()
+                .customer(expectedCustomer)
                 .purchaseCost(BigDecimal.valueOf(12.34))
                 .build();
-        Purchase purchase2 = Purchase.builder()
+
+        Purchase Customers2Purchase = Purchase.builder()
                 .customer(customer2)
                 .purchaseCost(BigDecimal.valueOf(12.31))
                 .build();
-        purchaseRepository.savePurchase(purchase);
-        purchaseRepository.savePurchase(purchase2);
+
+        purchaseRepository.savePurchase(expectedCustomersPurchase);
+        purchaseRepository.savePurchase(Customers2Purchase);
 
         List<Purchase> expectedPurchaseList = new ArrayList<>();
-        expectedPurchaseList.add(purchase);
+        expectedPurchaseList.add(expectedCustomersPurchase);
 
         //when
-        List<Purchase> purchaseList = purchaseRepository.findPurchaseByCustomerId(id);
+        List<Purchase> searchedPurchaseList = purchaseRepository.findPurchaseByCustomerId(customerId);
 
         //then
-        Assertions.assertEquals(expectedPurchaseList, purchaseList);
+        Assertions.assertEquals(expectedPurchaseList, searchedPurchaseList);
     }
 
     @Test

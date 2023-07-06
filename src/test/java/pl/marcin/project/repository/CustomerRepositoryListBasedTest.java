@@ -9,197 +9,155 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerRepositoryListBasedTest {
+    private int expectedCustomerId = 1;
+    private int expectedCustomerId2 = 2;
+    private int notExistingCustomerId = 3;
+    private Customer expectedCustomer = Customer.builder().id(expectedCustomerId)
+            .name("John").surname("Kowalski").address("Kraków, ul Krakowska 1").build();
+    private Customer expectedCustomer2 = Customer.builder().id(expectedCustomerId2)
+            .name("Poul").surname("Krakowski").address("Kowalowo, ul Kowalowska 1").build();
     private CustomerRepository customerRepository = new CustomerRepositoryListBased();
 
     @Test
     public void shouldReturnCustomerById() {
         //given
-        int id = 1;
-        Customer expectedCustomer = Customer.builder().id(id).build();
+
         customerRepository.saveCustomer(expectedCustomer);
 
         //when
-        Customer customer = customerRepository.findCustomer(id);
+
+        Customer customer = customerRepository.findCustomer(expectedCustomerId);
 
         //then
-        Assertions.assertEquals(id, customer.getId());
+
+        Assertions.assertEquals(expectedCustomerId, customer.getId());
     }
 
     @Test
     public void shouldReturnCustomerWithId2() {
+
         //given
-        int id = 1;
-        int id2 = 2;
-        Customer expectedCustomer1 = Customer.builder().id(id).build();
-        Customer expectedCustomer2 = Customer.builder().id(id2).build();
-        customerRepository.saveCustomer(expectedCustomer1);
+
+        customerRepository.saveCustomer(expectedCustomer);
         customerRepository.saveCustomer(expectedCustomer2);
 
         //when
-        Customer customer = customerRepository.findCustomer(id2);
+
+        Customer customer = customerRepository.findCustomer(expectedCustomerId2);
 
         //then
-        Assertions.assertEquals(id2, customer.getId());
+
+        Assertions.assertEquals(expectedCustomerId2, customer.getId());
     }
 
     @Test
     public void shouldThrowExceptionIfNotFindCustomerById() {
-        //given
-        int id = 1;
-        int id2 = 2;
-        //when:
-        Customer customer2 = Customer.builder().id(id2).build();
-        customerRepository.saveCustomer(customer2);
 
-        //then:
-        assertThrows(RuntimeException.class, () -> {
-            customerRepository.findCustomer(id);
-        });
-    }
-
-    @Test
-    public void shouldThrowExceptionMessageNoSuchCustomerById() {
         //given
-        int id = 1;
+
+        customerRepository.saveCustomer(expectedCustomer);
 
         //when
-        Throwable exception = assertThrows(RuntimeException.class, () -> {
-            customerRepository.findCustomer(id);
-        });
 
+        var exception = assertThrows(RuntimeException.class, () -> {
+            customerRepository.findCustomer(notExistingCustomerId);
+        });
         //then
+
         Assertions.assertEquals("There is no such customer", exception.getMessage());
     }
+
 
     @Test
     public void shouldReturnListOfAllCustomers() {
         //given
-        int id = 1;
-        int id2 = 2;
-        Customer customer1 = Customer.builder().id(id).build();
-        Customer customer2 = Customer.builder().id(id2).build();
-        customerRepository.saveCustomer(customer1);
-        customerRepository.saveCustomer(customer2);
+
+        customerRepository.saveCustomer(expectedCustomer);
+        customerRepository.saveCustomer(expectedCustomer2);
+
         //when
+
         List<Customer> list = customerRepository.getAllCustomers();
+
         //then
-        Assertions.assertEquals(List.of(customer1, customer2), list);
+
+        Assertions.assertEquals(List.of(expectedCustomer, expectedCustomer2), list);
     }
 
     @Test
-    public void shouldReturnTrueIfDeleted() {
-        //given
-        int id = 1;
-        Customer customer1 = Customer.builder().id(id).build();
-        customerRepository.saveCustomer(customer1);
-        //when
-        boolean ifDeleted = customerRepository.deleteCustomer(1);
-        //then
-        Assertions.assertTrue(ifDeleted);
-    }
+    public void shouldReturnTrueIfDeletedFalseIfNot() {
 
-    @Test
-    public void shouldReturnFalseIfNotDeleted() {
         //given
-        int id = 1;
-        Customer customer1 = Customer.builder().id(id).build();
-        customerRepository.saveCustomer(customer1);
+
+        customerRepository.saveCustomer(expectedCustomer);
+
         //when
-        boolean ifDeleted = customerRepository.deleteCustomer(2);
+
+        boolean ifDeleted = customerRepository.deleteCustomer(expectedCustomerId);
+
+        boolean ifNotDeleted = customerRepository.deleteCustomer(notExistingCustomerId);
+
         //then
+
         Assertions.assertFalse(ifDeleted);
+        Assertions.assertFalse(ifNotDeleted);
     }
 
     @Test
-    public void shouldReturnCustomerId() {
+    public void shouldReturnCustomerIdAndEqualToCustomer() {
+
         //given
-        int id = 1;
-        Customer customer1 = Customer.builder()
-                .id(id)
-                .name("Jan")
-                .surname("Kowalski")
-                .address("Kraków")
-                .build();
-        //when
-        int returnedId = customerRepository.saveCustomer(customer1);
+
+        int returnedId = customerRepository.saveCustomer(expectedCustomer);
+
         //then
-        Assertions.assertEquals(id, returnedId);
+
+        Assertions.assertEquals(expectedCustomerId, returnedId);
+        Assertions.assertEquals(expectedCustomer, customerRepository.findCustomer(1));
     }
 
     @Test
-    public void shouldEqualToSavedCustomer() {
+    public void shouldEqualToUpdatedCustomerAndReturnedId() {
         //given
-        int id = 1;
-        Customer customer1 = Customer.builder()
-                .id(id)
-                .name("Jan")
-                .surname("Kowalski")
-                .address("Kraków")
-                .build();
-        //when
-        customerRepository.saveCustomer(customer1);
-        //then
-        Assertions.assertEquals(customer1, customerRepository.findCustomer(1));
-    }
 
-    @Test
-    public void shouldEqualToUpdatedCustomer() {
-        //given
-        int id = 1;
-        Customer customer1 = Customer.builder().id(id).build();
-        customerRepository.saveCustomer(customer1);
+        customerRepository.saveCustomer(expectedCustomer);
 
         //when
+
         Customer updatedCustomer = Customer.builder()
-                .id(1)
+                .id(expectedCustomerId)
                 .name("Jacek")
                 .surname("Placek")
                 .address("Pułtusk")
                 .build();
-        customerRepository.updateCustomer(id, updatedCustomer);
+
+        int returnedId = customerRepository.updateCustomer(expectedCustomerId, updatedCustomer);
+
         //then
-        Assertions.assertEquals(updatedCustomer, customerRepository.findCustomer(id));
+
+        Assertions.assertEquals(updatedCustomer, customerRepository.findCustomer(expectedCustomerId));
+        Assertions.assertEquals(expectedCustomerId, returnedId);
     }
 
     @Test
     public void shouldThrowException() {
         //given
-        int id = 1;
-        Customer customer1 = Customer.builder().id(id).build();
-        customerRepository.saveCustomer(customer1);
+
+        customerRepository.saveCustomer(expectedCustomer);
 
         //when
+
         Customer updatedCustomer = Customer.builder()
-                .id(2)
+                .id(expectedCustomerId)
                 .name("Jacek")
                 .surname("Placek")
                 .address("Pułtusk")
                 .build();
 
         //then
+
         assertThrows(RuntimeException.class, () -> {
-            customerRepository.updateCustomer(2, updatedCustomer);
+            customerRepository.updateCustomer(notExistingCustomerId, updatedCustomer);
         });
     }
-
-    @Test
-    public void shouldReturnUpdatedCustomerId() {
-        //given
-        int id = 1;
-        Customer customer = Customer.builder().id(id).name("Janko").build();
-        customerRepository.saveCustomer(customer);
-
-        //when
-        Customer updatedCustomer = Customer.builder()
-                .id(id)
-                .name("Jan")
-                .surname("Kowalski")
-                .address("Kraków")
-                .build();
-
-        int returnedId = customerRepository.updateCustomer(id, updatedCustomer);
-        //then
-        Assertions.assertEquals(id, returnedId);
-    }
-
 }

@@ -19,17 +19,13 @@ class CupRepositoryListBasedTest {
 
     @Test
     public void shouldReturnCupById() {
-
         //given
-
         cupRepository.saveCup(expectedCup);
 
         //when
-
         Cup searchedCup = cupRepository.findCup(expectedCupId);
 
         //then
-
         Assertions.assertEquals(expectedCupId, searchedCup.getId());
     }
 
@@ -37,11 +33,9 @@ class CupRepositoryListBasedTest {
     public void shouldThrowExceptionIfNotFindCupById() {
 
         //when:
-
         cupRepository.saveCup(expectedCup);
 
         //then:
-
         assertThrows(RuntimeException.class, () -> {
             cupRepository.findCup(notExistingCupId);
         });
@@ -51,17 +45,14 @@ class CupRepositoryListBasedTest {
     public void shouldThrowExceptionMessageNoSuchCupById() {
 
         //given:
-
         cupRepository.saveCup(expectedCup);
 
         //when:
-
         var exception = assertThrows(RuntimeException.class, () -> {
             cupRepository.findCup(notExistingCupId);
         });
 
         //then:
-
         Assertions.assertEquals("There is no cup with this id", exception.getMessage());
     }
 
@@ -69,116 +60,74 @@ class CupRepositoryListBasedTest {
     public void shouldReturnListOfAllCups() {
 
         //given
-
         cupRepository.saveCup(expectedCup);
         cupRepository.saveCup(expectedCup2);
 
         //when:
-
         List<Cup> list = cupRepository.findCups();
 
         //then:
-
         Assertions.assertEquals(List.of(expectedCup, expectedCup2), list);
     }
 
     @Test
     public void shouldReturnOneElementIfCupDeleted() {
         //given
-
         cupRepository.saveCup(expectedCup);
         cupRepository.saveCup(expectedCup2);
 
         //when
-
-        boolean ifCupDeleted = cupRepository.deleteCup(expectedCupId);
+        cupRepository.deleteCup(expectedCupId);
 
         //then
-
         Assertions.assertEquals(List.of(expectedCup2), cupRepository.findCups());
     }
 
     @Test
-    public void shouldReturnTrueIfCupDeleted() {
+    public void shouldReturnTrueIfCupDeletedOrFalseIfNot() {
 
         //given
-
         cupRepository.saveCup(expectedCup);
 
         //when
-
         boolean ifCupDeleted = cupRepository.deleteCup(expectedCupId);
+        boolean ifCupNotDeleted = cupRepository.deleteCup(notExistingCupId);
 
         //then
-
         Assertions.assertTrue(ifCupDeleted);
-    }
-
-    @Test
-    public void shouldReturnFalseIfCupNotDeleted() {
-
-        //given
-
-        cupRepository.saveCup(expectedCup);
-
-        //when
-
-        boolean ifCupDeleted = cupRepository.deleteCup(notExistingCupId);
-
-        //then
-
-        Assertions.assertFalse(ifCupDeleted);
+        Assertions.assertFalse(ifCupNotDeleted);
     }
 
     @Test
     public void shouldReturnCupIdWhenSaved() {
 
-        //when
-
+        //given,when
         int returnedId = cupRepository.saveCup(expectedCup);
 
         //then
-
         Assertions.assertEquals(expectedCupId, returnedId);
-    }
-
-    @Test
-    public void shouldEqualToSavedCup() {
-
-        //when
-
-        cupRepository.saveCup(expectedCup);
-
-        //then
-
-        Assertions.assertEquals(expectedCup, cupRepository.findCup(expectedCupId));
     }
 
     @Test
     public void shouldEqualToUpdatedCup() {
 
         //given
-
         cupRepository.saveCup(expectedCup);
         Cup updatedCup = Cup.builder().id(expectedCupId).color("Blue").build();
 
         //when
-
         cupRepository.updateCup(expectedCupId, updatedCup);
 
         //then
-
         Assertions.assertEquals(updatedCup, cupRepository.findCup(expectedCupId));
     }
 
     @Test
     public void shouldThrowExceptionNoCup() {
         //given
-
         cupRepository.saveCup(expectedCup);
 
         //when
-
         Cup updatedCup = Cup.builder().id(3).shape("circle").build();
 
         //then
@@ -186,26 +135,4 @@ class CupRepositoryListBasedTest {
             cupRepository.updateCup(3, updatedCup);
         });
     }
-
-    @Test
-    public void shouldReturnUpdatedCupId() {
-
-        //given
-
-        cupRepository.saveCup(expectedCup);
-
-        //when
-
-        Cup updatedCup = Cup.builder()
-                .id(expectedCupId)
-                .shape("square")
-                .color("White")
-                .build();
-
-        int returnedId = cupRepository.updateCup(expectedCupId, updatedCup);
-        //then
-        Assertions.assertEquals(expectedCupId, returnedId);
-    }
-
-
 }

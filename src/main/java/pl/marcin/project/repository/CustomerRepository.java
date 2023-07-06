@@ -8,11 +8,12 @@ import pl.marcin.project.model.Purchase;
 import java.util.List;
 
 public interface CustomerRepository {
-    void saveCustomer(Customer customer);
+    int saveCustomer(Customer customer);
 
     int updateCustomer(int customerId, Customer customer);
 
-    void deleteCustomer(int cupId);
+    boolean deleteCustomer(int cupId);
+
     List<Customer> getAllCustomers();
     Customer findCustomer(int id);
     void updatePurchaseHistory(Purchase purchase,Customer customer);

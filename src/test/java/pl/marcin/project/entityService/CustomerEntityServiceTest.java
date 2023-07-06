@@ -90,11 +90,11 @@ class CustomerEntityServiceTest {
 
         //given
 
-        CustomerEntity customer = new CustomerEntity("Janko", "Muzykant");
-        customerEntityService.addCustomer(customer);
+        CustomerEntity onlyCustomer = new CustomerEntity("Janko", "Muzykant");
+        customerEntityService.addCustomer(onlyCustomer);
 
         //when
-        customerEntityService.deleteCustomer(customer.getCustomer_id());
+        customerEntityService.deleteCustomer(onlyCustomer.getCustomer_id());
 
 
         //then

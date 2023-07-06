@@ -5,6 +5,7 @@ import pl.marcin.project.model.Purchase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PurchaseRepositoryListBased implements PurchaseRepository {
     private List<Purchase> purchases = new ArrayList<>();
@@ -17,11 +18,10 @@ public class PurchaseRepositoryListBased implements PurchaseRepository {
     @Override
     public List<Purchase> findPurchaseByCustomerId(int id) {
         List<Purchase> purchaseHistory = new ArrayList<>();
-        for (Purchase purchase : purchases) {
-            if (purchase.getCustomer().getId() == id) {
-                purchaseHistory.add(purchase);
-            }
-        }
+        purchaseHistory = purchases.stream()
+                .filter(purchase -> purchase.getCustomer().getId() == id)
+                .collect(Collectors.toList());
+
         return purchaseHistory;
     }
 
@@ -32,11 +32,9 @@ public class PurchaseRepositoryListBased implements PurchaseRepository {
 
     @Override
     public Purchase findPurchase(int id) {
-        for (Purchase searchedPurchase : purchases) {
-            if (searchedPurchase.getId() == id) {
-                return searchedPurchase;
-            }
-        }
-        throw new RuntimeException("There is no such Purchase");
+        return purchases.stream()
+                .filter(purchase -> purchase.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 }

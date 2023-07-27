@@ -21,9 +21,9 @@ public class WebAppRunner implements AppRunner {
         ConfigurableApplicationContext context = SpringApplication.run(ProjectApplication.class);
         var customerService = context.getBean(CustomerEntityService.class);
         createCustomer(customerService);
-        updateCustomer(customerService, 5L);
+//        updateCustomer(customerService, 5L);
         getAllCustomers(customerService);
-        getCustomerById(customerService, 5L);
+//        getCustomerById(customerService, 5L);
         deleteCustomerWithId(customerService, 6L);
 
         var cupService = context.getBean(CupEntityService.class);

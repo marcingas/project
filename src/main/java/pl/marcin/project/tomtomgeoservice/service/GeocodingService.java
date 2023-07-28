@@ -11,10 +11,10 @@ import static pl.marcin.project.tomtomgeoservice.constants.RouteSearchConstants.
 
 
 @Slf4j
-public class geocodingService {
+public class GeocodingService {
     private final WebClient webClient;
 
-    public geocodingService(WebClient webClient) {
+    public GeocodingService(WebClient webClient) {
         this.webClient = webClient;
     }
 

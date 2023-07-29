@@ -1,6 +1,9 @@
 package pl.marcin.project.tomtomgeoservice.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.AddressData;
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.GeocodingAnswer;
@@ -11,23 +14,28 @@ import pl.marcin.project.tomtomgeoservice.routingmodel.RouteData;
 import pl.marcin.project.tomtomgeoservice.routingmodel.RouteType;
 import pl.marcin.project.tomtomgeoservice.routingmodel.TravelMode;
 
-
+@Service
 public class GeoSerwis {
-    private final String baseUrl = "https://api.tomtom.com";
-    private WebClient webClient = WebClient.create(baseUrl);
-    GeocodingService geocodingService = new GeocodingService(webClient);
-    RouteService routeService = new RouteService(webClient);
-    ObjectMapperConverter objectMapperConverter = new ObjectMapperConverter();
 
-    public GeocodingAnswer getLocationFromAddress(AddressData addressData) throws Exception {
-        String coordinates = geocodingService.getCoordinates(addressData).block();
+    private final MapServiceFacade mapServiceFacade;
+    private final ObjectMapperConverter objectMapperConverter;
+
+    @Autowired
+    public GeoSerwis(MapServiceFacade mapServiceFacade, ObjectMapperConverter objectMapperConverter) {
+        this.mapServiceFacade = mapServiceFacade;
+        this.objectMapperConverter = objectMapperConverter;
+    }
+
+
+    private GeocodingAnswer getLocationFromAddress(AddressData addressData) throws Exception {
+        String coordinates = mapServiceFacade.getLocationsCoordinates(addressData).block();
         JsonNode node = objectMapperConverter.parser(coordinates);
         return objectMapperConverter.convertFromJsonToObject(node, GeocodingAnswer.class);
 
     }
 
-    public RouteAnswer findRoute(RouteData routeData) throws Exception {
-        String jSonString = routeService.getRoute(routeData).block();
+    private RouteAnswer findRoute(RouteData routeData) throws Exception {
+        String jSonString = mapServiceFacade.getRoute(routeData).block();
         JsonNode node = objectMapperConverter.parser(jSonString);
         return objectMapperConverter.convertFromJsonToObject(node, RouteAnswer.class);
     }

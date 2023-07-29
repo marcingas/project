@@ -1,6 +1,7 @@
 package pl.marcin.project.tomtomgeoservice.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -11,6 +12,7 @@ import static pl.marcin.project.tomtomgeoservice.constants.RouteSearchConstants.
 
 
 @Slf4j
+@Service
 public class GeocodingService {
     private final WebClient webClient;
 

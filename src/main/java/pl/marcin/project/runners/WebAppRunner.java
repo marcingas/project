@@ -9,6 +9,10 @@ import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entity.PurchaseEntity;
 import pl.marcin.project.entityService.CupEntityService;
 import pl.marcin.project.entityService.CustomerEntityService;
+import pl.marcin.project.tomtomgeoservice.geocodingmodel.AddressData;
+import pl.marcin.project.tomtomgeoservice.routingmodel.RouteType;
+import pl.marcin.project.tomtomgeoservice.routingmodel.TravelMode;
+import pl.marcin.project.tomtomgeoservice.service.GeoSerwis;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,18 +24,32 @@ public class WebAppRunner implements AppRunner {
     public void runApplication() {
         ConfigurableApplicationContext context = SpringApplication.run(ProjectApplication.class);
         var customerService = context.getBean(CustomerEntityService.class);
+        var mapService = context.getBean(GeoSerwis.class);
+        try {
+            findLocation(mapService);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         createCustomer(customerService);
 //        updateCustomer(customerService, 5L);
         getAllCustomers(customerService);
 //        getCustomerById(customerService, 5L);
-        deleteCustomerWithId(customerService, 6L);
+//        deleteCustomerWithId(customerService, 6L);
 
         var cupService = context.getBean(CupEntityService.class);
         createCup(cupService);
-        updateCup(cupService, 1L);
+//        updateCup(cupService, 1L);
         getAllCup(cupService);
-        getCupById(cupService, 1L);
-        deleteCupWithId(cupService, 1L);
+//        getCupById(cupService, 1L);
+//        deleteCupWithId(cupService, 1L);
+    }
+
+    private void findLocation(GeoSerwis mapService) throws Exception {
+        AddressData addressDataStart = new AddressData("34-300", "Żywiec", "Baczyńskiego", 12);
+        AddressData addressDataEnd = new AddressData("43-300", "Bielsko-Biała", "Wyzwolenia", 1);
+        int distance = mapService.countDistanceBetweenClients(addressDataStart,
+                addressDataEnd, TravelMode.pedestrian, RouteType.eco, 2, true);
+        System.out.println("distance between " + addressDataStart + " and: " + addressDataEnd + " is: " + distance);
     }
 
     private void deleteCupWithId(CupEntityService cupService, long id) {

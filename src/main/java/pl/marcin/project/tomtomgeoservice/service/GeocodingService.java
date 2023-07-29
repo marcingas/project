@@ -21,7 +21,7 @@ public class GeocodingService {
     }
 
     public Mono<String> getCoordinates(AddressData addressData) {
-        //    https://{baseURL}/search/{versionNumber}/geocode/{query}.{ext}?key={Your_API_Key}
+
         String query = addressData.getPostCode() + " " + addressData.getTown() + ", "
                 + addressData.getStreet() + " " + addressData.getNumber();
 

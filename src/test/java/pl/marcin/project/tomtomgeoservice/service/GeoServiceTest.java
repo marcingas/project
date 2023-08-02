@@ -8,7 +8,7 @@ import pl.marcin.project.tomtomgeoservice.routingmodel.TravelMode;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GeoSerwisTest {
+class GeoServiceTest {
 
 
     @Test

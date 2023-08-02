@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Client {
-    Integer clientNr;
+    Long clientNr;
     Integer distance;
 
 }

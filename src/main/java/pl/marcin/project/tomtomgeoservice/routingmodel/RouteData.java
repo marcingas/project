@@ -19,5 +19,11 @@ public class RouteData {
     private Integer alternativeRoutes;
     private boolean traffic;
 
-
+    public RouteData(PositionsConverter positions) {
+        travelMode = TravelMode.car;
+        routeType = RouteType.shortest;
+        this.positions = positions;
+        alternativeRoutes = 1;
+        traffic = true;
+    }
 }

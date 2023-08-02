@@ -1,6 +1,15 @@
 package pl.marcin.project.routeservice;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import pl.marcin.project.entity.AddressEntity;
+import pl.marcin.project.entity.CustomerEntity;
+import pl.marcin.project.tomtomgeoservice.service.GeoService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,23 +17,26 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class RouteToClientServiceTest {
-    RouteToClientService routeToClientService = new RouteToClientService();
+    @Autowired
+    GeoService geoService;
+    RouteToClientService routeToClientService = new RouteToClientService(geoService);
 
     public List<List<Client>> loadListOfAdjecencyClients() {
 
-        List<Client> shopAdj = new ArrayList<>(List.of(new Client(1, 2), new Client(2, 3)));
-        List<Client> client1 = new ArrayList<>(List.of(new Client(0, 2), new Client(2, 4),
-                new Client(4, 3), new Client(5, 4)));
-        List<Client> client2 = new ArrayList<>(List.of(new Client(0, 3), new Client(1, 4),
-                new Client(3, 2), new Client(4, 2)));
-        List<Client> client3 = new ArrayList<>(List.of(new Client(2, 2), new Client(6, 1)));
-        List<Client> client4 = new ArrayList<>(List.of(new Client(2, 2), new Client(6, 1),
-                new Client(5, 1), new Client(1, 3)));
-        List<Client> client5 = new ArrayList<>(List.of(new Client(1, 4), new Client(6, 2),
-                new Client(4, 1)));
-        List<Client> client6 = new ArrayList<>(List.of(new Client(3, 1), new Client(4, 1),
-                new Client(5, 2), new Client(2, 3)));
+        List<Client> shopAdj = new ArrayList<>(List.of(new Client(1L, 2), new Client(2L, 3)));
+        List<Client> client1 = new ArrayList<>(List.of(new Client(0L, 2), new Client(2L, 4),
+                new Client(4L, 3), new Client(5L, 4)));
+        List<Client> client2 = new ArrayList<>(List.of(new Client(0L, 3), new Client(1L, 4),
+                new Client(3L, 2), new Client(4L, 2)));
+        List<Client> client3 = new ArrayList<>(List.of(new Client(2L, 2), new Client(6L, 1)));
+        List<Client> client4 = new ArrayList<>(List.of(new Client(2L, 2), new Client(6L, 1),
+                new Client(5L, 1), new Client(1L, 3)));
+        List<Client> client5 = new ArrayList<>(List.of(new Client(1L, 4), new Client(6L, 2),
+                new Client(4L, 1)));
+        List<Client> client6 = new ArrayList<>(List.of(new Client(3L, 1), new Client(4L, 1),
+                new Client(5L, 2), new Client(2L, 3)));
 
         List<List<Client>> adjecencyList = new ArrayList<>();
         adjecencyList.add(shopAdj);
@@ -67,5 +79,31 @@ class RouteToClientServiceTest {
         //then
         assertEquals(expectedAns, ans);
 
+    }
+
+    @Test
+    void calculate() {
+    }
+
+    @Test
+    void addNeighbour() {
+        //given
+        CustomerEntity customer1 = new CustomerEntity("Jan", "Kowalski",
+                new AddressEntity("Komonieckiego", 10, "Żywiec", "34-300"));
+        List<CustomerEntity> neighboursOfShop = new ArrayList<>();
+        routeToClientService.addNeighbour(customer1, neighboursOfShop);
+    }
+
+    @Test
+    void addCustomerWithNeighbours() throws Exception {
+        //given
+        CustomerEntity customer1 = new CustomerEntity("Jan", "Kowalski",
+                new AddressEntity("Komonieckiego", 10, "Żywiec", "34-300"));
+        List<CustomerEntity> neighboursOfShop = new ArrayList<>();
+        routeToClientService.addNeighbour(customer1, neighboursOfShop);
+        ;
+        //when:
+        routeToClientService.addCustomerWithNeighbours(routeToClientService.shop,
+                neighboursOfShop, routeToClientService.getAdjacencyList());
     }
 }

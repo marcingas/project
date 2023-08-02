@@ -40,6 +40,12 @@ public class CustomerEntity {
         this.address = address;
     }
 
+    public CustomerEntity(String name, String surname, AddressEntity address) {
+        this.name = name;
+        this.surname = surname;
+        this.address = address;
+    }
+
     @OneToMany(mappedBy = "customer")
     private List<PurchaseEntity> purchaseHistory;
 

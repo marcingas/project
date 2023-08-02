@@ -12,7 +12,7 @@ import pl.marcin.project.entityService.CustomerEntityService;
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.AddressData;
 import pl.marcin.project.tomtomgeoservice.routingmodel.RouteType;
 import pl.marcin.project.tomtomgeoservice.routingmodel.TravelMode;
-import pl.marcin.project.tomtomgeoservice.service.GeoSerwis;
+import pl.marcin.project.tomtomgeoservice.service.GeoService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class WebAppRunner implements AppRunner {
     public void runApplication() {
         ConfigurableApplicationContext context = SpringApplication.run(ProjectApplication.class);
         var customerService = context.getBean(CustomerEntityService.class);
-        var mapService = context.getBean(GeoSerwis.class);
+        var mapService = context.getBean(GeoService.class);
         try {
             findLocation(mapService);
         } catch (Exception e) {
@@ -44,11 +44,11 @@ public class WebAppRunner implements AppRunner {
 //        deleteCupWithId(cupService, 1L);
     }
 
-    private void findLocation(GeoSerwis mapService) throws Exception {
-        AddressData addressDataStart = new AddressData("34-300", "Żywiec", "Baczyńskiego", 12);
+    private void findLocation(GeoService mapService) throws Exception {
+        AddressData addressDataStart = new AddressData("34-300", "Żywiec", "Komonieckieg", 1);
         AddressData addressDataEnd = new AddressData("43-300", "Bielsko-Biała", "Wyzwolenia", 1);
         int distance = mapService.countDistanceBetweenClients(addressDataStart,
-                addressDataEnd, TravelMode.pedestrian, RouteType.eco, 2, true);
+                addressDataEnd);
         System.out.println("distance between " + addressDataStart + " and: " + addressDataEnd + " is: " + distance);
     }
 

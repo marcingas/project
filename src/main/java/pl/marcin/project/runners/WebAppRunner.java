@@ -58,24 +58,20 @@ public class WebAppRunner implements AppRunner {
 
         CustomerEntity customer1 = new CustomerEntity("Jan", "Kowalski",
                 new AddressEntity("Wyzwolenia", 1, "Bielsko Biała", "43-300"));
-        CustomerEntity customerPizzeria = new CustomerEntity("Piotr", "pizzeria",
-                new AddressEntity("Beskidzka", 43, "Rychwałd", "34-322"));
-        CustomerEntity customerZgwozdziami = new CustomerEntity("sklep", "gwozdzie",
-                new AddressEntity("Plebańska", 1, "Jeleśnia", "34-340"));
 
         AddressData customerAddressData = routeService.addressDataGenerator(customer1);
         AddressData shopAdrData = routeService.addressDataGenerator(routeService.getShop());
-        AddressData pizzeriaAddressData = routeService.addressDataGenerator(customerPizzeria);
-        AddressData gwozdzieAddressData = routeService.addressDataGenerator(customerZgwozdziami);
 
-        List<Client> shopsClients = new ArrayList<>(List.of(
-                new Client(customer1.getCustomer_id(), routeService.distance(shopAdrData, customerAddressData)),
-                new Client(customerPizzeria.getCustomer_id(), routeService.distance(shopAdrData, pizzeriaAddressData)),
-                new Client(customerZgwozdziami.getCustomer_id(), routeService.distance(shopAdrData, gwozdzieAddressData))));
+
+        List<Client> shopsNeighbours = new ArrayList<>(List.of(
+                new Client(customer1.getCustomer_id(), routeService.distance(shopAdrData, customerAddressData))
+        ));
+        List<Client> customer1Neigh = new ArrayList<>(List.of(new Client(routeService.getShop().getCustomer_id(), routeService.distance(customerAddressData, shopAdrData))));
 
         List<Client> shopAdj = new ArrayList<>();
         List<List<Client>> adjList = new ArrayList<>();
         adjList.add(shopAdj);
+        adjList.add(customer1Neigh);
 
 
         System.out.println(Arrays.toString(routeService.calculateBestRouteToClient(adjList)));

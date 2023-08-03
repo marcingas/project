@@ -42,7 +42,9 @@ public class GeoService {
                 geocodingAnswer -> futureCoordinates.complete(geocodingAnswer),
                 throwable -> futureCoordinates.completeExceptionally(throwable)
         );
+
         return futureCoordinates.join();
+
     }
 
     private RouteAnswer findRouteReactive(RouteData routeData) {
@@ -52,12 +54,8 @@ public class GeoService {
                 routeAnswer -> futureRoute.complete(routeAnswer),
                 throwable -> futureRoute.completeExceptionally(throwable)
         );
-        try {
-            return futureRoute.get();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+
+        return futureRoute.join();
     }
 
     private RouteAnswer findRoute(RouteData routeData) throws Exception {

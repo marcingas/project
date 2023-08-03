@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
-import pl.marcin.project.model.Customer;
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.AddressData;
-import pl.marcin.project.tomtomgeoservice.routingmodel.RouteType;
-import pl.marcin.project.tomtomgeoservice.routingmodel.TravelMode;
 import pl.marcin.project.tomtomgeoservice.service.GeoService;
 
 import java.util.*;
@@ -19,70 +16,22 @@ import java.util.*;
 @Setter
 public class RouteToClientService {
     private final GeoService geoService;
-    private List<List<Client>> adjacencyList;
     CustomerEntity shop;
 
     @Autowired
     public RouteToClientService(GeoService geoService) {
 
         this.geoService = geoService;
-        adjacencyList = new ArrayList<>();
         shop = new CustomerEntity("shop", "Żywiec",
                 new AddressEntity("Sienkiewicza", 1, "Żywiec", "34-300"));
-
     }
 
-    public int[] calculate(List<List<Client>> adjacencyList) {
-        return findShortestRoadToEachClient(adjacencyList,
+    public int[] calculateBestRouteToClient(List<List<Client>> adjacencyList) {
+        return dijkstraImplFindingShortestWay(adjacencyList,
                 0);
     }
 
-
-    public List<CustomerEntity> addNeighbour(CustomerEntity neighbour, List<CustomerEntity> neighbours) {
-        neighbours.add(neighbour);
-        return neighbours;
-    }
-
-    public List<List<Client>> addCustomerWithNeighbours(CustomerEntity customer,
-                                                        List<CustomerEntity> neighbours,
-                                                        List<List<Client>> adjacencyList) throws Exception {
-
-        if (adjacencyList == null) adjacencyList = new ArrayList<>();
-        adjacencyList.add(customerAdjecencyListGenerator(customer, neighbours));
-        return adjacencyList;
-
-    }
-
-
-    private List<Client> customerAdjecencyListGenerator(CustomerEntity customer,
-                                                        List<CustomerEntity> neighbours) throws Exception {
-        List<Client> adjecencyList = new ArrayList<>();
-        AddressData addressData = addressDataGenerator(customer);
-        for (CustomerEntity neighbour : neighbours) {
-            AddressData neighbourAddressData = addressDataGenerator(neighbour);
-            adjecencyList.add(new Client(customer.getCustomer_id(), distance(addressData, neighbourAddressData)));
-
-        }
-        return adjecencyList;
-    }
-
-    private int distance(AddressData baseCustomerData, AddressData neighbourCustomerData) throws Exception {
-        return geoService.countDistanceBetweenClients(baseCustomerData, neighbourCustomerData);
-
-    }
-
-    private AddressData addressDataGenerator(CustomerEntity customerToVisit) {
-
-        Long id = customerToVisit.getCustomer_id();
-        String code = customerToVisit.getAddress().getCode();
-        String town = customerToVisit.getAddress().getTown();
-        String street = customerToVisit.getAddress().getStreet();
-        int number = customerToVisit.getAddress().getNumber();
-        return new AddressData(code, town, street, number);
-    }
-
-
-    public int[] findShortestRoadToEachClient(List<List<Client>> adjecencyList, long shopAdj) {
+    private int[] dijkstraImplFindingShortestWay(List<List<Client>> adjecencyList, long shopAdj) {
         int[] distanceAns = new int[adjecencyList.size()];
         Arrays.fill(distanceAns, Integer.MAX_VALUE);
         distanceAns[(int) shopAdj] = 0;
@@ -107,10 +56,9 @@ public class RouteToClientService {
         }
         return distanceAns;
     }
-
     public List<Integer> printFullPath(List<List<Client>> adjList, int shopAdj, int destinationClient) {
 
-        int[] distanceAnswers = findShortestRoadToEachClient(adjList, shopAdj);
+        int[] distanceAnswers = dijkstraImplFindingShortestWay(adjList, shopAdj);
 
         List<Integer> path = new ArrayList<>();
         path.add(destinationClient);
@@ -134,4 +82,19 @@ public class RouteToClientService {
         return path;
     }
 
+    public AddressData addressDataGenerator(CustomerEntity customerToVisit) {
+        Random random = new Random();
+        int id = random.nextInt(50);
+        String code = customerToVisit.getAddress().getCode();
+        String town = customerToVisit.getAddress().getTown();
+        String street = customerToVisit.getAddress().getStreet();
+        int number = customerToVisit.getAddress().getNumber();
+
+        return new AddressData(code, town, street, number);
+    }
+
+    public int distance(AddressData baseCustomerData, AddressData neighbourCustomerData) throws Exception {
+        return geoService.countDistanceBetweenClientsReactive(baseCustomerData, neighbourCustomerData);
+
+    }
 }

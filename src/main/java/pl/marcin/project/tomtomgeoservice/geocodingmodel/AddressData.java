@@ -1,12 +1,12 @@
 package pl.marcin.project.tomtomgeoservice.geocodingmodel;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class AddressData {
 
     private String postCode;

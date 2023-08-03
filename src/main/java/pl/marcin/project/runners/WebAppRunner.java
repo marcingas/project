@@ -9,13 +9,16 @@ import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entity.PurchaseEntity;
 import pl.marcin.project.entityService.CupEntityService;
 import pl.marcin.project.entityService.CustomerEntityService;
+import pl.marcin.project.routeservice.Client;
+
+
+import pl.marcin.project.routeservice.RouteToClientService;
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.AddressData;
-import pl.marcin.project.tomtomgeoservice.routingmodel.RouteType;
-import pl.marcin.project.tomtomgeoservice.routingmodel.TravelMode;
 import pl.marcin.project.tomtomgeoservice.service.GeoService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class WebAppRunner implements AppRunner {
@@ -25,31 +28,74 @@ public class WebAppRunner implements AppRunner {
         ConfigurableApplicationContext context = SpringApplication.run(ProjectApplication.class);
         var customerService = context.getBean(CustomerEntityService.class);
         var mapService = context.getBean(GeoService.class);
+        var routeService = context.getBean(RouteToClientService.class);
+
         try {
-            findLocation(mapService);
+            findRoute(routeService);
+//            findLocation(mapService);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        createCustomer(customerService);
+//        createCustomer(customerService);
 //        updateCustomer(customerService, 5L);
-        getAllCustomers(customerService);
+//        getAllCustomers(customerService);
 //        getCustomerById(customerService, 5L);
 //        deleteCustomerWithId(customerService, 6L);
 
         var cupService = context.getBean(CupEntityService.class);
-        createCup(cupService);
+//        createCup(cupService);
 //        updateCup(cupService, 1L);
-        getAllCup(cupService);
+//        getAllCup(cupService);
 //        getCupById(cupService, 1L);
 //        deleteCupWithId(cupService, 1L);
+
+    }
+
+    private void findRoute(RouteToClientService routeService) throws Exception {
+
+        List<CustomerEntity> shopNeighbors = new ArrayList<>();
+
+
+        CustomerEntity customer1 = new CustomerEntity("Jan", "Kowalski",
+                new AddressEntity("Wyzwolenia", 1, "Bielsko Biała", "43-300"));
+        CustomerEntity customerPizzeria = new CustomerEntity("Piotr", "pizzeria",
+                new AddressEntity("Beskidzka", 43, "Rychwałd", "34-322"));
+        CustomerEntity customerZgwozdziami = new CustomerEntity("sklep", "gwozdzie",
+                new AddressEntity("Plebańska", 1, "Jeleśnia", "34-340"));
+
+        AddressData customerAddressData = routeService.addressDataGenerator(customer1);
+        AddressData shopAdrData = routeService.addressDataGenerator(routeService.getShop());
+        AddressData pizzeriaAddressData = routeService.addressDataGenerator(customerPizzeria);
+        AddressData gwozdzieAddressData = routeService.addressDataGenerator(customerZgwozdziami);
+
+        List<Client> shopsClients = new ArrayList<>(List.of(
+                new Client(customer1.getCustomer_id(), routeService.distance(shopAdrData, customerAddressData)),
+                new Client(customerPizzeria.getCustomer_id(), routeService.distance(shopAdrData, pizzeriaAddressData)),
+                new Client(customerZgwozdziami.getCustomer_id(), routeService.distance(shopAdrData, gwozdzieAddressData))));
+
+        List<Client> shopAdj = new ArrayList<>();
+        List<List<Client>> adjList = new ArrayList<>();
+        adjList.add(shopAdj);
+
+
+        System.out.println(Arrays.toString(routeService.calculateBestRouteToClient(adjList)));
     }
 
     private void findLocation(GeoService mapService) throws Exception {
         AddressData addressDataStart = new AddressData("34-300", "Żywiec", "Komonieckieg", 1);
         AddressData addressDataEnd = new AddressData("43-300", "Bielsko-Biała", "Wyzwolenia", 1);
-        int distance = mapService.countDistanceBetweenClients(addressDataStart,
+        int distance = mapService.countDistanceBetweenClientsReactive(addressDataStart,
                 addressDataEnd);
+        int distance2 = mapService.countDistanceBetweenClientsReactive(addressDataStart,
+                addressDataEnd);
+        int distance3 = mapService.countDistanceBetweenClientsReactive(addressDataStart,
+                addressDataEnd);
+
+
         System.out.println("distance between " + addressDataStart + " and: " + addressDataEnd + " is: " + distance);
+        System.out.println(distance2);
+        System.out.println(distance3);
+
     }
 
     private void deleteCupWithId(CupEntityService cupService, long id) {

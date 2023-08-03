@@ -12,7 +12,7 @@ import pl.marcin.project.tomtomgeoservice.routingmodel.RouteData;
 import reactor.core.publisher.Mono;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class GeoService {
@@ -52,7 +52,12 @@ public class GeoService {
                 routeAnswer -> futureRoute.complete(routeAnswer),
                 throwable -> futureRoute.completeExceptionally(throwable)
         );
-        return futureRoute.join();
+        try {
+            return futureRoute.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private RouteAnswer findRoute(RouteData routeData) throws Exception {

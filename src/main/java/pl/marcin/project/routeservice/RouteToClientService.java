@@ -8,6 +8,7 @@ import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.AddressData;
 import pl.marcin.project.tomtomgeoservice.service.GeoService;
+import reactor.core.publisher.Mono;
 
 import java.util.*;
 
@@ -93,7 +94,7 @@ public class RouteToClientService {
         return new AddressData(code, town, street, number);
     }
 
-    public int distance(AddressData baseCustomerData, AddressData neighbourCustomerData) throws Exception {
+    public Mono<Integer> distance(AddressData baseCustomerData, AddressData neighbourCustomerData) throws Exception {
         return geoService.countDistanceBetweenClientsReactive(baseCustomerData, neighbourCustomerData);
 
     }

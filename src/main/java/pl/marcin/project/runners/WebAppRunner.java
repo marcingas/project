@@ -59,14 +59,16 @@ public class WebAppRunner implements AppRunner {
         CustomerEntity customer1 = new CustomerEntity("Jan", "Kowalski",
                 new AddressEntity("Wyzwolenia", 1, "Bielsko Biała", "43-300"));
 
-        AddressData customerAddressData = routeService.addressDataGenerator(customer1);
+        AddressData customerAddressData = routeService.addressDataGenerator(customer1);//zrobić to samo co z distance mono zip
         AddressData shopAdrData = routeService.addressDataGenerator(routeService.getShop());
+
+        int distanceShopCustomer = routeService.distance(shopAdrData, customerAddressData).block();
 
 
         List<Client> shopsNeighbours = new ArrayList<>(List.of(
-                new Client(customer1.getCustomer_id(), routeService.distance(shopAdrData, customerAddressData))
+                new Client(customer1.getCustomer_id(), distanceShopCustomer)
         ));
-        List<Client> customer1Neigh = new ArrayList<>(List.of(new Client(routeService.getShop().getCustomer_id(), routeService.distance(customerAddressData, shopAdrData))));
+        List<Client> customer1Neigh = new ArrayList<>(List.of(new Client(routeService.getShop().getCustomer_id(), distanceShopCustomer)));
 
         List<Client> shopAdj = new ArrayList<>();
         List<List<Client>> adjList = new ArrayList<>();
@@ -80,17 +82,17 @@ public class WebAppRunner implements AppRunner {
     private void findLocation(GeoService mapService) throws Exception {
         AddressData addressDataStart = new AddressData("34-300", "Żywiec", "Komonieckieg", 1);
         AddressData addressDataEnd = new AddressData("43-300", "Bielsko-Biała", "Wyzwolenia", 1);
-        int distance = mapService.countDistanceBetweenClientsReactive(addressDataStart,
-                addressDataEnd);
-        int distance2 = mapService.countDistanceBetweenClientsReactive(addressDataStart,
-                addressDataEnd);
-        int distance3 = mapService.countDistanceBetweenClientsReactive(addressDataStart,
-                addressDataEnd);
+//        int distance = mapService.countDistanceBetweenClientsReactive(addressDataStart,
+//                addressDataEnd);
+//        int distance2 = mapService.countDistanceBetweenClientsReactive(addressDataStart,
+//                addressDataEnd);
+//        int distance3 = mapService.countDistanceBetweenClientsReactive(addressDataStart,
+//                addressDataEnd);
 
 
-        System.out.println("distance between " + addressDataStart + " and: " + addressDataEnd + " is: " + distance);
-        System.out.println(distance2);
-        System.out.println(distance3);
+//        System.out.println("distance between " + addressDataStart + " and: " + addressDataEnd + " is: " + distance);
+//        System.out.println(distance2);
+//        System.out.println(distance3);
 
     }
 

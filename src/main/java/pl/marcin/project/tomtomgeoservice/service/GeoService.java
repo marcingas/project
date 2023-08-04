@@ -34,28 +34,12 @@ public class GeoService {
 
     }
 
-    private GeocodingAnswer getLocationFromAddressReactive(AddressData addressData) throws Exception {
-
-        CompletableFuture<GeocodingAnswer> futureCoordinates = new CompletableFuture<>();
-        Mono<GeocodingAnswer> monoCoordinates = mapServiceFacade.getLocationsCoordFromObject(addressData);
-        monoCoordinates.subscribe(
-                geocodingAnswer -> futureCoordinates.complete(geocodingAnswer),
-                throwable -> futureCoordinates.completeExceptionally(throwable)
-        );
-
-        return futureCoordinates.join();
-
+    private Mono<GeocodingAnswer> getLocationFromAddressReactive(AddressData addressData) throws Exception {
+        return mapServiceFacade.getLocationsCoordFromObject(addressData);
     }
 
-    private RouteAnswer findRouteReactive(RouteData routeData) {
-        CompletableFuture<RouteAnswer> futureRoute = new CompletableFuture<>();
-        Mono<RouteAnswer> monoRoute = mapServiceFacade.getRouteFromObject(routeData);
-        monoRoute.subscribe(
-                routeAnswer -> futureRoute.complete(routeAnswer),
-                throwable -> futureRoute.completeExceptionally(throwable)
-        );
-
-        return futureRoute.join();
+    private Mono<RouteAnswer> findRouteReactive(RouteData routeData) {
+        return mapServiceFacade.getRouteFromObject(routeData);
     }
 
     private RouteAnswer findRoute(RouteData routeData) throws Exception {
@@ -71,21 +55,26 @@ public class GeoService {
 
         PositionsConverter positionsConverter = new PositionsConverter(positionStart, endPosition);
 
-        RouteData routeData = new RouteData(positionsConverter);
+        RouteData routeData = new RouteData(positionsConverter.toString());
         RouteAnswer routeAnswer = findRoute(routeData);
         return routeAnswer.getRoutes().get(0).getSummary().getLengthInMeters();
     }
 
-    public int countDistanceBetweenClientsReactive(AddressData addressDataStart,
-                                                   AddressData addressDataEnd) throws Exception {
+    public Mono<Integer> countDistanceBetweenClientsReactive(AddressData addressDataStart,
+                                                             AddressData addressDataEnd) throws Exception {
 
-        Position positionStart = getLocationFromAddressReactive(addressDataStart).getResults().get(0).getPosition();
-        Position positionEnd = getLocationFromAddressReactive(addressDataEnd).getResults().get(0).getPosition();
+        Mono<Position> positionStart = getLocationFromAddressReactive(addressDataStart)
+                .map(geocodingAnswer -> geocodingAnswer.getResults().get(0).getPosition());
+        Mono<Position> positionEnd = getLocationFromAddressReactive(addressDataEnd).
+                map(geocodingAnswer -> geocodingAnswer.getResults().get(0).getPosition());
 
-        PositionsConverter converter = new PositionsConverter(positionStart, positionEnd);
+        Mono<String> position = positionStart.zipWith(positionEnd, (a, b) -> a.getLat()
+                + "," + a.getLon() + ":" + b.getLat() + "," + b.getLon());
+//        PositionsConverter converter = new PositionsConverter(positionStart, positionEnd);
 
-        RouteData routeData = new RouteData(converter);
-        return findRouteReactive(routeData).getRoutes().get(0).getSummary().getLengthInMeters();
+        return position.map(p -> new RouteData(p))
+                .flatMap(rd -> findRouteReactive(rd))
+                .map(routeAnswer -> routeAnswer.getRoutes().get(0).getSummary().getLengthInMeters());
 
     }
 

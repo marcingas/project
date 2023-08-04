@@ -15,11 +15,11 @@ public class RouteData {
 
     private TravelMode travelMode;
     private RouteType routeType;
-    private PositionsConverter positions;
+    private String positions;
     private Integer alternativeRoutes;
     private boolean traffic;
 
-    public RouteData(PositionsConverter positions) {
+    public RouteData(String positions) {
         travelMode = TravelMode.car;
         routeType = RouteType.shortest;
         this.positions = positions;

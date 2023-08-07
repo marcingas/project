@@ -36,9 +36,9 @@ public class WebAppRunner implements AppRunner {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-//        createCustomer(customerService);
+        createCustomer(customerService);
 //        updateCustomer(customerService, 5L);
-//        getAllCustomers(customerService);
+        getAllCustomers(customerService);
 //        getCustomerById(customerService, 5L);
 //        deleteCustomerWithId(customerService, 6L);
 
@@ -158,6 +158,11 @@ public class WebAppRunner implements AppRunner {
                 new AddressEntity("Tower Bridge", 12, "New York", "001212"),
                 new ArrayList<PurchaseEntity>());
         service.addCustomer(customer1);
+        CustomerEntity customer2 = new CustomerEntity("John", "Trump",
+                new AddressEntity("Tower Bridge", 1, "Chicago", "0012"),
+                new ArrayList<PurchaseEntity>());
+        service.addCustomer(customer1);
+        service.addCustomer(customer2);
         System.out.println("Customer with id: " + customer1.getCustomer_id() + " saved");
     }
 }

@@ -12,32 +12,15 @@ import static pl.marcin.project.tomtomgeoservice.constants.RouteSearchConstants.
 import static pl.marcin.project.tomtomgeoservice.constants.RouteSearchConstants.KEY;
 
 @Service
-public class RouteService {
+public class TomTomRoutingService {
     private final WebClient webClient;
 
     @Autowired
-    public RouteService(WebClient webClient) {
+    public TomTomRoutingService(WebClient webClient) {
         this.webClient = webClient;
     }
 
-    public Mono<String> getRoute(RouteData routeData) {
-
-        String uri = UriComponentsBuilder.fromUriString(FIND_ROUTE)
-                .buildAndExpand(routeData.getPositions(), routeData.getAlternativeRoutes(),
-                        routeData.getRouteType(), routeData.isTraffic(), routeData.getTravelMode())
-                .toUriString();
-        uri += "&key=" + KEY;
-
-        Mono<String> response = webClient.get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(String.class);
-
-        return response;
-
-    }
-
-    public Mono<RouteAnswer> getRouteAsObject(RouteData routeData) {
+    public Mono<RouteAnswer> getRoute(RouteData routeData) {
         String uri = UriComponentsBuilder.fromUriString(FIND_ROUTE)
                 .buildAndExpand(routeData.getPositions(), routeData.getAlternativeRoutes(),
                         routeData.getRouteType(), routeData.isTraffic(), routeData.getTravelMode())

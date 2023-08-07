@@ -13,32 +13,14 @@ import static pl.marcin.project.tomtomgeoservice.constants.RouteSearchConstants.
 
 @Slf4j
 @Service
-public class GeocodingService {
+public class TomTomGeocodingService {
     private final WebClient webClient;
 
-    public GeocodingService(WebClient webClient) {
+    public TomTomGeocodingService(WebClient webClient) {
         this.webClient = webClient;
     }
 
-    public Mono<String> getCoordinates(AddressData addressData) {
-
-        String query = addressData.getPostCode() + " " + addressData.getTown() + ", "
-                + addressData.getStreet() + " " + addressData.getNumber();
-
-        String uri = UriComponentsBuilder.fromUriString(GET_LAT_LONG)
-                .buildAndExpand(VERSION_NUMBER, query, EXT)
-                .toUriString();
-        uri += "?key=" + KEY;
-
-        Mono<String> responseMono = webClient.get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(String.class);
-
-        return responseMono;
-    }
-
-    public Mono<GeocodingAnswer> getCoordinatesAsObject(AddressData addressData) {
+    public Mono<GeocodingAnswer> getCoordinates(AddressData addressData) {
         String query = addressData.getPostCode() + " " + addressData.getTown() + ", "
                 + addressData.getStreet() + " " + addressData.getNumber();
 
@@ -52,6 +34,5 @@ public class GeocodingService {
                 .retrieve()
                 .bodyToMono(GeocodingAnswer.class);
         return responseMono;
-
     }
 }

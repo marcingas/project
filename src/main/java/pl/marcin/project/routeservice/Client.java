@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Client {
-    Long clientNr;
+    Integer clientId;
     Integer distance;
 
 }

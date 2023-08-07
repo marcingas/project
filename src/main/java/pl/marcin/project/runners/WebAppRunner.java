@@ -12,7 +12,7 @@ import pl.marcin.project.entityService.CustomerEntityService;
 import pl.marcin.project.routeservice.Client;
 
 
-import pl.marcin.project.routeservice.RouteToClientService;
+import pl.marcin.project.routeservice.RouteCalculatorService;
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.AddressData;
 import pl.marcin.project.tomtomgeoservice.service.GeoService;
 
@@ -28,7 +28,7 @@ public class WebAppRunner implements AppRunner {
         ConfigurableApplicationContext context = SpringApplication.run(ProjectApplication.class);
         var customerService = context.getBean(CustomerEntityService.class);
         var mapService = context.getBean(GeoService.class);
-        var routeService = context.getBean(RouteToClientService.class);
+        var routeService = context.getBean(RouteCalculatorService.class);
 
         try {
             findRoute(routeService);
@@ -51,10 +51,8 @@ public class WebAppRunner implements AppRunner {
 
     }
 
-    private void findRoute(RouteToClientService routeService) throws Exception {
-
+    private void findRoute(RouteCalculatorService routeService) throws Exception {
         List<CustomerEntity> shopNeighbors = new ArrayList<>();
-
 
         CustomerEntity customer1 = new CustomerEntity("Jan", "Kowalski",
                 new AddressEntity("Wyzwolenia", 1, "Bielsko Biała", "43-300"));
@@ -66,9 +64,10 @@ public class WebAppRunner implements AppRunner {
 
 
         List<Client> shopsNeighbours = new ArrayList<>(List.of(
-                new Client(customer1.getCustomer_id(), distanceShopCustomer)
+                new Client(customer1.getCustomer_id().intValue(), distanceShopCustomer)
         ));
-        List<Client> customer1Neigh = new ArrayList<>(List.of(new Client(routeService.getShop().getCustomer_id(), distanceShopCustomer)));
+        List<Client> customer1Neigh = new ArrayList<>(List.of(new Client(routeService.getShop()
+                .getCustomer_id().intValue(), distanceShopCustomer)));
 
         List<Client> shopAdj = new ArrayList<>();
         List<List<Client>> adjList = new ArrayList<>();
@@ -106,7 +105,7 @@ public class WebAppRunner implements AppRunner {
         System.out.println("Searched cup: \n" + cup);
     }
 
-    private void getAllCup(CupEntityService cupService) {
+    private void getAllCups(CupEntityService cupService) {
         List<CupEntity> cups = cupService.getAllCups();
         for (var cup : cups) {
             System.out.println(cup);

@@ -6,12 +6,9 @@ import pl.marcin.project.tomtomgeoservice.routingmodel.RouteAnswer;
 import pl.marcin.project.tomtomgeoservice.routingmodel.RouteData;
 import reactor.core.publisher.Mono;
 
-public interface MapServiceFacade {
-    Mono<String> getLocationsCoordinates(AddressData addressData);
+public interface TomTomServiceFacade {
 
-    Mono<GeocodingAnswer> getLocationsCoordFromObject(AddressData addressData);
+    Mono<GeocodingAnswer> getLocationsCoordinates(AddressData addressData);
 
-    Mono<String> getRoute(RouteData routeData);
-
-    Mono<RouteAnswer> getRouteFromObject(RouteData routeData);
+    Mono<RouteAnswer> getRouteBetweenAddresses(RouteData routeData);
 }

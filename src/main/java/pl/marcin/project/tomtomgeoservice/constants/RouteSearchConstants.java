@@ -1,7 +1,6 @@
 package pl.marcin.project.tomtomgeoservice.constants;
 
 public class RouteSearchConstants {
-    public static final String BASE_URL = "https://api.tomtom.com";
     public static final String VERSION_NUMBER = "2";
     public static final String EXT = "json";
     public static final String KEY = "vctUnSj6acA5V6nLMaZMmSqXpoyPA5xq";

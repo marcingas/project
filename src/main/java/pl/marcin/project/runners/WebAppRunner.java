@@ -57,8 +57,8 @@ public class WebAppRunner implements AppRunner {
         CustomerEntity customer1 = new CustomerEntity("Jan", "Kowalski",
                 new AddressEntity("Wyzwolenia", 1, "Bielsko Biała", "43-300"));
 
-        AddressData customerAddressData = routeService.addressDataGenerator(customer1);//zrobić to samo co z distance mono zip
-        AddressData shopAdrData = routeService.addressDataGenerator(routeService.getShop());
+        AddressData customerAddressData = routeService.addressDataGenerator(customer1).block();
+        AddressData shopAdrData = routeService.addressDataGenerator(routeService.getShop()).block();
 
         int distanceShopCustomer = routeService.distance(shopAdrData, customerAddressData).block();
 

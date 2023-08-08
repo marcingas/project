@@ -79,13 +79,8 @@ public class RouteCalculatorService {
         return path;
     }
 
-    public AddressData addressDataGenerator(CustomerEntity customerToVisit) {
-        String code = customerToVisit.getAddress().getCode();
-        String town = customerToVisit.getAddress().getTown();
-        String street = customerToVisit.getAddress().getStreet();
-        int number = customerToVisit.getAddress().getNumber();
-
-        return new AddressData(code, town, street, number);
+    public Mono<AddressData> addressDataGenerator(CustomerEntity customerToVisit) {
+        return geoService.generateAddressDataReactive(customerToVisit);
     }
 
     public Mono<Integer> distance(AddressData baseCustomerData, AddressData neighbourCustomerData) {

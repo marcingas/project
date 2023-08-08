@@ -2,7 +2,10 @@ package pl.marcin.project.tomtomgeoservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.marcin.project.database.AddressEntityReactiveRepository;
+import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
+import pl.marcin.project.entityService.AddressEntityReactiveService;
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.AddressData;
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.GeocodingAnswer;
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.Position;
@@ -14,10 +17,12 @@ import reactor.core.publisher.Mono;
 public class GeoService {
 
     private final TomTomServiceFacade tomTomServiceFacade;
+    private final AddressEntityReactiveService addressReactiveService;
 
     @Autowired
-    public GeoService(TomTomServiceFacade tomTomServiceFacade) {
+    public GeoService(TomTomServiceFacade tomTomServiceFacade, AddressEntityReactiveService addressReactiveService) {
         this.tomTomServiceFacade = tomTomServiceFacade;
+        this.addressReactiveService = addressReactiveService;
 
     }
 
@@ -28,9 +33,19 @@ public class GeoService {
     private Mono<RouteAnswer> findRouteReactive(RouteData routeData) {
         return tomTomServiceFacade.getRouteBetweenAddresses(routeData);
     }
-//    public Mono<AddressData> generateAddressData(CustomerEntity customerToVisit){
-//
-//    }
+
+    public Mono<AddressData> generateAddressDataReactive(CustomerEntity customerToVisit) {
+        Mono<AddressData> addressById = addressReactiveService.getAddressById(customerToVisit.getCustomer_id())
+                .flatMap(addressEntity -> {
+                    AddressData addressData = new AddressData();
+                    addressData.setNumber(addressEntity.getNumber());
+                    addressData.setTown(addressEntity.getTown());
+                    addressData.setStreet(addressEntity.getStreet());
+                    addressData.setPostCode(addressEntity.getCode());
+                    return Mono.just(addressData);
+                });
+        return addressById;
+    }
 
 
     public Mono<Integer> countDistanceBetweenClientsReactive(AddressData addressDataStart,

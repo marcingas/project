@@ -54,8 +54,8 @@ public class WebAppRunner implements AppRunner {
     private void findRoute(RouteCalculatorService routeService) throws Exception {
         List<CustomerEntity> shopNeighbors = new ArrayList<>();
 
-        CustomerEntity customer1 = new CustomerEntity("Jan", "Kowalski",
-                new AddressEntity("Wyzwolenia", 1, "Bielsko Biała", "43-300"));
+       CustomerEntity customer1 = new CustomerEntity("Jan", "Kowalski",
+               new AddressEntity("Wyzwolenia", 1, "Bielsko Biała", "43-300"));
 
         AddressData customerAddressData = routeService.addressDataGenerator(customer1).block();
         AddressData shopAdrData = routeService.addressDataGenerator(routeService.getShop()).block();

@@ -1,12 +1,7 @@
 package pl.marcin.project.request;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
-import pl.marcin.project.entity.AddressEntity;
-import pl.marcin.project.model.Purchase;
-
-import java.util.List;
 
 @Getter
 @Setter

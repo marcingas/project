@@ -1,25 +1,26 @@
 package pl.marcin.project.tomtomgeoservice.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.AddressData;
+import pl.marcin.project.tomtomgeoservice.geocodingmodel.GeocodingAnswer;
 import reactor.core.publisher.Mono;
 
 import static pl.marcin.project.tomtomgeoservice.constants.RouteSearchConstants.*;
 
 
 @Slf4j
-public class GeocodingService {
+@Service
+public class TomTomGeocodingService {
     private final WebClient webClient;
 
-    public GeocodingService(WebClient webClient) {
+    public TomTomGeocodingService(WebClient webClient) {
         this.webClient = webClient;
     }
 
-    public Mono<String> getCoordinates(AddressData addressData) {
-        //    https://{baseURL}/search/{versionNumber}/geocode/{query}.{ext}?key={Your_API_Key}
+    public Mono<GeocodingAnswer> getCoordinates(AddressData addressData) {
         String query = addressData.getPostCode() + " " + addressData.getTown() + ", "
                 + addressData.getStreet() + " " + addressData.getNumber();
 
@@ -28,11 +29,10 @@ public class GeocodingService {
                 .toUriString();
         uri += "?key=" + KEY;
 
-        Mono<String> responseMono = webClient.get()
+        Mono<GeocodingAnswer> responseMono = webClient.get()
                 .uri(uri)
                 .retrieve()
-                .bodyToMono(String.class);
-
+                .bodyToMono(GeocodingAnswer.class);
         return responseMono;
     }
 }

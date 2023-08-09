@@ -13,7 +13,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class Cup {
 
-    private int id;
+    private Integer id;
     private String color;
     private String shape;
     private BigDecimal price;

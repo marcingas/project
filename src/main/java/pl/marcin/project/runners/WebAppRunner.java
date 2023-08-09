@@ -7,8 +7,8 @@ import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CupEntity;
 import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entity.PurchaseEntity;
-import pl.marcin.project.entityService.CupEntityService;
-import pl.marcin.project.entityService.CustomerEntityService;
+import pl.marcin.project.entityService.CupEntityReactiveService;
+import pl.marcin.project.entityService.CustomerEntityReactiveService;
 import pl.marcin.project.routeservice.Client;
 
 
@@ -26,7 +26,7 @@ public class WebAppRunner implements AppRunner {
     @Override
     public void runApplication() {
         ConfigurableApplicationContext context = SpringApplication.run(ProjectApplication.class);
-        var customerService = context.getBean(CustomerEntityService.class);
+        var customerService = context.getBean(CustomerEntityReactiveService.class);
         var mapService = context.getBean(GeoService.class);
         var routeService = context.getBean(RouteCalculatorService.class);
 
@@ -36,13 +36,13 @@ public class WebAppRunner implements AppRunner {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        createCustomer(customerService);
+//        createCustomer(customerService);
 //        updateCustomer(customerService, 5L);
-        getAllCustomers(customerService);
+//        getAllCustomers(customerService);
 //        getCustomerById(customerService, 5L);
 //        deleteCustomerWithId(customerService, 6L);
 
-        var cupService = context.getBean(CupEntityService.class);
+        var cupService = context.getBean(CupEntityReactiveService.class);
 //        createCup(cupService);
 //        updateCup(cupService, 1L);
 //        getAllCup(cupService);

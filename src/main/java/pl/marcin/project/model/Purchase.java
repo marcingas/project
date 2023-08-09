@@ -13,11 +13,11 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class Purchase {
-    private int id;
+    private Integer id;
     private Customer customer;
     private List<Cup> cups;
     private BigDecimal purchaseCost;
-    private String discountInfo = "";
+
 
     public Purchase(Customer customer, List<Cup> cups) {
         this.customer = customer;
@@ -28,7 +28,7 @@ public class Purchase {
         }
         if (customer.getPurchaseHistory().size() >= 3) {
             this.purchaseCost = purchaseCost.multiply(BigDecimal.valueOf(0.9));
-            discountInfo = "!!!10% Discount included!!!: ";
+            System.out.println("!!!10% Discount included!!!: ");
         } else {
             this.purchaseCost = purchaseCost;
         }
@@ -50,7 +50,7 @@ public class Purchase {
     public String toString() {
         return "Purchase\n" +
                 "cups: " + cups +
-                "\npurchaseCost: " + discountInfo + "" + purchaseCost + " USD" +
+                "\npurchaseCost:" + purchaseCost + " USD" +
                 "\ncustomer: " + customer.getName() + "\n";
     }
 }

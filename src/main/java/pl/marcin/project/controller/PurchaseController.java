@@ -5,15 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entity.PurchaseEntity;
-import pl.marcin.project.entityService.CustomerEntityService;
-import pl.marcin.project.entityService.PurchaseEntityService;
 import pl.marcin.project.request.PurchaseRequest;
 
 import java.util.List;
 
-@RestController
+
 @RequiredArgsConstructor
 public class PurchaseController {
     private final PurchaseEntityService purchaseEntityService;

@@ -9,15 +9,12 @@ import pl.marcin.project.database.AddressEntityRepository;
 import pl.marcin.project.database.CustomerEntityRepository;
 import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
-import pl.marcin.project.entity.PurchaseEntity;
-import pl.marcin.project.entityService.CustomerEntityService;
 import pl.marcin.project.request.CustomerRequest;
-import pl.marcin.project.request.PurchaseRequest;
 
 
 import java.util.List;
 
-@RestController
+
 @RequiredArgsConstructor
 public class CustomerController {
     private final CustomerEntityService customerEntityService;

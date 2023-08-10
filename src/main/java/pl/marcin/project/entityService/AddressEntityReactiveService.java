@@ -7,6 +7,8 @@ import pl.marcin.project.entity.AddressEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.swing.text.Utilities;
+
 @Service
 public class AddressEntityReactiveService {
     @Autowired
@@ -17,13 +19,11 @@ public class AddressEntityReactiveService {
     }
 
     public Flux<AddressEntity> getAllAddresses() {
-        Flux<AddressEntity> fluxAddresses = addressReactiveRepository.findAll();
-        return fluxAddresses;
+        return addressReactiveRepository.findAll().map();
     }
 
     public Mono<AddressEntity> getAddressById(long id) {
-        Mono<AddressEntity> monoAddressbyId = addressReactiveRepository.findById(id);
-        return monoAddressbyId;
+        return addressReactiveRepository.findById(id);
     }
 
     public Mono<AddressEntity> saveAddress(Mono<AddressEntity> addressEntityMono) {

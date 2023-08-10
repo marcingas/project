@@ -3,7 +3,6 @@ package pl.marcin.project.model;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 @Setter
 @Getter
@@ -11,9 +10,10 @@ import java.util.Objects;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
+@NoArgsConstructor
 public class Cup {
 
-    private Integer id;
+    private Integer cup_id;
     private String color;
     private String shape;
     private BigDecimal price;

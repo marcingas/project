@@ -15,7 +15,7 @@ public class CustomerEntity {
     @Id
     private Long id;
     private String name;
-    private String LastName;
+    private String surname;
     @Column("address_id")
     private Long addressId;
     private List<PurchaseEntity> purchaseHistory;

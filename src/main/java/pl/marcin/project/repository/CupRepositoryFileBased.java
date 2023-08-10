@@ -1,9 +1,6 @@
 package pl.marcin.project.repository;
 
-import java.util.logging.Logger;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.logging.LogLevel;
 import pl.marcin.project.model.Cup;
 
 import java.io.File;
@@ -26,7 +23,7 @@ public class CupRepositoryFileBased implements CupRepository {
                 file.createNewFile();
             }
             FileWriter fileWriter = new FileWriter(file, true);
-            fileWriter.write(cup.getId() + "," + cup.getColor() + "," + cup.getShape() + "," +
+            fileWriter.write(cup.getCup_id() + "," + cup.getColor() + "," + cup.getShape() + "," +
                     cup.getPrice() + "\n");
             fileWriter.close();
 
@@ -37,11 +34,11 @@ public class CupRepositoryFileBased implements CupRepository {
             // trace
             // fatal
 
-            log.info("new cup saved with id {}", cup.getId());
+            log.info("new cup saved with id {}", cup.getCup_id());
         } catch (IOException e) {
-            log.warn("cannot save cup with id {} because of: {}", cup.getId(), e.getMessage());
+            log.warn("cannot save cup with id {} because of: {}", cup.getCup_id(), e.getMessage());
         }
-        return cup.getId();
+        return cup.getCup_id();
     }
 
     @Override
@@ -62,7 +59,7 @@ public class CupRepositoryFileBased implements CupRepository {
 
                 tempFileWriter = new FileWriter(tempFile, true);
                 if (id == cupId) {
-                    tempFileWriter.write(cup.getId() + "," + cup.getColor() + "," + cup.getShape() + "," +
+                    tempFileWriter.write(cup.getCup_id() + "," + cup.getColor() + "," + cup.getShape() + "," +
                             cup.getPrice() + "\n");
                 } else {
                     tempFileWriter.write(id + "," + color + "," + shape + "," +

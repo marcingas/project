@@ -11,13 +11,13 @@ public class CupRepositoryListBased implements CupRepository {
     @Override
     public int saveCup(Cup cup) {
         cups.add(cup);
-        return cup.getId();
+        return cup.getCup_id();
     }
 
     @Override
     public int updateCup(int cupId, Cup cup) {
         Cup foundCup = cups.stream()
-                .filter(searchedCup -> searchedCup.getId() == cupId)
+                .filter(searchedCup -> searchedCup.getCup_id() == cupId)
                 .findFirst()
                 .orElse(null);
 
@@ -33,7 +33,7 @@ public class CupRepositoryListBased implements CupRepository {
 
     @Override
     public boolean deleteCup(int cupId) {
-        return cups.removeIf(s -> s.getId() == cupId);
+        return cups.removeIf(s -> s.getCup_id() == cupId);
 
     }
 
@@ -46,7 +46,7 @@ public class CupRepositoryListBased implements CupRepository {
     public Cup findCup(int cupId) {
         Cup cup = null;
         for (Cup searchedCup : cups) {
-            if (searchedCup.getId() == cupId) {
+            if (searchedCup.getCup_id() == cupId) {
                 cup = searchedCup;
             }
         }

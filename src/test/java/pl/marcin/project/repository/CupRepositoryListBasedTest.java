@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pl.marcin.project.model.Cup;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,8 +12,8 @@ class CupRepositoryListBasedTest {
     private int notExistingCupId = 1;
     private int expectedCupId = 2;
     private int expectedCupId2 = 3;
-    private Cup expectedCup = Cup.builder().id(expectedCupId).color("White").build();
-    private Cup expectedCup2 = Cup.builder().id(expectedCupId2).color("Blue").build();
+    private Cup expectedCup = Cup.builder().cup_id(expectedCupId).color("White").build();
+    private Cup expectedCup2 = Cup.builder().cup_id(expectedCupId2).color("Blue").build();
     private CupRepository cupRepository = new CupRepositoryListBased();
 
     @Test
@@ -26,7 +25,7 @@ class CupRepositoryListBasedTest {
         Cup searchedCup = cupRepository.findCup(expectedCupId);
 
         //then
-        Assertions.assertEquals(expectedCupId, searchedCup.getId());
+        Assertions.assertEquals(expectedCupId, searchedCup.getCup_id());
     }
 
     @Test
@@ -113,7 +112,7 @@ class CupRepositoryListBasedTest {
 
         //given
         cupRepository.saveCup(expectedCup);
-        Cup updatedCup = Cup.builder().id(expectedCupId).color("Blue").build();
+        Cup updatedCup = Cup.builder().cup_id(expectedCupId).color("Blue").build();
 
         //when
         cupRepository.updateCup(expectedCupId, updatedCup);
@@ -128,7 +127,7 @@ class CupRepositoryListBasedTest {
         cupRepository.saveCup(expectedCup);
 
         //when
-        Cup updatedCup = Cup.builder().id(3).shape("circle").build();
+        Cup updatedCup = Cup.builder().cup_id(3).shape("circle").build();
 
         //then
         assertThrows(RuntimeException.class, () -> {

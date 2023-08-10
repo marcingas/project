@@ -17,6 +17,7 @@ public class PurchaseEntity {
     private Long id;
     @Column("customer_id")
     private Long customerId;
+    @Column("purchase_cost")
     private BigDecimal purchaseCost;
     private List<CupEntity> cups;
 

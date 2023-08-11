@@ -1,10 +1,13 @@
 package pl.marcin.project.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
 
     private Integer address_id;
@@ -12,4 +15,5 @@ public class Address {
     private Integer number;
     private String town;
     private String code;
+
 }

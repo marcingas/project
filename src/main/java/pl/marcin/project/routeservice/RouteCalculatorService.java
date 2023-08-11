@@ -17,13 +17,10 @@ import java.util.*;
 @Setter
 public class RouteCalculatorService {
     private final GeoService geoService;
-    CustomerEntity shop;
 
     @Autowired
     public RouteCalculatorService(GeoService geoService) {
         this.geoService = geoService;
-        shop = new CustomerEntity("shop", "Żywiec",
-                new AddressEntity("Sienkiewicza", 1, "Żywiec", "34-300"));
     }
 
     public int[] calculateBestRouteToClient(List<List<Client>> adjacencyList) {

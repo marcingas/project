@@ -1,5 +1,6 @@
 package pl.marcin.project.controller;
 
+import pl.marcin.project.model.Address;
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.model.Customer;
 import pl.marcin.project.model.Purchase;
@@ -24,9 +25,12 @@ public class Shop {
         CustomerService customerService = new CustomerService(new CustomerRepositoryListBased());
         CupService cupService = new CupService(new CupRepositoryListBased());
 
-        Customer jas = new Customer(1, "Jaś", "Kowalski", "Kraków");
-        Customer stas = new Customer(2, "Staszek", "Buła", "Żywiec");
-        Customer jola = new Customer(3, "Jola", "Buła", "Żywiec");
+        Customer jas = new Customer(1, "Jaś", "Kowalski",
+                new Address(1, "Krakowska", 1, "Krakow", "30-312"));
+        Customer stas = new Customer(2, "Staszek", "Buła",
+                new Address(2, "Krakowska", 1, "Krakow", "30-312"));
+        Customer jola = new Customer(3, "Jola", "Buła",
+                new Address(3, "Krakowska", 1, "Krakow", "30-312"));
 
         Cup cup1 = new Cup(1, "Blue", "square", BigDecimal.valueOf(1.2));
         Cup cup2 = new Cup(2, "Yellow", "circle", BigDecimal.valueOf(3.2));
@@ -46,7 +50,8 @@ public class Shop {
         addPurchase(purchaseService, purchase1);
         addPurchase(purchaseService, purchase2);
 
-        updateCustomer(customerService, new Customer(1, "Janek", "Kowalski", "Warszawa"), 1);
+        updateCustomer(customerService, new Customer(1, "Janek", "Kowalski",
+                new Address(5, "Krakowska", 1, "Krakow", "30-312")), 1);
         updateCup(cupService, new Cup(1, "BLUE", "square", BigDecimal.valueOf(2.43)), 1);
 
         System.out.println(getAllCups(cupService));

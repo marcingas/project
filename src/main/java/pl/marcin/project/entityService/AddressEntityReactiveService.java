@@ -3,7 +3,8 @@ package pl.marcin.project.entityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.AddressEntityReactiveRepository;
-import pl.marcin.project.entity.AddressEntity;
+import pl.marcin.project.model.Address;
+import pl.marcin.project.utils.AddressCupUtilities;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -16,24 +17,32 @@ public class AddressEntityReactiveService {
         this.addressReactiveRepository = addressReactiveRepository;
     }
 
-    public Flux<AddressEntity> getAllAddresses() {
-        return addressReactiveRepository.findAll();
+    public Flux<Address> getAllAddresses() {
+        return addressReactiveRepository.findAll()
+                .map(AddressCupUtilities::addressEntityToDto);
     }
 
-    public Mono<AddressEntity> getAddressById(long id) {
-        return addressReactiveRepository.findById(id);
+    public Mono<Address> getAddressById(Integer id) {
+        return addressReactiveRepository.findById(id.longValue())
+                .map(AddressCupUtilities::addressEntityToDto);
     }
 
-    public Mono<AddressEntity> saveAddress(Mono<AddressEntity> addressEntityMono) {
-        return addressEntityMono.flatMap(addressReactiveRepository::save);
+    public Mono<Address> saveAddress(Mono<Address> address) {
+        return address.map(AddressCupUtilities::dtoToAddressEntity)
+                .flatMap(addressReactiveRepository::save)
+                .map(AddressCupUtilities::addressEntityToDto);
     }
 
-    public Mono<AddressEntity> updateAddress(Mono<AddressEntity> addressEntityMono) {
-        return addressEntityMono.flatMap(addressReactiveRepository::save);
+    public Mono<Address> updateAddress(Mono<Address> address, Integer id) {
+        return addressReactiveRepository.findById(id.longValue())
+                .flatMap(addressEntity -> address.map(AddressCupUtilities::dtoToAddressEntity))
+                .doOnNext(addressEntity -> addressEntity.setAddress_id(id.longValue()))
+                .flatMap(addressReactiveRepository::save)
+                .map(AddressCupUtilities::addressEntityToDto);
     }
 
-    public Mono<Void> deleteAddress(Long id) {
-        return addressReactiveRepository.deleteById(id);
+    public Mono<Void> deleteAddress(Integer id) {
+        return addressReactiveRepository.deleteById(id.longValue());
     }
 
 

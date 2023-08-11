@@ -9,7 +9,8 @@ import org.springframework.data.relational.core.mapping.Table;
 
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "address")
 public class AddressEntity {
     @Id
@@ -19,5 +20,10 @@ public class AddressEntity {
     private String town;
     private String code;
 
-
+    public AddressEntity(String street, Integer number, String town, String code) {
+        this.street = street;
+        this.number = number;
+        this.town = town;
+        this.code = code;
+    }
 }

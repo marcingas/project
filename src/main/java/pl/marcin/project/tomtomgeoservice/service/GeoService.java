@@ -35,7 +35,7 @@ public class GeoService {
     }
 
     public Mono<AddressData> generateAddressDataReactive(CustomerEntity customerToVisit) {
-        Mono<AddressData> addressById = addressReactiveService.getAddressById(customerToVisit.getCustomer_id())
+        Mono<AddressData> addressById = addressReactiveService.getAddressById(customerToVisit.getAddressId())
                 .flatMap(addressEntity -> {
                     AddressData addressData = new AddressData();
                     addressData.setNumber(addressEntity.getNumber());

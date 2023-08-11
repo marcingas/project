@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.PurchaseEntityReactiveRepository;
 import pl.marcin.project.entity.PurchaseEntity;
+import pl.marcin.project.model.Purchase;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -11,31 +12,40 @@ import reactor.core.publisher.Mono;
 public class PurchaseEntityReactiveService {
     @Autowired
     private final PurchaseEntityReactiveRepository purchaseReactiveRepository;
+    @Autowired
+    private final CustomerEntityReactiveService customerEntityReactiveService;
 
-    public PurchaseEntityReactiveService(PurchaseEntityReactiveRepository purchaseReactiveRepository) {
+    public PurchaseEntityReactiveService(PurchaseEntityReactiveRepository purchaseReactiveRepository,
+                                         CustomerEntityReactiveService customerEntityReactiveService) {
         this.purchaseReactiveRepository = purchaseReactiveRepository;
+        this.customerEntityReactiveService = customerEntityReactiveService;
     }
 
-    public Flux<PurchaseEntity> getAllPurchasees() {
-        Flux<PurchaseEntity> fluxPurchases = purchaseReactiveRepository.findAll();
-        return fluxPurchases;
+    public Flux<Purchase> getAllPurchases() {
+        return purchaseReactiveRepository.findAll().map(customerEntityReactiveService::purchaseEntityToDto);
     }
 
-    public Mono<PurchaseEntity> getPurchaseById(long id) {
-        Mono<PurchaseEntity> monoPurchasebyId = purchaseReactiveRepository.findById(id);
-        return monoPurchasebyId;
+    public Mono<Purchase> getPurchaseById(Integer id) {
+        return purchaseReactiveRepository.findById(id.longValue())
+                .map(customerEntityReactiveService::purchaseEntityToDto);
     }
 
-    public Mono<PurchaseEntity> savePurchase(Mono<PurchaseEntity> purchaseEntityMono) {
-        return purchaseEntityMono.flatMap(purchaseReactiveRepository::save);
+    public Mono<Purchase> savePurchase(Mono<Purchase> purchaseMono) {
+        return purchaseMono.map(customerEntityReactiveService::dtoToPurchaseEntity)
+                .flatMap(purchaseReactiveRepository::save)
+                .map(customerEntityReactiveService::purchaseEntityToDto);
     }
 
-    public Mono<PurchaseEntity> updatePurchase(Mono<PurchaseEntity> purchaseEntityMono) {
-        return purchaseEntityMono.flatMap(purchaseReactiveRepository::save);
+    public Mono<Purchase> updatePurchase(Mono<Purchase> purchaseMono, Integer id) {
+        return purchaseReactiveRepository.findById(id.longValue())
+                .flatMap(purchaseEntity -> purchaseMono.map(customerEntityReactiveService::dtoToPurchaseEntity))
+                .doOnNext(purchaseEntity -> purchaseEntity.setId(id.longValue()))
+                .flatMap(purchaseReactiveRepository::save)
+                .map(customerEntityReactiveService::purchaseEntityToDto);
     }
 
-    public Mono<Void> deletePurchase(Long id) {
-        return purchaseReactiveRepository.deleteById(id);
+    public Mono<Void> deletePurchase(Integer id) {
+        return purchaseReactiveRepository.deleteById(id.longValue());
     }
 
 }

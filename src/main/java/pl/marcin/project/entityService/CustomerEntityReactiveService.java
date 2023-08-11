@@ -3,7 +3,6 @@ package pl.marcin.project.entityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.CustomerEntityRepositoryReactive;
-import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entity.PurchaseEntity;
 import pl.marcin.project.model.Address;
@@ -80,8 +79,6 @@ public class CustomerEntityReactiveService {
         return customerEntity;
     }
 
-
-    //customer service
     public Purchase purchaseEntityToDto(PurchaseEntity purchaseEntity) {
         Purchase purchase = new Purchase();
         Customer customer = getCustomerById(purchaseEntity.getCustomerId().intValue()).block();

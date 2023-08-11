@@ -23,29 +23,38 @@ public class CustomerEntityReactiveService {
     @Autowired
     private final AddressEntityReactiveService addressEntityReactiveService;
 
-    public CustomerEntityReactiveService(CustomerEntityRepositoryReactive customerEntityRepositoryReactive, AddressEntityReactiveService addressEntityReactiveService) {
+    public CustomerEntityReactiveService(CustomerEntityRepositoryReactive customerEntityRepositoryReactive,
+                                         AddressEntityReactiveService addressEntityReactiveService) {
         this.customerEntityRepositoryReactive = customerEntityRepositoryReactive;
         this.addressEntityReactiveService = addressEntityReactiveService;
     }
 
-    public Flux<CustomerEntity> getAllCustomers() {
-        return customerEntityRepositoryReactive.findAll();
+    public Flux<Customer> getAllCustomers() {
+        return customerEntityRepositoryReactive.findAll()
+                .map(this::customerEntityToDto);
     }
 
-    public Mono<CustomerEntity> getCustomerById(long id) {
-        return customerEntityRepositoryReactive.findById(id);
+    public Mono<Customer> getCustomerById(Integer id) {
+        return customerEntityRepositoryReactive.findById(id.longValue())
+                .map(this::customerEntityToDto);
     }
 
-    public Mono<CustomerEntity> saveCustomer(Mono<CustomerEntity> customerEntityMono) {
-        return customerEntityMono.flatMap(customerEntityRepositoryReactive::save);
+    public Mono<Customer> saveCustomer(Mono<Customer> customerMono) {
+        return customerMono.map(this::dtoToCustomerEntity)
+                .flatMap(customerEntityRepositoryReactive::save)
+                .map(this::customerEntityToDto);
     }
 
-    public Mono<CustomerEntity> updateCustomer(Mono<CustomerEntity> customerEntityMono) {
-        return customerEntityMono.flatMap(customerEntityRepositoryReactive::save);
+    public Mono<Customer> updateCustomer(Mono<Customer> customerMono, Integer id) {
+        return customerEntityRepositoryReactive.findById(id.longValue())
+                .flatMap(customerEntity -> customerMono.map(this::dtoToCustomerEntity))
+                .doOnNext(customerEntity -> customerEntity.setId(id.longValue()))
+                .flatMap(customerEntityRepositoryReactive::save)
+                .map(this::customerEntityToDto);
     }
 
-    public Mono<Void> deleteCustomer(Long id) {
-        return customerEntityRepositoryReactive.deleteById(id);
+    public Mono<Void> deleteCustomer(Integer id) {
+        return customerEntityRepositoryReactive.deleteById(id.longValue());
     }
 
     public Customer customerEntityToDto(CustomerEntity customerEntity) {
@@ -75,7 +84,7 @@ public class CustomerEntityReactiveService {
     //customer service
     public Purchase purchaseEntityToDto(PurchaseEntity purchaseEntity) {
         Purchase purchase = new Purchase();
-        Customer customer = customerEntityToDto(getCustomerById(purchaseEntity.getCustomerId()).block());
+        Customer customer = getCustomerById(purchaseEntity.getCustomerId().intValue()).block();
 
         purchase.setPurchaseCost(purchaseEntity.getPurchaseCost());
         purchase.setCups(AddressCupUtilities.cupEntityListToDto(purchaseEntity.getCups()));

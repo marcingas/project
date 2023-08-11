@@ -7,11 +7,11 @@ import pl.marcin.project.entity.CupEntity;
 import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entity.PurchaseEntity;
 import pl.marcin.project.entityService.AddressEntityReactiveService;
+import pl.marcin.project.entityService.CustomerEntityReactiveService;
 import pl.marcin.project.model.Address;
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.model.Customer;
 import pl.marcin.project.model.Purchase;
-import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +19,21 @@ import java.util.List;
 public class ProjectUtilities {
     @Autowired
     private final AddressEntityReactiveService addressEntityReactiveService;
+    private final CustomerEntityReactiveService customerEntityReactiveService;
 
-    public ProjectUtilities(AddressEntityReactiveService addressEntityReactiveService) {
+    public ProjectUtilities(AddressEntityReactiveService addressEntityReactiveService, CustomerEntityReactiveService customerEntityReactiveService) {
         this.addressEntityReactiveService = addressEntityReactiveService;
+        this.customerEntityReactiveService = customerEntityReactiveService;
     }
 
-    //customer and address ok check rest!
+
     public Address addressEntityToDto(AddressEntity addressEntity) {
         Address address = new Address();
-        BeanUtils.copyProperties(addressEntity, address);
+        address.setAddress_id(addressEntity.getAddress_id().intValue());
+        address.setCode(addressEntity.getCode());
+        address.setTown(addressEntity.getTown());
+        address.setStreet(addressEntity.getStreet());
+        address.setNumber(addressEntity.getNumber());
         return address;
     }
 
@@ -45,13 +51,34 @@ public class ProjectUtilities {
 
     public Cup cupEntityToDto(CupEntity cupEntity) {
         Cup cup = new Cup();
-        BeanUtils.copyProperties(cupEntity, cup);
+        cup.setPrice(cupEntity.getPrice());
+        cup.setCup_id(cupEntity.getCup_id().intValue());
+        cup.setColor(cupEntity.getColor());
+        cup.setShape(cupEntity.getShape());
         return cup;
+    }
+
+    public List<Cup> cupEntityListToDto(List<CupEntity> cupEntities) {
+        List<Cup> cups = new ArrayList<>();
+        for (var cup : cupEntities) cups.add(cupEntityToDto(cup));
+        return cups;
+    }
+
+    public List<CupEntity> dtoToCupEntityList(List<Cup> cups) {
+        List<CupEntity> cupEntities = new ArrayList<>();
+        for (var cup : cups) cupEntities.add(dtoToCupEntity(cup));
+        return cupEntities;
     }
 
     public Purchase purchaseEntityToDto(PurchaseEntity purchaseEntity) {
         Purchase purchase = new Purchase();
-        BeanUtils.copyProperties(purchaseEntity, purchase);
+        Customer customer = customerEntityToDto(customerEntityReactiveService
+                .getCustomerById(purchaseEntity.getCustomerId()).block());
+
+        purchase.setPurchaseCost(purchaseEntity.getPurchaseCost());
+        purchase.setCups(cupEntityListToDto(purchaseEntity.getCups()));
+        purchase.setCustomer(customer);
+        purchase.setId(purchaseEntity.getId().intValue());
         return purchase;
     }
 
@@ -73,13 +100,20 @@ public class ProjectUtilities {
 
     public AddressEntity dtoToAddressEntity(Address address) {
         AddressEntity addressEntity = new AddressEntity();
-        BeanUtils.copyProperties(address, addressEntity);
+        addressEntity.setAddress_id(address.getAddress_id().longValue());
+        addressEntity.setTown(address.getTown());
+        addressEntity.setNumber(address.getNumber());
+        addressEntity.setStreet(address.getStreet());
+        addressEntity.setCode(address.getCode());
         return addressEntity;
     }
 
     public CupEntity dtoToCupEntity(Cup cup) {
         CupEntity cupEntity = new CupEntity();
-        BeanUtils.copyProperties(cup, cupEntity);
+        cupEntity.setPrice(cup.getPrice());
+        cupEntity.setCup_id(cup.getCup_id().longValue());
+        cupEntity.setColor(cup.getColor());
+        cupEntity.setShape(cup.getShape());
         return cupEntity;
     }
 
@@ -96,7 +130,11 @@ public class ProjectUtilities {
 
     public PurchaseEntity dtoToPurchaseEntity(Purchase purchase) {
         PurchaseEntity purchaseEntity = new PurchaseEntity();
-        BeanUtils.copyProperties(purchase, purchaseEntity);
+        purchaseEntity.setPurchaseCost(purchase.getPurchaseCost());
+        purchaseEntity.setId(purchase.getId().longValue());
+        purchaseEntity.setCups(dtoToCupEntityList(purchase.getCups()));
+        Long customerId = purchase.getCustomer().getId().longValue();
+        purchaseEntity.setCustomerId(customerId);
         return purchaseEntity;
     }
 }

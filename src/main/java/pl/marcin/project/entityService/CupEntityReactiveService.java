@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.CupEntityReactiveRepository;
-import pl.marcin.project.entity.CupEntity;
+import pl.marcin.project.model.Cup;
+import pl.marcin.project.utils.AddressCupUtilities;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -14,24 +15,31 @@ public class CupEntityReactiveService {
     @Autowired
     private final CupEntityReactiveRepository cupEntityReactiveRepository;
 
-    public Flux<CupEntity> getAllCups() {
-        return cupEntityReactiveRepository.findAll();
+    public Flux<Cup> getAllCups() {
+        return cupEntityReactiveRepository.findAll()
+                .map(AddressCupUtilities::cupEntityToDto);
     }
 
-    public Mono<CupEntity> getCupById(long id) {
-        return cupEntityReactiveRepository.findById(id);
+    public Mono<Cup> getCupById(Integer id) {
+        return cupEntityReactiveRepository.findById(id.longValue())
+                .map(AddressCupUtilities::cupEntityToDto);
     }
 
-    public Mono<CupEntity> saveCup(Mono<CupEntity> cupEntityMono) {
-        return cupEntityMono.flatMap(cupEntityReactiveRepository::save);
+    public Mono<Cup> saveCup(Mono<Cup> cupMono) {
+        return cupMono.map(AddressCupUtilities::dtoToCupEntity)
+                .flatMap(cupEntityReactiveRepository::save)
+                .map(AddressCupUtilities::cupEntityToDto);
     }
 
-    public Mono<CupEntity> updateCUp(Mono<CupEntity> cupEntityMono) {
-        return cupEntityMono.flatMap(cupEntityReactiveRepository::save);
+    public Mono<Cup> updateCup(Mono<Cup> cupMono, Integer id) {
+        return cupEntityReactiveRepository.findById(id.longValue())
+                .flatMap(cupEntity -> cupMono.map(AddressCupUtilities::dtoToCupEntity))
+                .doOnNext(cupEntityReactiveRepository::save)
+                .map(AddressCupUtilities::cupEntityToDto);
     }
 
-    public Mono<Void> deleteCup(Long id) {
-        return cupEntityReactiveRepository.deleteById(id);
+    public Mono<Void> deleteCup(Integer id) {
+        return cupEntityReactiveRepository.deleteById(id.longValue());
     }
 
 

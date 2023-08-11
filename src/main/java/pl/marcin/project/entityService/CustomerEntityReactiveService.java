@@ -51,9 +51,9 @@ public class CustomerEntityReactiveService {
     public Customer customerEntityToDto(CustomerEntity customerEntity) {
         Customer customer = new Customer();
         Long addressId = customerEntity.getAddressId();
-        AddressEntity addressMono = addressEntityReactiveService.getAddressById(addressId).block();
 
-        customer.setAddress(AddressCupUtilities.addressEntityToDto(addressMono));
+        Address address = addressEntityReactiveService.getAddressById(addressId.intValue()).block();
+        customer.setAddress(address);
         customer.setName(customerEntity.getName());
         customer.setSurname(customerEntity.getSurname());
         customer.setPurchaseHistory(purchaseEntityListToDto(customerEntity.getPurchaseHistory()));

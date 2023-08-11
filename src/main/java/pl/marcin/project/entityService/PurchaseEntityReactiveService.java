@@ -3,7 +3,6 @@ package pl.marcin.project.entityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.PurchaseEntityReactiveRepository;
-import pl.marcin.project.entity.PurchaseEntity;
 import pl.marcin.project.model.Purchase;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

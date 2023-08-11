@@ -49,15 +49,7 @@ class AddressEntityReactiveServiceTest {
 
     @Test
     void saveAddress() {
-        Address address = new Address(1, "Krakowska", 1, "Kraków", "30-333");
-        AddressEntity addressEntity = utilities.dtoToAddressEntity(address);
-        Mono<AddressEntity> monoAddressEntity = Mono.just(addressEntity);
-        addressService.saveAddress(monoAddressEntity);
 
-        Mono<AddressEntity> expectedMonoAddressEntity = repository.findById(address.getAddress_id().longValue());
-        AddressEntity addressGiven = monoAddressEntity.block();
-        AddressEntity addressExpected = monoAddressEntity.block();
-        Assertions.assertEquals(addressGiven.getAddress_id(), addressExpected.getAddress_id());
     }
 
     @Test

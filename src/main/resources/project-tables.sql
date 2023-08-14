@@ -30,9 +30,7 @@ CREATE TABLE purchase (
 	purchase_id int NOT NULL PRIMARY KEY,
 	purchase_cost numeric(38, 2),
 	customer_id int NOT NULL,
-	cup_id int NOT NULL,
-	FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-	FOREIGN KEY (cup_id) REFERENCES cup(cup_id),
+	FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
 );
 
 CREATE TABLE purchase_cups (

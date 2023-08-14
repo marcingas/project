@@ -12,8 +12,6 @@ import java.util.*;
 
 @Slf4j
 public class CupRepositoryFileBased implements CupRepository {
-    //private static Logger logger = Logger.getLogger(CupRepositoryFileBased.class.getName());
-//    private static final File FILE = new File("cups.txt");
 
     @Override
     public int saveCup(Cup cup) {
@@ -27,12 +25,6 @@ public class CupRepositoryFileBased implements CupRepository {
                     cup.getPrice() + "\n");
             fileWriter.close();
 
-            // info
-            // error
-            // warn
-            // debug
-            // trace
-            // fatal
 
             log.info("new cup saved with id {}", cup.getCup_id());
         } catch (IOException e) {
@@ -69,7 +61,7 @@ public class CupRepositoryFileBased implements CupRepository {
             }
             tempFileWriter.close();
         } catch (IOException e) {
-            e.printStackTrace(); // log...
+            e.printStackTrace();
         } finally {
             scanner.close();
         }
@@ -85,7 +77,6 @@ public class CupRepositoryFileBased implements CupRepository {
         }
         return cupId;
     }
-
 
     @Override
     public boolean deleteCup(int cupId) {

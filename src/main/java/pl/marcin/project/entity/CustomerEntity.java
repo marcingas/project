@@ -21,18 +21,6 @@ public class CustomerEntity {
     private String surname;
     @Column("address_id")
     private Long addressId;
-    private List<PurchaseEntity> purchaseHistory;
 
-    public CustomerEntity(String name, String surname, Long addressId) {
-        this.name = name;
-        this.surname = surname;
-        this.addressId = addressId;
-    }
 
-    public CustomerEntity(String name, String surname, Long addressId, List<PurchaseEntity> purchaseHistory) {
-        this.name = name;
-        this.surname = surname;
-        this.addressId = addressId;
-        this.purchaseHistory = purchaseHistory;
-    }
 }

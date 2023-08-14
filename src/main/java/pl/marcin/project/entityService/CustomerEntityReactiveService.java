@@ -8,12 +8,8 @@ import pl.marcin.project.entity.PurchaseEntity;
 import pl.marcin.project.model.Address;
 import pl.marcin.project.model.Customer;
 import pl.marcin.project.model.Purchase;
-import pl.marcin.project.utils.AddressCupUtilities;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CustomerEntityReactiveService {
@@ -64,7 +60,6 @@ public class CustomerEntityReactiveService {
         customer.setAddress(address);
         customer.setName(customerEntity.getName());
         customer.setSurname(customerEntity.getSurname());
-        customer.setPurchaseHistory(purchaseEntityListToDto(customerEntity.getPurchaseHistory()));
         return customer;
     }
 
@@ -75,7 +70,6 @@ public class CustomerEntityReactiveService {
         customerEntity.setSurname(customer.getSurname());
         Address address = customer.getAddress();
         customerEntity.setAddressId(address.getAddress_id().longValue());
-        customerEntity.setPurchaseHistory(dtoToPurchaseEntityList(customer.getPurchaseHistory()));
         return customerEntity;
     }
 
@@ -84,7 +78,7 @@ public class CustomerEntityReactiveService {
         Customer customer = getCustomerById(purchaseEntity.getCustomerId().intValue()).block();
 
         purchase.setPurchaseCost(purchaseEntity.getPurchaseCost());
-        purchase.setCups(AddressCupUtilities.cupEntityListToDto(purchaseEntity.getCups()));
+        purchase.setCups(purchaseEntity.getCups());
         purchase.setCustomer(customer);
         purchase.setId(purchaseEntity.getId().intValue());
         return purchase;
@@ -94,27 +88,9 @@ public class CustomerEntityReactiveService {
         PurchaseEntity purchaseEntity = new PurchaseEntity();
         purchaseEntity.setPurchaseCost(purchase.getPurchaseCost());
         purchaseEntity.setId(purchase.getId().longValue());
-        purchaseEntity.setCups(AddressCupUtilities.dtoToCupEntityList(purchase.getCups()));
+        purchaseEntity.setCups(purchase.getCups());
         Long customerId = purchase.getCustomer().getId().longValue();
         purchaseEntity.setCustomerId(customerId);
         return purchaseEntity;
     }
-
-    public List<Purchase> purchaseEntityListToDto(List<PurchaseEntity> purchaseEntityList) {
-        List<Purchase> purchases = new ArrayList<>();
-        for (var purchase : purchaseEntityList) {
-            purchases.add(purchaseEntityToDto(purchase));
-        }
-        return purchases;
-    }
-
-    public List<PurchaseEntity> dtoToPurchaseEntityList(List<Purchase> purchaseList) {
-        List<PurchaseEntity> entityPurchases = new ArrayList<>();
-        for (var purchase : purchaseList) {
-            entityPurchases.add(dtoToPurchaseEntity(purchase));
-        }
-        return entityPurchases;
-    }
-
-
 }

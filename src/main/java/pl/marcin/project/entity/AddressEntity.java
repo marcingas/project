@@ -9,8 +9,8 @@ import org.springframework.data.relational.core.mapping.Table;
 
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "address")
 public class AddressEntity {
     @Id

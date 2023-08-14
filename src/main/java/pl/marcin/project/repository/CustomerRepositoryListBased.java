@@ -48,13 +48,4 @@ public class CustomerRepositoryListBased implements CustomerRepository {
         }
         throw new RuntimeException("There is no such customer");
     }
-
-    @Override
-    public void updatePurchaseHistory(Purchase purchase, Customer customer) {
-        for (Customer c : customers) {
-            if (c.getId() == customer.getId()) {
-                c.updatePurchaseHistory(purchase);
-            }
-        }
-    }
 }

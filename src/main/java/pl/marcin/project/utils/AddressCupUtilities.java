@@ -6,9 +6,6 @@ import pl.marcin.project.entity.CupEntity;
 import pl.marcin.project.model.Address;
 import pl.marcin.project.model.Cup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public class AddressCupUtilities {
 
@@ -50,17 +47,7 @@ public class AddressCupUtilities {
         return cupEntity;
     }
 
-    public static List<Cup> cupEntityListToDto(List<CupEntity> cupEntities) {
-        List<Cup> cups = new ArrayList<>();
-        for (var cup : cupEntities) cups.add(cupEntityToDto(cup));
-        return cups;
-    }
 
-    public static List<CupEntity> dtoToCupEntityList(List<Cup> cups) {
-        List<CupEntity> cupEntities = new ArrayList<>();
-        for (var cup : cups) cupEntities.add(dtoToCupEntity(cup));
-        return cupEntities;
-    }
 
 
 }

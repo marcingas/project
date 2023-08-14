@@ -32,32 +32,26 @@ class AddressCupUtilitiesTest {
 
     @Test
     void cupEntityToDto() {
-        CupEntity cupEntity = new CupEntity(1L, "abc", "abc", BigDecimal.valueOf(2.32));
+        CupEntity cupEntity = new CupEntity(1L, "ehite", "circle", BigDecimal.valueOf(2.32));
         Cup cup = AddressCupUtilities.cupEntityToDto(cupEntity);
 
         Assertions.assertEquals(1, cup.getCup_id());
     }
 
-    @Test
-    void cupEntityListToDto() {
-        CupEntity cupEntity = new CupEntity(1L, "abc", "abc", BigDecimal.valueOf(2.32));
-        List<CupEntity> cupEntities = new ArrayList<>();
-        cupEntities.add(cupEntity);
-
-        List<Cup> cups = AddressCupUtilities.cupEntityListToDto(cupEntities);
-        Assertions.assertEquals(1, cups.get(0).getCup_id());
-
-    }
-
-    @Test
-    void dtoToCupEntityList() {
-    }
 
     @Test
     void dtoToAddressEntity() {
+        Address address = new Address(1, "abc", 1, "Kraków", "43-300");
+        AddressEntity addressEntity = AddressCupUtilities.dtoToAddressEntity(address);
+
+        Assertions.assertEquals(1L, addressEntity.getAddress_id());
     }
 
     @Test
     void dtoToCupEntity() {
+        Cup cup = new Cup(1, "blue", "circle", BigDecimal.valueOf(2.32));
+        CupEntity cupEntity = AddressCupUtilities.dtoToCupEntity(cup);
+
+        Assertions.assertEquals(1L, cupEntity.getCup_id());
     }
 }

@@ -8,13 +8,14 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Purchase {
     private Integer id;
     private Customer customer;
-    private List<Cup> cups;
     private BigDecimal purchaseCost;
+    private List<Cup> cups;
 
 
     public Purchase(Customer customer, List<Cup> cups) {
@@ -22,33 +23,8 @@ public class Purchase {
         this.cups = cups;
         BigDecimal purchaseCost = BigDecimal.ZERO;
         for (var cup : cups) {
-            purchaseCost = purchaseCost.add(cup.getPrice());
+            purchaseCost.add(cup.getPrice());
         }
-        if (customer.getPurchaseHistory().size() >= 3) {
-            this.purchaseCost = purchaseCost.multiply(BigDecimal.valueOf(0.9));
-            System.out.println("!!!10% Discount included!!!: ");
-        } else {
-            this.purchaseCost = purchaseCost;
-        }
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public List<Cup> getCups() {
-        return cups;
-    }
-
-    public BigDecimal getPurchaseCost() {
-        return purchaseCost;
-    }
-
-    @Override
-    public String toString() {
-        return "Purchase\n" +
-                "cups: " + cups +
-                "\npurchaseCost:" + purchaseCost + " USD" +
-                "\ncustomer: " + customer.getName() + "\n";
+        this.purchaseCost = purchaseCost;
     }
 }

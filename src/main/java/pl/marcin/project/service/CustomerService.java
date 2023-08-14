@@ -43,11 +43,6 @@ public class CustomerService {
         return customerRepository.findCustomer(customerId);
     }
 
-    public int updatePurchaseHistory(Purchase purchase, Customer customer) {
-        customerRepository.updatePurchaseHistory(purchase, customer);
-        log.info("Customers id: " + customer.getId() + " purchase history updated");
-        return customer.getId();
-    }
 
 
 }

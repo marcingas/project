@@ -4,21 +4,37 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.CupEntityReactiveRepository;
+import pl.marcin.project.database.PurchaseEntityReactiveRepository;
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.utils.AddressCupUtilities;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class CupEntityReactiveService {
     @Autowired
     private final CupEntityReactiveRepository cupEntityReactiveRepository;
+    @Autowired
+    private final PurchaseEntityReactiveRepository purchaseEntityReactiveRepository;
 
     public Flux<Cup> getAllCups() {
         return cupEntityReactiveRepository.findAll()
                 .map(AddressCupUtilities::cupEntityToDto);
     }
+
+    public Flux<Cup> getAllCupsById(List<Long> cupIds) {
+        return cupEntityReactiveRepository.findAllById(cupIds)
+                .map(AddressCupUtilities::cupEntityToDto);
+    }
+
+    public Flux<Cup> getCupsByPurchaseId(Integer purchaseId) {
+        return cupEntityReactiveRepository.findByPurchase_id(purchaseId.longValue())
+                .map(AddressCupUtilities::cupEntityToDto);
+    }
+
 
     public Mono<Cup> getCupById(Integer id) {
         return cupEntityReactiveRepository.findById(id.longValue())

@@ -48,9 +48,26 @@ public class CustomerEntityReactiveService {
                 .map(this::customerEntityToDto);
     }
 
-    public Mono<Void> deleteCustomer(Integer id) {
-        return customerEntityRepositoryReactive.deleteById(id.longValue());
+    public Mono<Customer> updateCustomersAddressId(Mono<Customer> customerMono, Integer id, Integer addressId) {
+        return customerEntityRepositoryReactive.findById(id.longValue())
+                .flatMap(customerEntity -> customerMono.map(this::dtoToCustomerEntity))
+                .doOnNext(customerEntity -> customerEntity.setId(id.longValue()))
+                .doOnNext(customerEntity -> customerEntity.setAddressId(addressId.longValue()))
+                .flatMap(customerEntityRepositoryReactive::save)
+                .map(this::customerEntityToDto);
     }
+
+    public Mono<Void> deleteCustomer(Integer id) {
+        return customerEntityRepositoryReactive.findById(id.longValue())
+                .flatMap(
+                        customerEntity -> {
+                            Mono<Void> deleteAddress = addressEntityReactiveService.deleteAddress(customerEntity
+                                    .getAddressId().intValue());
+                            Mono<Void> deleteCustomer = customerEntityRepositoryReactive.deleteById(id.longValue());
+                            return deleteAddress.then(deleteCustomer);
+                        });
+    }
+
 
     public Customer customerEntityToDto(CustomerEntity customerEntity) {
         Customer customer = new Customer();
@@ -69,7 +86,7 @@ public class CustomerEntityReactiveService {
         customerEntity.setName(customer.getName());
         customerEntity.setSurname(customer.getSurname());
         Address address = customer.getAddress();
-        customerEntity.setAddressId(address.getAddress_id().longValue());
+        customerEntity.setAddressId(address.getAddressId().longValue());
         return customerEntity;
     }
 

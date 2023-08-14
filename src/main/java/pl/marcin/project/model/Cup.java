@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class Cup {
 
-    private Integer cup_id;
+    private Integer cupId;
     private String color;
     private String shape;
     private BigDecimal price;

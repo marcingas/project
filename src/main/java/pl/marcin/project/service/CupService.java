@@ -20,20 +20,20 @@ public class CupService {
 
     public int addCup(Cup cup) {
         cupRepository.saveCup(cup);
-        log.info("Cup " + cup.getCup_id() + " saved");
-        return cup.getCup_id();
+        log.info("Cup " + cup.getCupId() + " saved");
+        return cup.getCupId();
     }
 
     public int addCupToFile(Cup cup) {
         cupRepositoryFileBased.saveCup(cup);
-        log.info("Cup " + cup.getCup_id() + " saved");
-        return cup.getCup_id();
+        log.info("Cup " + cup.getCupId() + " saved");
+        return cup.getCupId();
     }
 
     public int updateCup(int cupId, Cup cup) {
         cupRepository.updateCup(cupId, cup);
         log.info("Cup with id " + cupId + " updated");
-        return cup.getCup_id();
+        return cup.getCupId();
     }
 
     public int deleteCup(int cupId) {

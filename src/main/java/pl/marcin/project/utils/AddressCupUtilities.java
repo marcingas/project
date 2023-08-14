@@ -11,7 +11,7 @@ public class AddressCupUtilities {
 
     public static Address addressEntityToDto(AddressEntity addressEntity) {
         Address address = new Address();
-        address.setAddress_id(addressEntity.getAddress_id().intValue());
+        address.setAddressId(addressEntity.getAddressId().intValue());
         address.setCode(addressEntity.getCode());
         address.setTown(addressEntity.getTown());
         address.setStreet(addressEntity.getStreet());
@@ -21,7 +21,7 @@ public class AddressCupUtilities {
 
     public static AddressEntity dtoToAddressEntity(Address address) {
         AddressEntity addressEntity = new AddressEntity();
-        addressEntity.setAddress_id(address.getAddress_id().longValue());
+        addressEntity.setAddressId(address.getAddressId().longValue());
         addressEntity.setTown(address.getTown());
         addressEntity.setNumber(address.getNumber());
         addressEntity.setStreet(address.getStreet());
@@ -32,7 +32,7 @@ public class AddressCupUtilities {
     public static Cup cupEntityToDto(CupEntity cupEntity) {
         Cup cup = new Cup();
         cup.setPrice(cupEntity.getPrice());
-        cup.setCup_id(cupEntity.getCup_id().intValue());
+        cup.setCupId(cupEntity.getCupId().intValue());
         cup.setColor(cupEntity.getColor());
         cup.setShape(cupEntity.getShape());
         return cup;
@@ -41,7 +41,7 @@ public class AddressCupUtilities {
     public static CupEntity dtoToCupEntity(Cup cup) {
         CupEntity cupEntity = new CupEntity();
         cupEntity.setPrice(cup.getPrice());
-        cupEntity.setCup_id(cup.getCup_id().longValue());
+        cupEntity.setCupId(cup.getCupId().longValue());
         cupEntity.setColor(cup.getColor());
         cupEntity.setShape(cup.getShape());
         return cupEntity;

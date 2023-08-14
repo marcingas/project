@@ -36,7 +36,7 @@ public class AddressEntityReactiveService {
     public Mono<Address> updateAddress(Mono<Address> address, Integer id) {
         return addressReactiveRepository.findById(id.longValue())
                 .flatMap(addressEntity -> address.map(AddressCupUtilities::dtoToAddressEntity))
-                .doOnNext(addressEntity -> addressEntity.setAddress_id(id.longValue()))
+                .doOnNext(addressEntity -> addressEntity.setAddressId(id.longValue()))
                 .flatMap(addressReactiveRepository::save)
                 .map(AddressCupUtilities::addressEntityToDto);
     }

@@ -3,7 +3,6 @@ package pl.marcin.project.entityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.marcin.project.database.CupEntityReactiveRepository;
 import pl.marcin.project.database.PurchaseCupsReactiveRepository;
 import pl.marcin.project.database.PurchaseEntityReactiveRepository;
 import pl.marcin.project.entity.PurchaseCups;
@@ -23,24 +22,21 @@ public class PurchaseEntityReactiveService {
     private final CustomerEntityReactiveService customerEntityReactiveService;
     @Autowired
     private final PurchaseCupsReactiveRepository purchaseCupsReactiveRepository;
-    @Autowired
-    private final CupEntityReactiveService cupEntityReactiveService;
 
 
     public Flux<Purchase> getAllPurchases() {
         return purchaseReactiveRepository.findAll().map(customerEntityReactiveService::purchaseEntityToDto);
     }
 
-    public Flux<Purchase> getPurchasesByCustomerId(Integer customerId) {
-        return purchaseReactiveRepository.findByCustomer_id(customerId.longValue()).
-                map(customerEntityReactiveService::purchaseEntityToDto);
+    public Flux<Purchase> getCustomersPurchaseHistory(Integer customerId) {
+        return purchaseReactiveRepository.findByCustomer_id(customerId.longValue())
+                .map(customerEntityReactiveService::purchaseEntityToDto);
     }
 
     public Mono<Purchase> getPurchaseById(Integer id) {
         return purchaseReactiveRepository.findById(id.longValue())
                 .map(customerEntityReactiveService::purchaseEntityToDto);
     }
-
 
     public Mono<Purchase> savePurchase(Mono<Purchase> purchaseMono, List<Cup> cups) {
 
@@ -50,7 +46,7 @@ public class PurchaseEntityReactiveService {
                             return Flux.fromIterable(cups)
                                     .flatMap(cup -> {
                                         return purchaseCupsReactiveRepository.save(
-                                                new PurchaseCups(purchaseEntity.getId(), cup.getCup_id().longValue()));
+                                                new PurchaseCups(purchaseEntity.getId(), cup.getCupId().longValue()));
                                     }).then(Mono.just(purchaseEntity));
                         }
                 )
@@ -67,8 +63,24 @@ public class PurchaseEntityReactiveService {
                 .map(customerEntityReactiveService::purchaseEntityToDto);
     }
 
-    public Mono<Void> deletePurchase(Integer id) {
-        return purchaseReactiveRepository.deleteById(id.longValue());
+    public Mono<Purchase> updatePurchaseCupList(Mono<Purchase> purchaseMono, Integer id, List<Cup> updatedCupsList) {
+        return purchaseReactiveRepository.findById(id.longValue())
+                .flatMap(purchaseEntity -> purchaseMono.map(customerEntityReactiveService::dtoToPurchaseEntity))
+                .doOnNext(purchaseEntity -> purchaseEntity.setId(id.longValue()))
+                .flatMap(purchaseEntity -> {
+                            purchaseEntity.setCups(updatedCupsList);
+                            return Flux.fromIterable(updatedCupsList)
+                                    .flatMap(cup -> {
+                                        return purchaseCupsReactiveRepository.save(
+                                                new PurchaseCups(purchaseEntity.getId(), cup.getCupId().longValue()));
+                                    }).then(Mono.just(purchaseEntity));
+                        }
+                )
+                .map(customerEntityReactiveService::purchaseEntityToDto);
     }
 
+    public Mono<Void> deletePurchase(Integer purchaseId) {
+        return purchaseCupsReactiveRepository.deleteByPurchaseId(purchaseId.longValue())
+                .then(purchaseReactiveRepository.deleteById(purchaseId.longValue()));
+    }
 }

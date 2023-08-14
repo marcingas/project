@@ -21,16 +21,16 @@ public class CupRepositoryFileBased implements CupRepository {
                 file.createNewFile();
             }
             FileWriter fileWriter = new FileWriter(file, true);
-            fileWriter.write(cup.getCup_id() + "," + cup.getColor() + "," + cup.getShape() + "," +
+            fileWriter.write(cup.getCupId() + "," + cup.getColor() + "," + cup.getShape() + "," +
                     cup.getPrice() + "\n");
             fileWriter.close();
 
 
-            log.info("new cup saved with id {}", cup.getCup_id());
+            log.info("new cup saved with id {}", cup.getCupId());
         } catch (IOException e) {
-            log.warn("cannot save cup with id {} because of: {}", cup.getCup_id(), e.getMessage());
+            log.warn("cannot save cup with id {} because of: {}", cup.getCupId(), e.getMessage());
         }
-        return cup.getCup_id();
+        return cup.getCupId();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CupRepositoryFileBased implements CupRepository {
 
                 tempFileWriter = new FileWriter(tempFile, true);
                 if (id == cupId) {
-                    tempFileWriter.write(cup.getCup_id() + "," + cup.getColor() + "," + cup.getShape() + "," +
+                    tempFileWriter.write(cup.getCupId() + "," + cup.getColor() + "," + cup.getShape() + "," +
                             cup.getPrice() + "\n");
                 } else {
                     tempFileWriter.write(id + "," + color + "," + shape + "," +

@@ -12,13 +12,13 @@ public class CustomerRepositoryListBased implements CustomerRepository {
     @Override
     public int saveCustomer(Customer customer) {
         customers.add(customer);
-        return customer.getId();
+        return customer.getCustomerId();
     }
 
     @Override
     public int updateCustomer(int customerId, Customer customer) {
         for (var searchedCustomer : customers) {
-            if (searchedCustomer.getId() == customerId) {
+            if (searchedCustomer.getCustomerId() == customerId) {
                 searchedCustomer.setName(customer.getName());
                 searchedCustomer.setSurname(customer.getSurname());
                 searchedCustomer.setAddress(customer.getAddress());
@@ -30,7 +30,7 @@ public class CustomerRepositoryListBased implements CustomerRepository {
 
     @Override
     public boolean deleteCustomer(int customerId) {
-        return customers.removeIf(s -> s.getId() == customerId);
+        return customers.removeIf(s -> s.getCustomerId() == customerId);
 
     }
 
@@ -42,19 +42,10 @@ public class CustomerRepositoryListBased implements CustomerRepository {
     @Override
     public Customer findCustomer(int customerId) {
         for (Customer searchedCustomer : customers) {
-            if (searchedCustomer.getId() == customerId) {
+            if (searchedCustomer.getCustomerId() == customerId) {
                 return searchedCustomer;
             }
         }
         throw new RuntimeException("There is no such customer");
-    }
-
-    @Override
-    public void updatePurchaseHistory(Purchase purchase, Customer customer) {
-        for (Customer c : customers) {
-            if (c.getId() == customer.getId()) {
-                c.updatePurchaseHistory(purchase);
-            }
-        }
     }
 }

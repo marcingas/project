@@ -20,18 +20,17 @@ public class TomTomRoutingService {
         this.webClient = webClient;
     }
 
-    public Mono<RouteAnswer> getRoute(RouteData routeData) {
+    public RouteAnswer getRoute(RouteData routeData) {
         String uri = UriComponentsBuilder.fromUriString(FIND_ROUTE)
                 .buildAndExpand(routeData.getPositions(), routeData.getAlternativeRoutes(),
                         routeData.getRouteType(), routeData.isTraffic(), routeData.getTravelMode())
                 .toUriString();
         uri += "&key=" + KEY;
 
-        Mono<RouteAnswer> responseMono = webClient.get()
+        return webClient.get()
                 .uri(uri)
                 .retrieve()
-                .bodyToMono(RouteAnswer.class);
-        return responseMono;
+                .bodyToMono(RouteAnswer.class).block();
 
     }
 

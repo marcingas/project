@@ -4,11 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.tomtomgeoservice.geocodingmodel.AddressData;
 import pl.marcin.project.tomtomgeoservice.service.GeoService;
-import reactor.core.publisher.Mono;
 
 import java.util.*;
 
@@ -22,8 +20,6 @@ public class RouteCalculatorService {
     @Autowired
     public RouteCalculatorService(GeoService geoService) {
         this.geoService = geoService;
-        shop = new CustomerEntity("shop", "Żywiec",
-                new AddressEntity("Sienkiewicza", 1, "Żywiec", "34-300"));
     }
 
     public int[] calculateBestRouteToClient(List<List<Client>> adjacencyList) {
@@ -79,11 +75,11 @@ public class RouteCalculatorService {
         return path;
     }
 
-    public Mono<AddressData> addressDataGenerator(CustomerEntity customerToVisit) {
-        return geoService.generateAddressDataReactive(customerToVisit);
+    public AddressData addressDataGenerator(CustomerEntity customerToVisit) {
+        return geoService.generateAddressData(customerToVisit);
     }
 
-    public Mono<Integer> distance(AddressData baseCustomerData, AddressData neighbourCustomerData) {
-        return geoService.countDistanceBetweenClientsReactive(baseCustomerData, neighbourCustomerData);
+    public Integer distance(AddressData baseCustomerData, AddressData neighbourCustomerData) {
+        return geoService.countDistanceBetweenClients(baseCustomerData, neighbourCustomerData);
     }
 }

@@ -1,10 +1,10 @@
 package pl.marcin.project.entityService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.CupEntityRepository;
 import pl.marcin.project.entity.CupEntity;
-import pl.marcin.project.entity.CustomerEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +12,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CupEntityService {
+    @Autowired
     private final CupEntityRepository cupEntityRepository;
 
     public List<CupEntity> getAllCups() {

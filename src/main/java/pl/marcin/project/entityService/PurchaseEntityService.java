@@ -28,6 +28,15 @@ public class PurchaseEntityService {
         }
     }
 
+    public List<PurchaseEntity> getPurchaseHistoryByCustomerId(Long customerId) {
+        Optional<List<PurchaseEntity>> purchases = purchaseEntityRepository.findByCustomerCustomerId(customerId);
+        if (purchases.isPresent()) {
+            return purchases.get();
+        } else {
+            throw new RuntimeException("There is no Purchase history yet");
+        }
+    }
+
     public PurchaseEntity addPurchase(PurchaseEntity purchaseEntity) {
         return purchaseEntityRepository.save(purchaseEntity);
     }

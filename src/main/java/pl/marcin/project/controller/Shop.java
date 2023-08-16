@@ -25,8 +25,8 @@ public class Shop {
         CupService cupService = new CupService(new CupRepositoryListBased());
 
         Customer jas = new Customer(1, "Jaś", "Kowalski", "Kraków");
-        Customer stas = new Customer(2, "Staszek", "Buła", "Żywiec");
-        Customer jola = new Customer(3, "Jola", "Buła", "Żywiec");
+        Customer stas = new Customer(2, "Staszek", "Buła", "Kraków");
+        Customer jola = new Customer(3, "Jola", "Buła", "Kraków");
 
         Cup cup1 = new Cup(1, "Blue", "square", BigDecimal.valueOf(1.2));
         Cup cup2 = new Cup(2, "Yellow", "circle", BigDecimal.valueOf(3.2));
@@ -34,8 +34,8 @@ public class Shop {
         Cup cup4 = new Cup(4, "White", "thin", BigDecimal.valueOf(2.23));
         Cup cup5 = new Cup(5, "White", "thin", BigDecimal.valueOf(12.23));
 
-        Purchase purchase1 = new Purchase(jas, new ArrayList<>(List.of(cup1, cup2)));
-        Purchase purchase2 = new Purchase(stas, new ArrayList<>(List.of(cup3, cup4)));
+        Purchase purchase1 = new Purchase(1, jas, new ArrayList<>(List.of(cup1, cup2)), BigDecimal.valueOf(2.14));
+        Purchase purchase2 = new Purchase(2, stas, new ArrayList<>(List.of(cup3, cup4)), BigDecimal.valueOf(2.34));
 
         addCustomer(customerService, jas);
         addCustomer(customerService, stas);

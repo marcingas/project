@@ -20,12 +20,12 @@ public class TomTomServiceFacadeImpl implements TomTomServiceFacade {
     }
 
     @Override
-    public Mono<GeocodingAnswer> getLocationsCoordinates(AddressData addressData) {
+    public GeocodingAnswer getLocationsCoordinates(AddressData addressData) {
         return tomTomGeocodingService.getCoordinates(addressData);
     }
 
     @Override
-    public Mono<RouteAnswer> getRouteBetweenAddresses(RouteData routeData) {
+    public RouteAnswer getRouteBetweenAddresses(RouteData routeData) {
         return tomTomRoutingService.getRoute(routeData);
     }
 }

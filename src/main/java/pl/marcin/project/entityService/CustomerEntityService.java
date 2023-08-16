@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.CupEntityRepository;
 import pl.marcin.project.database.CustomerEntityRepository;
+import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
 
 import java.util.List;

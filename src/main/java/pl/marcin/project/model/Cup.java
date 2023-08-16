@@ -3,20 +3,17 @@ package pl.marcin.project.model;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
-@Setter
-@Getter
+@Data
 @Builder
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
+@NoArgsConstructor
 public class Cup {
 
     private int id;
     private String color;
     private String shape;
     private BigDecimal price;
-
-
 }

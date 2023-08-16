@@ -16,5 +16,4 @@ public interface CustomerRepository {
 
     List<Customer> getAllCustomers();
     Customer findCustomer(int id);
-    void updatePurchaseHistory(Purchase purchase,Customer customer);
 }

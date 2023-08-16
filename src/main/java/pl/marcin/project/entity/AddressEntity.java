@@ -2,7 +2,6 @@ package pl.marcin.project.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.relational.core.mapping.Table;
 
 
 @AllArgsConstructor
@@ -17,7 +16,7 @@ public class AddressEntity {
     @SequenceGenerator(name = "address_seq", sequenceName = "address_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_seq")
     @Column(name = "address_id")
-    private Long address_id;
+    private Long addressId;
     @Column(name = "street")
     private String street;
     @Column(name = "number")
@@ -27,10 +26,4 @@ public class AddressEntity {
     @Column(name = "code")
     private String code;
 
-    public AddressEntity(String street, int number, String town, String code) {
-        this.street = street;
-        this.number = number;
-        this.town = town;
-        this.code = code;
-    }
 }

@@ -20,7 +20,7 @@ public class TomTomGeocodingService {
         this.webClient = webClient;
     }
 
-    public Mono<GeocodingAnswer> getCoordinates(AddressData addressData) {
+    public GeocodingAnswer getCoordinates(AddressData addressData) {
         String query = addressData.getPostCode() + " " + addressData.getTown() + ", "
                 + addressData.getStreet() + " " + addressData.getNumber();
 
@@ -29,10 +29,9 @@ public class TomTomGeocodingService {
                 .toUriString();
         uri += "?key=" + KEY;
 
-        Mono<GeocodingAnswer> responseMono = webClient.get()
+        return webClient.get()
                 .uri(uri)
                 .retrieve()
-                .bodyToMono(GeocodingAnswer.class);
-        return responseMono;
+                .bodyToMono(GeocodingAnswer.class).block();
     }
 }

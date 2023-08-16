@@ -12,9 +12,9 @@ class CustomerRepositoryListBasedTest {
     private int expectedCustomerId = 1;
     private int expectedCustomerId2 = 2;
     private int notExistingCustomerId = 3;
-    private Customer expectedCustomer = Customer.builder().id(expectedCustomerId)
+    private Customer expectedCustomer = Customer.builder().customerId(expectedCustomerId)
             .name("John").surname("Kowalski").address("Kraków, ul Krakowska 1").build();
-    private Customer expectedCustomer2 = Customer.builder().id(expectedCustomerId2)
+    private Customer expectedCustomer2 = Customer.builder().customerId(expectedCustomerId2)
             .name("Poul").surname("Krakowski").address("Kowalowo, ul Kowalowska 1").build();
     private CustomerRepository customerRepository = new CustomerRepositoryListBased();
 
@@ -30,7 +30,7 @@ class CustomerRepositoryListBasedTest {
 
         //then
 
-        Assertions.assertEquals(expectedCustomerId, customer.getId());
+        Assertions.assertEquals(expectedCustomerId, customer.getCustomerId());
     }
 
     @Test
@@ -47,7 +47,7 @@ class CustomerRepositoryListBasedTest {
 
         //then
 
-        Assertions.assertEquals(expectedCustomerId2, customer.getId());
+        Assertions.assertEquals(expectedCustomerId2, customer.getCustomerId());
     }
 
     @Test
@@ -125,7 +125,7 @@ class CustomerRepositoryListBasedTest {
         //when
 
         Customer updatedCustomer = Customer.builder()
-                .id(expectedCustomerId)
+                .customerId(expectedCustomerId)
                 .name("Jacek")
                 .surname("Placek")
                 .address("Pułtusk")
@@ -148,7 +148,7 @@ class CustomerRepositoryListBasedTest {
         //when
 
         Customer updatedCustomer = Customer.builder()
-                .id(expectedCustomerId)
+                .customerId(expectedCustomerId)
                 .name("Jacek")
                 .surname("Placek")
                 .address("Pułtusk")

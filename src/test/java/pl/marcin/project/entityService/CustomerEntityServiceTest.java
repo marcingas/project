@@ -1,21 +1,22 @@
 package pl.marcin.project.entityService;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
 class CustomerEntityServiceTest {
-    CustomerEntity expectedCustomer = new CustomerEntity("Janko", "Muzykant");
-    CustomerEntity expectedCustomer2 = new CustomerEntity("Polko", "Podolski");
+    AddressEntity addressEntity = new AddressEntity(1L, "Kowalowa", 12, "Kraków", "30-215");
+    CustomerEntity expectedCustomer = new CustomerEntity(1L, "Janko", "Muzykant", addressEntity);
+    CustomerEntity expectedCustomer2 = new CustomerEntity(2L, "Polko", "Podolski", addressEntity);
     Long notAddedCustomerId = 100L;
 
 
@@ -50,7 +51,8 @@ class CustomerEntityServiceTest {
     public void shouldReturnUpdatedNameOfCustomer() {
 
         //given
-        CustomerEntity updatedCustomer = new CustomerEntity("Polko", "Muzykant");
+        AddressEntity addressEntity = new AddressEntity(1L, "Kowalowa", 12, "Kraków", "30-215");
+        CustomerEntity updatedCustomer = new CustomerEntity(1L, "Janko", "Muzykant", addressEntity);
 
 
         //when
@@ -58,7 +60,7 @@ class CustomerEntityServiceTest {
 
         //then
         Assertions.assertEquals("Polko",
-                customerEntityService.getCustomer(updatedCustomer.getCustomer_id()).getName());
+                customerEntityService.getCustomer(updatedCustomer.getCustomerId()).getName());
     }
 
     @Test
@@ -68,7 +70,7 @@ class CustomerEntityServiceTest {
         customerEntityService.addCustomer(expectedCustomer);
 
         //when
-        customerEntityService.deleteCustomer(expectedCustomer.getCustomer_id());
+        customerEntityService.deleteCustomer(expectedCustomer.getCustomerId());
 
 
         //then

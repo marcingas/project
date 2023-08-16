@@ -19,14 +19,14 @@ public class CustomerService {
 
     public int addCustomer(Customer customer) {
         customerRepository.saveCustomer(customer);
-        log.info("Customer " + customer.getId() + " saved");
-        return customer.getId();
+        log.info("Customer " + customer.getCustomerId() + " saved");
+        return customer.getCustomerId();
     }
 
     public int updateCustomer(int customerId, Customer customer) {
         customerRepository.updateCustomer(customerId, customer);
         log.info("Customer with id " + customerId + " updated");
-        return customer.getId();
+        return customer.getCustomerId();
     }
 
     public int deleteCustomer(int customerId) {
@@ -42,12 +42,5 @@ public class CustomerService {
     public Customer getCustomer(int customerId) {
         return customerRepository.findCustomer(customerId);
     }
-
-    public int updatePurchaseHistory(Purchase purchase, Customer customer) {
-        customerRepository.updatePurchaseHistory(purchase, customer);
-        log.info("Customers id: " + customer.getId() + " purchase history updated");
-        return customer.getId();
-    }
-
 
 }

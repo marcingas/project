@@ -3,7 +3,6 @@ package pl.marcin.project.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import pl.marcin.project.model.Customer;
 
 import java.math.BigDecimal;
 import java.util.List;

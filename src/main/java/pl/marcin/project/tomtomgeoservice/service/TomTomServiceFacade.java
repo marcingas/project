@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 public interface TomTomServiceFacade {
 
-    Mono<GeocodingAnswer> getLocationsCoordinates(AddressData addressData);
+    GeocodingAnswer getLocationsCoordinates(AddressData addressData);
 
-    Mono<RouteAnswer> getRouteBetweenAddresses(RouteData routeData);
+    RouteAnswer getRouteBetweenAddresses(RouteData routeData);
 }

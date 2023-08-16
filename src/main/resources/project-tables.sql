@@ -1,5 +1,5 @@
 CREATE DATABASE postgres;
-USE postgres;
+
 
 CREATE TABLE address (
 	address_id int NOT NULL PRIMARY KEY,
@@ -7,7 +7,6 @@ CREATE TABLE address (
 	number int,
 	street varchar(255),
 	town varchar(255)
-
 );
 
 CREATE TABLE cup (
@@ -15,7 +14,6 @@ CREATE TABLE cup (
 	color varchar(255),
 	price numeric(38, 2),
 	shape varchar(255)
-
 );
 
 CREATE TABLE customer (

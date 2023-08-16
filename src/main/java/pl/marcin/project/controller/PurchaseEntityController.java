@@ -48,4 +48,9 @@ public class PurchaseEntityController {
     public List<PurchaseEntity> getAllPurchases() {
         return purchaseEntityService.getAllPurchases();
     }
+
+    @GetMapping("/{customerId}")
+    public List<PurchaseEntity> getCustomerHistory(@PathVariable Long customerId) {
+        return purchaseEntityService.getPurchaseHistoryByCustomerId(customerId);
+    }
 }

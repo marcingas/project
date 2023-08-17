@@ -21,6 +21,8 @@ dependencies {
 	implementation 'org.projectlombok:lombok:1.18.26'
 	implementation 'org.postgresql:postgresql'
 	testImplementation 'com.h2database:h2'
+	testImplementation 'org.testcontainers:postgresql'
+	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

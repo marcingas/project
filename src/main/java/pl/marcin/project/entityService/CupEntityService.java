@@ -2,6 +2,8 @@ package pl.marcin.project.entityService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.CupEntityRepository;
 import pl.marcin.project.entity.CupEntity;
@@ -19,13 +21,10 @@ public class CupEntityService {
         return cupEntityRepository.findAll();
     }
 
-    public CupEntity getCups(Long id) {
+    public CupEntity getCupById(Long id) {
         Optional<CupEntity> cupEntity = cupEntityRepository.findById(id);
-        if (cupEntity.isPresent()) {
-            return cupEntity.get();
-        } else {
-            throw new RuntimeException("Cup not found by id: " + id);
-        }
+        if (cupEntity.isPresent()) return cupEntity.get();
+        throw new RuntimeException("Cup not found with Id " + id);
     }
 
     public CupEntity addCup(CupEntity cupEntity) {

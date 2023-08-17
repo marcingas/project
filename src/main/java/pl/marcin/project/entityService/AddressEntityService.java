@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AddressEntityService {
-    private AddressEntityRepository addressEntityRepository;
+    private final AddressEntityRepository addressEntityRepository;
 
     public AddressEntity getAddress(Long addressId) {
         Optional<AddressEntity> addressEntity = addressEntityRepository.findById(addressId);

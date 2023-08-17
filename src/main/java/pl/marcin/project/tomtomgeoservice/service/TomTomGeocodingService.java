@@ -1,5 +1,6 @@
 package pl.marcin.project.tomtomgeoservice.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,12 +14,9 @@ import static pl.marcin.project.tomtomgeoservice.constants.RouteSearchConstants.
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TomTomGeocodingService {
     private final WebClient webClient;
-
-    public TomTomGeocodingService(WebClient webClient) {
-        this.webClient = webClient;
-    }
 
     public GeocodingAnswer getCoordinates(AddressData addressData) {
         String query = addressData.getPostCode() + " " + addressData.getTown() + ", "

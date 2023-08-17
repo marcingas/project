@@ -1,6 +1,8 @@
 package pl.marcin.project.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.marcin.project.entity.CupEntity;
 import pl.marcin.project.entityService.CupEntityService;
@@ -22,4 +24,15 @@ public class CupEntityController {
     public List<CupEntity> getCups() {
         return cupEntityService.getAllCups();
     }
+
+    @GetMapping("/{cupId}")
+    public ResponseEntity<CupEntity> getCup(@PathVariable Long cupId) {
+        try {
+            CupEntity cupEntity = cupEntityService.getCupById(cupId);
+            return ResponseEntity.ok(cupEntity);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }
+

@@ -1,5 +1,6 @@
 package pl.marcin.project.tomtomgeoservice.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.entity.AddressEntity;
@@ -12,16 +13,10 @@ import pl.marcin.project.tomtomgeoservice.routingmodel.RouteData;
 import reactor.core.publisher.Mono;
 
 @Service
+@RequiredArgsConstructor
 public class GeoService {
 
     private final TomTomServiceFacade tomTomServiceFacade;
-
-
-    @Autowired
-    public GeoService(TomTomServiceFacade tomTomServiceFacade) {
-        this.tomTomServiceFacade = tomTomServiceFacade;
-    }
-
     private GeocodingAnswer getLocationFromAddress(AddressData addressData) {
         return tomTomServiceFacade.getLocationsCoordinates(addressData);
     }

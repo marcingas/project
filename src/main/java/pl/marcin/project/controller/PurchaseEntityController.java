@@ -1,6 +1,5 @@
 package pl.marcin.project.controller;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +9,6 @@ import pl.marcin.project.entity.PurchaseEntity;
 import pl.marcin.project.entityService.CupEntityService;
 import pl.marcin.project.entityService.CustomerEntityService;
 import pl.marcin.project.entityService.PurchaseEntityService;
-import pl.marcin.project.model.Purchase;
 import pl.marcin.project.request.PurchaseRequest;
 
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ public class PurchaseEntityController {
         List<CupEntity> cups = new ArrayList<>();
 
         for (var purchaseID : purchase.getCupIds()) {
-            cups.add(cupEntityService.getCups(purchaseID));
+            cups.add(cupEntityService.getCupById(purchaseID));
         }
 
         purchaseEntity.setCups(cups);

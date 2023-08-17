@@ -4,15 +4,6 @@ import java.util.Scanner;
 
 
 public class RunnerFactory {
-    private static RunnerFactory runnerFactory;
-
-    public static RunnerFactory getInstance() {
-        if (runnerFactory == null) return new RunnerFactory();
-        return runnerFactory;
-    }
-
-    private RunnerFactory() {
-    }
 
     private AppRunner appRunner;
 
@@ -25,7 +16,7 @@ public class RunnerFactory {
         if ("web".equals(runningWay)) {
             System.out.println("running...");
 
-            appRunner = WebAppRunner.getInstance();
+            appRunner = new WebAppRunner();
         } else if ("shop".equals(runningWay)) {
             appRunner = new ShopAppRunner();
         }

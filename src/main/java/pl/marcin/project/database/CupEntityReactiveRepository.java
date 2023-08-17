@@ -7,5 +7,5 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface CupEntityReactiveRepository extends R2dbcRepository<CupEntity, Long> {
-    Flux<CupEntity> findByPurchase_id(Long purchaseId);
+
 }

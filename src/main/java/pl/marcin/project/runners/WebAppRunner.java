@@ -1,17 +1,24 @@
 package pl.marcin.project.runners;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.PropertySource;
+import pl.marcin.project.ProjectApplication;
 
-@SpringBootApplication
-@PropertySource("application-local.properties")
 public class WebAppRunner implements AppRunner {
+    private static WebAppRunner instance;
 
+    private WebAppRunner() {
+    }
+
+    public static synchronized WebAppRunner getInstance() {
+        if (instance == null) {
+            instance = new WebAppRunner();
+        }
+        return instance;
+    }
 
     @Override
     public void runApplication() {
-        ConfigurableApplicationContext context = SpringApplication.run(WebAppRunner.class);
+        System.out.println("Running application....");
+        SpringApplication.run(ProjectApplication.class);
     }
 }

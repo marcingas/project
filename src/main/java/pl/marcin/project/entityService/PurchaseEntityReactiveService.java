@@ -1,5 +1,7 @@
 package pl.marcin.project.entityService;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,7 @@ public class PurchaseEntityReactiveService {
     }
 
     public Flux<Purchase> getCustomersPurchaseHistory(Integer customerId) {
-        return purchaseReactiveRepository.findByCustomer_id(customerId.longValue())
+        return purchaseReactiveRepository.findByCustomerId(customerId.longValue())
                 .map(customerEntityReactiveService::purchaseEntityToDto);
     }
 

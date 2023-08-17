@@ -9,7 +9,7 @@ public class ProjectApplication {
 
     public static void main(String[] args) {
 
-        RunnerFactory runnerFactory = new RunnerFactory();
+        RunnerFactory runnerFactory = RunnerFactory.getInstance();
         runnerFactory.run(new DefaultApplicationArguments());
 
     }

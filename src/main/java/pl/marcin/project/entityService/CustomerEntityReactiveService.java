@@ -26,36 +26,43 @@ public class CustomerEntityReactiveService {
 
     public Flux<Customer> getAllCustomers() {
         return customerEntityRepositoryReactive.findAll()
-                .map(this::customerEntityToDto);
+                .flatMap(this::customerEntityToDto);
     }
 
     public Mono<Customer> getCustomerById(Integer id) {
         return customerEntityRepositoryReactive.findById(id.longValue())
-                .map(this::customerEntityToDto);
+                .flatMap(this::customerEntityToDto);
     }
 
     public Mono<Customer> saveCustomer(Mono<Customer> customerMono) {
-        return customerMono.map(this::dtoToCustomerEntity)
+        return customerMono.flatMap(this::dtoToCustomerEntity)
                 .flatMap(customerEntityRepositoryReactive::save)
-                .map(this::customerEntityToDto);
+                .flatMap(this::customerEntityToDto);
     }
 
-    public Mono<Customer> updateCustomer(Mono<Customer> customerMono, Integer id) {
-        return customerEntityRepositoryReactive.findById(id.longValue())
-                .flatMap(customerEntity -> customerMono.map(this::dtoToCustomerEntity))
-                .doOnNext(customerEntity -> customerEntity.setId(id.longValue()))
-                .flatMap(customerEntityRepositoryReactive::save)
-                .map(this::customerEntityToDto);
+    public Mono<Customer> updateCustomer(Mono<Customer> customerMono, Integer customerId) {
+        return customerEntityRepositoryReactive.findById(customerId.longValue())
+                .flatMap(existingCustomerEntity -> {
+                    return customerMono.flatMap(updatedCustomer -> {
+                        return dtoToCustomerEntity(updatedCustomer)
+                                .map(updatedEntity -> {
+                                    updatedEntity.setId(customerId.longValue());
+                                    return updatedEntity;
+                                })
+                                .flatMap(customerEntityRepositoryReactive::save)
+                                .thenReturn(updatedCustomer);
+                    });
+                });
     }
-
-    public Mono<Customer> updateCustomersAddressId(Mono<Customer> customerMono, Integer id, Integer addressId) {
-        return customerEntityRepositoryReactive.findById(id.longValue())
-                .flatMap(customerEntity -> customerMono.map(this::dtoToCustomerEntity))
-                .doOnNext(customerEntity -> customerEntity.setId(id.longValue()))
-                .doOnNext(customerEntity -> customerEntity.setAddressId(addressId.longValue()))
-                .flatMap(customerEntityRepositoryReactive::save)
-                .map(this::customerEntityToDto);
-    }
+//
+//    public Mono<Customer> updateCustomersAddressId(Mono<Customer> customerMono, Integer id, Integer addressId) {
+//        return customerEntityRepositoryReactive.findById(id.longValue())
+//                .flatMap(existingCustomerEntity -> dtoToCustomerEntity(existingCustomerEntity))
+//                .doOnNext(customerEntity -> customerEntity.setId(id.longValue()))
+//                .doOnNext(customerEntity -> customerEntity.setAddressId(addressId.longValue()))
+//                .flatMap(customerEntityRepositoryReactive::save)
+//                .map(this::customerEntityToDto);
+//    }
 
     public Mono<Void> deleteCustomer(Integer id) {
         return customerEntityRepositoryReactive.findById(id.longValue())
@@ -69,25 +76,30 @@ public class CustomerEntityReactiveService {
     }
 
 
-    public Customer customerEntityToDto(CustomerEntity customerEntity) {
+    public Mono<Customer> customerEntityToDto(CustomerEntity customerEntity) {
         Customer customer = new Customer();
         Long addressId = customerEntity.getAddressId();
 
-        Address address = addressEntityReactiveService.getAddressById(addressId.intValue()).block();
-        customer.setAddress(address);
-        customer.setName(customerEntity.getName());
-        customer.setSurname(customerEntity.getSurname());
-        return customer;
+        return addressEntityReactiveService.getAddressById(addressId.intValue())
+                .map(address -> {
+                    customer.setAddress(address);
+                    customer.setName(customerEntity.getName());
+                    customer.setSurname(customerEntity.getSurname());
+                    return customer;
+                });
+
+
     }
 
-    public CustomerEntity dtoToCustomerEntity(Customer customer) {
-        CustomerEntity customerEntity = new CustomerEntity();
-        customerEntity.setId(customer.getId().longValue());
-        customerEntity.setName(customer.getName());
-        customerEntity.setSurname(customer.getSurname());
-        Address address = customer.getAddress();
-        customerEntity.setAddressId(address.getAddressId().longValue());
-        return customerEntity;
+    public Mono<CustomerEntity> dtoToCustomerEntity(Customer customer) {
+        return addressEntityReactiveService.getAddressById(customer.getAddress().getAddressId().intValue())
+                .map(address -> {
+                    CustomerEntity customerEntity = new CustomerEntity();
+                    customerEntity.setName(customer.getName());
+                    customerEntity.setSurname(customer.getSurname());
+                    customerEntity.setAddressId(address.getAddressId().longValue());
+                    return customerEntity;
+                });
     }
 
     public Purchase purchaseEntityToDto(PurchaseEntity purchaseEntity) {

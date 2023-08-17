@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.CupEntityReactiveRepository;
 import pl.marcin.project.database.PurchaseEntityReactiveRepository;
+import pl.marcin.project.entity.CupEntity;
 import pl.marcin.project.model.Cup;
 import pl.marcin.project.utils.AddressCupUtilities;
 import reactor.core.publisher.Flux;
@@ -17,8 +18,7 @@ import java.util.List;
 public class CupEntityReactiveService {
     @Autowired
     private final CupEntityReactiveRepository cupEntityReactiveRepository;
-    @Autowired
-    private final PurchaseEntityReactiveRepository purchaseEntityReactiveRepository;
+
 
     public Flux<Cup> getAllCups() {
         return cupEntityReactiveRepository.findAll()
@@ -30,18 +30,13 @@ public class CupEntityReactiveService {
                 .map(AddressCupUtilities::cupEntityToDto);
     }
 
-    public Flux<Cup> getCupsByPurchaseId(Integer purchaseId) {
-        return cupEntityReactiveRepository.findByPurchase_id(purchaseId.longValue())
-                .map(AddressCupUtilities::cupEntityToDto);
-    }
-
-
     public Mono<Cup> getCupById(Integer id) {
         return cupEntityReactiveRepository.findById(id.longValue())
                 .map(AddressCupUtilities::cupEntityToDto);
     }
 
     public Mono<Cup> saveCup(Mono<Cup> cupMono) {
+
         return cupMono.map(AddressCupUtilities::dtoToCupEntity)
                 .flatMap(cupEntityReactiveRepository::save)
                 .map(AddressCupUtilities::cupEntityToDto);

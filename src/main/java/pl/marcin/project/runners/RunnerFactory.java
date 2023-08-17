@@ -7,8 +7,17 @@ import java.util.Scanner;
 
 
 public class RunnerFactory implements ApplicationRunner {
-
+    private static RunnerFactory runnerFactoryInstance;
     private AppRunner appRunner;
+
+    private RunnerFactory() {
+    }
+
+    public static synchronized RunnerFactory getInstance() {
+        if (runnerFactoryInstance == null) runnerFactoryInstance = new RunnerFactory();
+        return runnerFactoryInstance;
+    }
+
 
     @Override
     public void run(ApplicationArguments args) {
@@ -16,7 +25,8 @@ public class RunnerFactory implements ApplicationRunner {
         Scanner scanner = new Scanner(System.in);
         String runningWay = scanner.nextLine();
         if ("web".equals(runningWay)) {
-            appRunner = new WebAppRunner();
+            WebAppRunner webAppRunner = WebAppRunner.getInstance();
+            appRunner = webAppRunner;
         } else if ("shop".equals(runningWay)) {
             appRunner = new ShopAppRunner();
         } else {

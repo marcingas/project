@@ -7,5 +7,5 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface PurchaseEntityReactiveRepository extends R2dbcRepository<PurchaseEntity, Long> {
-    Flux<PurchaseEntity> findByCustomer_id(Long customerId);
+    Flux<PurchaseEntity> findByCustomerId(Long customerId);
 }

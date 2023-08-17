@@ -24,7 +24,8 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.projectlombok:lombok:1.18.26'
 	implementation 'org.postgresql:postgresql'
-	testImplementation 'com.h2database:h2'
+//	testImplementation 'io.r2dbc:r2dbc-h2'
+//	testImplementation 'io.r2dbc:r2dbc-postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

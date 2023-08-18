@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cup Registration Form</title>
+</head>
+<body>
+<i>Fill out the form.</i>
+<br><br>
+
+<form th:action="@{/processForm}" th:object="${cupEntity}" method="POST">
+
+    color: <input type="text" th:field="*{color}"/>
+
+    <br><br>
+
+    shape: <input type="text" th:field="*{shape}"/>
+
+    <br><br>
+
+    price: <input type="number" th:field="*{price}"/></form>
+
+<br><br>
+
+<input type="submit" value="Submit"/>
+
+</form>
+
+</body>
+</html>

@@ -13,7 +13,7 @@ import pl.marcin.project.entityService.CupEntityService;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/cups")
 public class CupEntityController {

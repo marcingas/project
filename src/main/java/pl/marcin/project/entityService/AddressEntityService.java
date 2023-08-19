@@ -14,6 +14,10 @@ import java.util.Optional;
 public class AddressEntityService {
     private final AddressEntityRepository addressEntityRepository;
 
+    public List<AddressEntity> getAddresses() {
+        return addressEntityRepository.findAll();
+    }
+
     public AddressEntity getAddress(Long addressId) {
         Optional<AddressEntity> addressEntity = addressEntityRepository.findById(addressId);
         if (addressEntity.isPresent()) {

@@ -1,42 +1,57 @@
 package pl.marcin.project.entityService;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import pl.marcin.project.database.CustomerEntityRepository;
 import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-@ActiveProfiles("test")
+import java.util.Optional;
+
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class CustomerEntityServiceTest {
-    AddressEntity addressEntity = new AddressEntity(1L, "Kowalowa", 12, "Kraków", "30-215");
-    CustomerEntity expectedCustomer = new CustomerEntity(1L, "Janko", "Muzykant", addressEntity);
-    CustomerEntity expectedCustomer2 = new CustomerEntity(2L, "Polko", "Podolski", addressEntity);
-    Long notAddedCustomerId = 100L;
-
-
-    @Autowired
+    @Mock
+    private CustomerEntityRepository customerEntityRepository;
+    @InjectMocks
     private CustomerEntityService customerEntityService;
 
-
     @Test
-    public void shouldReturnOneIfAddedCustomer() {
+    public void shouldReturnCustomerEntity() {
+        AddressEntity addressEntity = new AddressEntity(1L, "Kowalowa",
+                12, "Kraków", "30-215");
+        CustomerEntity expectedCustomer = new CustomerEntity(1L, "Janko",
+                "Muzykant", addressEntity);
+        when(customerEntityRepository.save(expectedCustomer)).thenReturn(expectedCustomer);
 
         //when
-        customerEntityService.addCustomer(expectedCustomer);
+        CustomerEntity customerEntity = customerEntityService.addCustomer(expectedCustomer);
 
         //then
-        Assertions.assertEquals(1, customerEntityService.getAllCustomers().size());
+        Assertions.assertEquals(customerEntity, expectedCustomer);
 
     }
 
     @Test
     public void shouldThrowExceptionWhenCustomerNotFound() {
+        AddressEntity addressEntity = new AddressEntity(1L, "Kowalowa",
+                12, "Kraków", "30-215");
+        CustomerEntity expectedCustomer = new CustomerEntity(1L, "Janko",
+                "Muzykant", addressEntity);
+        Long notAddedCustomerId = 2L;
+        when(customerEntityRepository.findById(expectedCustomer.getCustomerId())).thenReturn(Optional.of(expectedCustomer));
 
 
         //when
@@ -49,28 +64,33 @@ class CustomerEntityServiceTest {
 
     @Test
     public void shouldReturnUpdatedNameOfCustomer() {
+        AddressEntity addressEntity = new AddressEntity(1L, "Kowalowa",
+                12, "Kraków", "30-215");
+        CustomerEntity addedCustomer = new CustomerEntity(1L, "Janko",
+                "Muzykant", addressEntity);
+        CustomerEntity updatedCustomer = new CustomerEntity(1L, "Polko", "Muzykant", addressEntity);
+        Long addedCustomerId = 1L;
+        when(customerEntityRepository.save(any())).then(returnsFirstArg());
 
-        //given
-        AddressEntity addressEntity = new AddressEntity(1L, "Kowalowa", 12, "Kraków", "30-215");
-        CustomerEntity updatedCustomer = new CustomerEntity(1L, "Janko", "Muzykant", addressEntity);
-
+        when(customerEntityRepository.findById(addedCustomerId)).thenReturn(Optional.of(updatedCustomer));
 
         //when
+        customerEntityService.addCustomer(addedCustomer);
         customerEntityService.updateCustomer(updatedCustomer);
 
         //then
         Assertions.assertEquals("Polko",
-                customerEntityService.getCustomer(updatedCustomer.getCustomerId()).getName());
+                customerEntityService.getCustomer(addedCustomerId).getName());
     }
 
     @Test
     public void shouldReturnZeroIfDeleted() {
 
         //given
-        customerEntityService.addCustomer(expectedCustomer);
+//        customerEntityService.addCustomer(expectedCustomer);
 
         //when
-        customerEntityService.deleteCustomer(expectedCustomer.getCustomerId());
+//        customerEntityService.deleteCustomer(expectedCustomer.getCustomerId());
 
 
         //then

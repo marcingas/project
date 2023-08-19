@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
+import pl.marcin.project.entityService.AddressEntityService;
 import pl.marcin.project.entityService.CustomerEntityService;
 import pl.marcin.project.request.CustomerRequest;
 
@@ -17,19 +18,35 @@ public class CustomerEntityController {
     @Autowired
     private final CustomerEntityService customerEntityService;
 
+
     @PostMapping("/add")
-    public CustomerEntity addCustomer(@RequestBody CustomerRequest customer) {
+    public CustomerEntity addCustomer(@RequestBody CustomerRequest customerRequest) {
         AddressEntity address = new AddressEntity();
-        address.setCode(customer.getCode());
-        address.setTown(customer.getTown());
-        address.setStreet(customer.getStreet());
-        address.setNumber(customer.getNumber());
+        address.setCode(customerRequest.getCode());
+        address.setTown(customerRequest.getTown());
+        address.setStreet(customerRequest.getStreet());
+        address.setNumber(customerRequest.getNumber());
 
         CustomerEntity customerEntity = new CustomerEntity();
-        customerEntity.setName(customer.getName());
-        customerEntity.setSurname(customer.getSurname());
+        customerEntity.setName(customerRequest.getName());
+        customerEntity.setSurname(customerRequest.getSurname());
         customerEntity.setAddress(address);
         return customerEntityService.addCustomer(customerEntity);
+    }
+
+    @PutMapping("/{customerId}/update-address")
+    public CustomerEntity updateAddress(@PathVariable Long customerId, @RequestBody AddressEntity address) {
+        CustomerEntity customer = customerEntityService.getCustomer(customerId);
+        customer.setAddress(address);
+        return customerEntityService.updateCustomer(customer);
+    }
+
+    @PutMapping("/{customerId}/update-data")
+    public CustomerEntity updateData(@PathVariable Long customerId, @RequestBody CustomerEntity customerEntity) {
+        CustomerEntity customer = customerEntityService.getCustomer(customerId);
+        customer.setName(customerEntity.getName());
+        customer.setSurname(customerEntity.getSurname());
+        return customerEntityService.updateCustomer(customer);
     }
 
     @GetMapping

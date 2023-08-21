@@ -20,21 +20,14 @@ public class PurchaseEntityService {
     }
 
     public PurchaseEntity getPurchase(Long id) {
-        Optional<PurchaseEntity> purchaseEntity = purchaseEntityRepository.findById(id);
-        if (purchaseEntity.isPresent()) {
-            return purchaseEntity.get();
-        } else {
-            throw new RuntimeException("Purchase not found by id: " + id);
-        }
+        return purchaseEntityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No purchase with id " + id));
     }
 
     public List<PurchaseEntity> getPurchaseHistoryByCustomerId(Long customerId) {
-        Optional<List<PurchaseEntity>> purchases = purchaseEntityRepository.findByCustomerCustomerId(customerId);
-        if (purchases.isPresent()) {
-            return purchases.get();
-        } else {
-            throw new RuntimeException("There is no Purchase history yet");
-        }
+        return purchaseEntityRepository.findByCustomerCustomerId(customerId)
+                .orElseThrow(() -> new RuntimeException("no such customer or no such history for customer"));
+
     }
 
     public PurchaseEntity addPurchase(PurchaseEntity purchaseEntity) {
@@ -42,10 +35,17 @@ public class PurchaseEntityService {
     }
 
     public PurchaseEntity updatePurchase(PurchaseEntity purchaseEntity) {
-        return purchaseEntityRepository.save(purchaseEntity);
+        PurchaseEntity existingPurchase = purchaseEntityRepository.findById(purchaseEntity.getPurchaseId()).
+                orElseThrow(() -> new RuntimeException("No purchase found with id " + purchaseEntity.getPurchaseId()));
+        existingPurchase.setCustomer(purchaseEntity.getCustomer());
+        existingPurchase.setPurchaseCost(purchaseEntity.getPurchaseCost());
+        existingPurchase.setCups(purchaseEntity.getCups());
+        return purchaseEntityRepository.save(existingPurchase);
     }
 
     public void deletePurchase(Long id) {
-        purchaseEntityRepository.deleteById(id);
+        PurchaseEntity existingPurchase = purchaseEntityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No purchase with Id " + id));
+        purchaseEntityRepository.delete(existingPurchase);
     }
 }

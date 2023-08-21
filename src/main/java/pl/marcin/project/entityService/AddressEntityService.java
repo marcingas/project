@@ -1,5 +1,6 @@
 package pl.marcin.project.entityService;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.AddressEntityRepository;
@@ -33,10 +34,19 @@ public class AddressEntityService {
     }
 
     public AddressEntity updateAddress(AddressEntity addressEntity) {
-        return addressEntityRepository.save(addressEntity);
+        AddressEntity existingAddress = addressEntityRepository.findById(addressEntity.getAddressId())
+                .orElseThrow(() -> new EntityNotFoundException("No address found"));
+        existingAddress.setNumber(addressEntity.getNumber());
+        existingAddress.setTown(addressEntity.getTown());
+        existingAddress.setStreet(addressEntity.getStreet());
+        existingAddress.setCode(addressEntity.getCode());
+
+        return addressEntityRepository.save(existingAddress);
     }
 
     public void deleteAddress(Long addressId) {
-        addressEntityRepository.deleteById(addressId);
+        AddressEntity existingAddress = addressEntityRepository.findById(addressId)
+                .orElseThrow(() -> new EntityNotFoundException("No address found"));
+        addressEntityRepository.delete(existingAddress);
     }
 }

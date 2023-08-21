@@ -16,7 +16,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -29,6 +28,7 @@ class CustomerEntityServiceTest {
 
     @Test
     public void shouldReturnCustomerEntity() {
+        //given
         AddressEntity addressEntity = new AddressEntity(1L, "Kowalowa",
                 12, "Kraków", "30-215");
         CustomerEntity expectedCustomer = new CustomerEntity(1L, "Janko",
@@ -36,96 +36,88 @@ class CustomerEntityServiceTest {
         when(customerEntityRepository.save(expectedCustomer)).thenReturn(expectedCustomer);
 
         //when
-        CustomerEntity customerEntity = customerEntityService.addCustomer(expectedCustomer);
+        CustomerEntity reslut = customerEntityService.addCustomer(expectedCustomer);
 
         //then
-        assertEquals(customerEntity, expectedCustomer);
-
+        assertEquals(expectedCustomer, reslut);
+        verify(customerEntityRepository).save(expectedCustomer);
     }
 
     @Test
-    public void shouldThrowExceptionWhenCustomerNotFound() {
-        AddressEntity addressEntity = new AddressEntity(1L, "Kowalowa",
-                12, "Kraków", "30-215");
-        CustomerEntity expectedCustomer = new CustomerEntity(1L, "Janko",
-                "Muzykant", addressEntity);
-        Long notAddedCustomerId = 2L;
-        when(customerEntityRepository.findById(expectedCustomer.getCustomerId())).thenReturn(Optional.of(expectedCustomer));
-
-
-        //when
-        customerEntityService.addCustomer(expectedCustomer);
-
-        //then
-        Assertions.assertThrows(RuntimeException.class,
-                () -> customerEntityService.getCustomer(notAddedCustomerId));
-    }
-
-    @Test
-    public void shouldReturnUpdatedNameOfCustomer() {
-        AddressEntity addressEntity = new AddressEntity(1L, "Kowalowa",
-                12, "Kraków", "30-215");
-        CustomerEntity addedCustomer = new CustomerEntity(1L, "Janko",
-                "Muzykant", addressEntity);
-        CustomerEntity updatedCustomer = new CustomerEntity(1L, "Polko", "Muzykant", addressEntity);
-        Long addedCustomerId = 1L;
-        when(customerEntityRepository.save(any())).then(returnsFirstArg());
-
-        when(customerEntityRepository.findById(addedCustomerId)).thenReturn(Optional.of(updatedCustomer));
-
-        //when
-        customerEntityService.addCustomer(addedCustomer);
-        customerEntityService.updateCustomer(updatedCustomer);
-
-        //then
-        assertEquals("Polko",
-                customerEntityService.getCustomer(addedCustomerId).getName());
-    }
-
-    @Test
-    public void shouldReturnZeroIfDeleted() {
-
+    public void shouldReturnUpdatedCustomer() {
         //given
-//        customerEntityService.addCustomer(expectedCustomer);
+        AddressEntity addressEntity = new AddressEntity();
+        CustomerEntity existingCust = new CustomerEntity(1L, "Janko", "Spiewak", addressEntity);
+        CustomerEntity updatedCust = new CustomerEntity(1L, "Polko", "Muzykant", addressEntity);
+
+        when(customerEntityRepository.findById(existingCust.getCustomerId())).thenReturn(Optional.of(existingCust));
+        when(customerEntityRepository.save(any(CustomerEntity.class))).thenReturn(updatedCust);
 
         //when
-//        customerEntityService.deleteCustomer(expectedCustomer.getCustomerId());
-
+        CustomerEntity result = customerEntityService.updateCustomer(updatedCust);
 
         //then
-        assertEquals(0, customerEntityService.getAllCustomers().size());
+        assertEquals(updatedCust, result);
+        verify(customerEntityRepository).findById(existingCust.getCustomerId());
+        verify(customerEntityRepository).save(updatedCust);
+    }
+
+    @Test
+    public void shouldDeleteCustomer() {
+        //given
+        AddressEntity addressEntity = new AddressEntity();
+        CustomerEntity existingCust = new CustomerEntity(1L, "Janko", "Spiewak", addressEntity);
+        when(customerEntityRepository.findById(existingCust.getCustomerId())).thenReturn(Optional.of(existingCust));
+
+        //when
+        customerEntityService.deleteCustomer(existingCust.getCustomerId());
+
+        //then
+        verify(customerEntityRepository).findById(existingCust.getCustomerId());
+        verify(customerEntityRepository).delete(existingCust);
     }
 
     @Test
     void getAllCustomers() {
+        //given
         List<CustomerEntity> mockList = new ArrayList<>();
         mockList.add(new CustomerEntity());
         mockList.add(new CustomerEntity());
         mockList.add(new CustomerEntity());
         when(customerEntityRepository.findAll()).thenReturn(mockList);
+
+        //when
         List<CustomerEntity> result = customerEntityService.getAllCustomers();
+
+        //then
         assertEquals(mockList.size(), result.size());
         verify(customerEntityRepository, times(1)).findAll();
     }
 
     @Test
     void getCustomer() {
+        //given
         CustomerEntity customerEntity = new CustomerEntity(1L, "Jan", "Kowalski",
                 new AddressEntity());
-
         when(customerEntityRepository.findById(customerEntity.getCustomerId())).thenReturn(Optional.of(customerEntity));
+
+        //when
         CustomerEntity result = customerEntityService.getCustomer(customerEntity.getCustomerId());
 
+        //then
         assertEquals(customerEntity, result);
         verify(customerEntityRepository, times(1)).findById(customerEntity.getCustomerId());
     }
 
     @Test()
     void getCustomerNotPresentException() {
+        //given
         CustomerEntity customerEntity = new CustomerEntity(1L, "Jan", "Kowalski",
                 new AddressEntity());
         Long nonExistentId = 3L;
         when(customerEntityRepository.findById(customerEntity.getCustomerId())).thenReturn(Optional.empty());
+
+        //when then:
         assertThrows(RuntimeException.class, () -> customerEntityService.getCustomer(nonExistentId));
     }
 }

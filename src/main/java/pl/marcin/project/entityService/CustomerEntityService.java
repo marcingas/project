@@ -1,5 +1,6 @@
 package pl.marcin.project.entityService;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.marcin.project.database.CupEntityRepository;
@@ -22,12 +23,8 @@ public class CustomerEntityService {
     }
 
     public CustomerEntity getCustomer(Long id) {
-        Optional<CustomerEntity> customerEntity = customerEntityRepository.findById(id);
-        if (customerEntity.isPresent()) {
-            return customerEntity.get();
-        } else {
-            throw new RuntimeException("Customer not found by id: " + id);
-        }
+        return customerEntityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found by id " + id));
     }
 
     public CustomerEntity addCustomer(CustomerEntity customerEntity) {
@@ -35,11 +32,18 @@ public class CustomerEntityService {
     }
 
     public CustomerEntity updateCustomer(CustomerEntity customerEntity) {
-        return customerEntityRepository.save(customerEntity);
+        CustomerEntity existingCustomer = customerEntityRepository.findById(customerEntity.getCustomerId())
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+        existingCustomer.setName(customerEntity.getName());
+        existingCustomer.setSurname(customerEntity.getSurname());
+        existingCustomer.setAddress(customerEntity.getAddress());
+        return customerEntityRepository.save(existingCustomer);
     }
 
     public void deleteCustomer(Long id) {
-        customerEntityRepository.deleteById(id);
+        CustomerEntity existingCustomer = customerEntityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Coustomer not Found"));
+        customerEntityRepository.delete(existingCustomer);
     }
 
 }

@@ -1,5 +1,6 @@
 package pl.marcin.project.entityService;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,9 @@ public class CupEntityService {
     }
 
     public CupEntity getCupById(Long id) {
-        Optional<CupEntity> cupEntity = cupEntityRepository.findById(id);
-        if (cupEntity.isPresent()) return cupEntity.get();
-        throw new RuntimeException("Cup not found with Id " + id);
+        return cupEntityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cup Not Found"));
+
     }
 
     public CupEntity addCup(CupEntity cupEntity) {
@@ -32,11 +33,17 @@ public class CupEntityService {
     }
 
     public CupEntity updateCup(CupEntity cupEntity) {
-        return cupEntityRepository.save(cupEntity);
+        CupEntity existingCup = cupEntityRepository.findById(cupEntity.getCupId())
+                .orElseThrow(() -> new EntityNotFoundException("Cup Not Found"));
+        existingCup.setShape(cupEntity.getShape());
+        existingCup.setColor(cupEntity.getColor());
+        existingCup.setPrice(cupEntity.getPrice());
+        return cupEntityRepository.save(existingCup);
     }
 
     public void deleteCup(Long id) {
-        cupEntityRepository.deleteById(id);
+        CupEntity existingCup = cupEntityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cup Not Found"));
+        cupEntityRepository.delete(existingCup);
     }
-
 }

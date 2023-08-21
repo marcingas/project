@@ -57,46 +57,8 @@ class RouteCalculatorServiceTest {
 
 
     }
-
-//    @Test
-//    void printFullPath() {
-//        //given
-//        int[] expectedRoute = new int[]{0, 2, 3, 5, 5, 6, 6};
-//        List<List<Client>> adjecencyList = loadListOfAdjecencyClients();
-//        int shop = 0;
-//        int targetClient = 3;
-//        List<Integer> expectedAns = new ArrayList<>(List.of(0, 2, 3));
-//        int[] route = routeToClientService.findShortestRoadToEachClient(adjecencyList, shop);
-//        //when
-//        List<Integer> ans = routeToClientService.printFullPath(adjecencyList, shop, targetClient);
-//        //then
-//        assertEquals(expectedAns, ans);
-//
-//    }
-
     @Test
     void calculate() {
     }
 
-//    @Test
-//    void addNeighbour() {
-//        //given
-//        CustomerEntity customer1 = new CustomerEntity("Jan", "Kowalski",
-//                new AddressEntity("Komonieckiego", 10, "Żywiec", "34-300"));
-//        List<CustomerEntity> neighboursOfShop = new ArrayList<>();
-//        routeToClientService.addNeighbour(customer1, neighboursOfShop);
-//    }
-
-//    @Test
-//    void addCustomerWithNeighbours() throws Exception {
-//        //given
-//        CustomerEntity customer1 = new CustomerEntity("Jan", "Kowalski",
-//                new AddressEntity("Komonieckiego", 10, "Żywiec", "34-300"));
-//        List<CustomerEntity> neighboursOfShop = new ArrayList<>();
-//        routeToClientService.addNeighbour(customer1, neighboursOfShop);
-//        ;
-//        //when:
-//        routeToClientService.addCustomerWithNeighbours(routeToClientService.shop,
-//                neighboursOfShop, routeToClientService.getAdjacencyList());
-//    }
 }

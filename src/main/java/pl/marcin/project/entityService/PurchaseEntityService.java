@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import pl.marcin.project.database.CupEntityRepository;
 import pl.marcin.project.database.PurchaseEntityRepository;
 import pl.marcin.project.entity.CupEntity;
+import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entity.PurchaseEntity;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -22,6 +24,11 @@ public class PurchaseEntityService {
     public PurchaseEntity getPurchase(Long id) {
         return purchaseEntityRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No purchase with id " + id));
+    }
+
+    public CustomerEntity getCustomerByPurchaseId(Long purchaseId) {
+        return purchaseEntityRepository.findCustomerByPurchaseId(purchaseId)
+                .orElseThrow(() -> new NoSuchElementException("No such purchase with id " + purchaseId));
     }
 
     public List<PurchaseEntity> getPurchaseHistoryByCustomerId(Long customerId) {

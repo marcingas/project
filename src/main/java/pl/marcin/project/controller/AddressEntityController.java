@@ -20,10 +20,20 @@ public class AddressEntityController {
         return addressEntityService.getAddresses();
     }
 
+    @GetMapping("/{addressID}")
+    public AddressEntity getAddress(@PathVariable Long addressId) {
+        return addressEntityService.getAddress(addressId);
+    }
+
     @DeleteMapping("/{addressId}/delete")
     public Long deleteAddressById(@PathVariable Long addressId) {
         addressEntityService.deleteAddress(addressId);
         return addressId;
+    }
+
+    @PostMapping("/save")
+    public AddressEntity saveAddress(@RequestBody AddressEntity address) {
+        return addressEntityService.addAddress(address);
     }
 
     @PutMapping("/{addressId}/update")

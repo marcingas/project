@@ -35,11 +35,30 @@ public class PurchaseEntityController {
         for (var purchaseID : purchase.getCupIds()) {
             cups.add(cupEntityService.getCupById(purchaseID));
         }
-
         purchaseEntity.setCups(cups);
         CustomerEntity customer = customerEntityService.getCustomer(purchase.getCustomerId());
         purchaseEntity.setCustomer(customer);
         return purchaseEntityService.addPurchase(purchaseEntity);
+    }
+
+    @PutMapping("/{purchaseId}/update")
+    public PurchaseEntity updatePurchase(@PathVariable Long purchaseId, @RequestBody PurchaseRequest purchaseRequest) {
+
+        CustomerEntity customerEntity = purchaseEntityService.getCustomerByPurchaseId(purchaseId);
+        PurchaseEntity purchaseEntity = new PurchaseEntity();
+        purchaseEntity.setPurchaseCost(purchaseRequest.getCost());
+        purchaseEntity.setCustomer(customerEntity);
+        List<CupEntity> cups = new ArrayList<>();
+        for (var cupId : purchaseRequest.getCupIds()) {
+            cups.add(cupEntityService.getCupById(cupId));
+        }
+        purchaseEntity.setCups(cups);
+        return purchaseEntity;
+    }
+
+    @GetMapping("/{purchaseId}")
+    public PurchaseEntity getPurchase(@PathVariable Long purchaseId) {
+        return purchaseEntityService.getPurchase(purchaseId);
     }
 
     @GetMapping
@@ -50,5 +69,11 @@ public class PurchaseEntityController {
     @GetMapping("/{customerId}")
     public List<PurchaseEntity> getCustomerHistory(@PathVariable Long customerId) {
         return purchaseEntityService.getPurchaseHistoryByCustomerId(customerId);
+    }
+
+    @DeleteMapping("/{purchaseId}/delete")
+    public Long deletePurchase(@PathVariable Long purchaseId) {
+        purchaseEntityService.deletePurchase(purchaseId);
+        return purchaseId;
     }
 }

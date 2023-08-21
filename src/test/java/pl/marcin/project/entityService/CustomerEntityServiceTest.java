@@ -1,25 +1,24 @@
 package pl.marcin.project.entityService;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pl.marcin.project.database.CustomerEntityRepository;
 import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerEntityServiceTest {
@@ -40,7 +39,7 @@ class CustomerEntityServiceTest {
         CustomerEntity customerEntity = customerEntityService.addCustomer(expectedCustomer);
 
         //then
-        Assertions.assertEquals(customerEntity, expectedCustomer);
+        assertEquals(customerEntity, expectedCustomer);
 
     }
 
@@ -79,7 +78,7 @@ class CustomerEntityServiceTest {
         customerEntityService.updateCustomer(updatedCustomer);
 
         //then
-        Assertions.assertEquals("Polko",
+        assertEquals("Polko",
                 customerEntityService.getCustomer(addedCustomerId).getName());
     }
 
@@ -94,9 +93,41 @@ class CustomerEntityServiceTest {
 
 
         //then
-        Assertions.assertEquals(0, customerEntityService.getAllCustomers().size());
+        assertEquals(0, customerEntityService.getAllCustomers().size());
     }
 
+    @Test
+    void getAllCustomers() {
+        List<CustomerEntity> mockList = new ArrayList<>();
+        mockList.add(new CustomerEntity());
+        mockList.add(new CustomerEntity());
+        mockList.add(new CustomerEntity());
+        when(customerEntityRepository.findAll()).thenReturn(mockList);
+        List<CustomerEntity> result = customerEntityService.getAllCustomers();
+        assertEquals(mockList.size(), result.size());
+        verify(customerEntityRepository, times(1)).findAll();
+    }
+
+    @Test
+    void getCustomer() {
+        CustomerEntity customerEntity = new CustomerEntity(1L, "Jan", "Kowalski",
+                new AddressEntity());
+
+        when(customerEntityRepository.findById(customerEntity.getCustomerId())).thenReturn(Optional.of(customerEntity));
+        CustomerEntity result = customerEntityService.getCustomer(customerEntity.getCustomerId());
+
+        assertEquals(customerEntity, result);
+        verify(customerEntityRepository, times(1)).findById(customerEntity.getCustomerId());
+    }
+
+    @Test()
+    void getCustomerNotPresentException() {
+        CustomerEntity customerEntity = new CustomerEntity(1L, "Jan", "Kowalski",
+                new AddressEntity());
+        Long nonExistentId = 3L;
+        when(customerEntityRepository.findById(customerEntity.getCustomerId())).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> customerEntityService.getCustomer(nonExistentId));
+    }
 }
 
 

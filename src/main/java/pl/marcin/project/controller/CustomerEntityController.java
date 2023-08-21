@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
-import pl.marcin.project.entityService.AddressEntityService;
 import pl.marcin.project.entityService.CustomerEntityService;
 import pl.marcin.project.request.CustomerRequest;
 
@@ -53,4 +52,16 @@ public class CustomerEntityController {
     public List<CustomerEntity> getCustomers() {
         return customerEntityService.getAllCustomers();
     }
+
+    @GetMapping("/{customerId}")
+    public CustomerEntity getCustomer(@PathVariable Long customerId) {
+        return customerEntityService.getCustomer(customerId);
+    }
+
+    @DeleteMapping("/delete/{customerId}")
+    public Long deleteCustomer(@PathVariable Long customerId) {
+        customerEntityService.deleteCustomer(customerId);
+        return customerId;
+    }
 }
+

@@ -8,17 +8,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.marcin.project.entity.AddressEntity;
-import pl.marcin.project.entity.CupEntity;
 import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entityService.CustomerEntityService;
 import pl.marcin.project.request.CustomerRequest;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerEntityController.class)
 class CustomerEntityControllerTest {
@@ -29,27 +29,101 @@ class CustomerEntityControllerTest {
 
     @Test
     void addCustomer() throws Exception {
+        //given
         CustomerRequest request = new CustomerRequest("Jan", "Kowalski",
                 "Kierownicza", 12, "Krakow", "34-300");
         CustomerEntity customerEntity = new CustomerEntity(1L, "Jan", "Kowalski",
                 new AddressEntity(1L, "Kierownicza", 12, "Kraków", "34-300"));
-        when(customerEntityService.addCustomer(customerEntity)).thenReturn(customerEntity);
+        when(customerEntityService.addCustomer(any())).thenReturn(customerEntity);
+
+        //when then
         mockMvc.perform(post("/customers/add", request)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
-                .andExpect(status().isOk());
-
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Jan"))
+                .andExpect(jsonPath("$.surname").value("Kowalski"));
     }
 
     @Test
-    void updateAddress() {
+    void updateAddress() throws Exception {
+        //given
+        AddressEntity addressEntity = new AddressEntity(1L, "Kierownicza", 12,
+                "Kraków", "34-300");
+        AddressEntity updatedAddress = new AddressEntity(1L, "Stolarska",
+                23, "Opole", "30-200");
+        CustomerEntity customerEntity = new CustomerEntity(1L, "Jan", "Kowalski", addressEntity);
+        CustomerEntity updatedCustomer = new CustomerEntity(1L, "Jan", "Kowalski", updatedAddress);
+
+        //when
+        when(customerEntityService.getCustomer(customerEntity.getCustomerId())).thenReturn(customerEntity);
+        when(customerEntityService.updateCustomer(any())).thenReturn(updatedCustomer);
+
+        //then
+        mockMvc.perform(put("/customers/{customerId}/update-address", customerEntity.getCustomerId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(updatedCustomer)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.address.street").value("Stolarska"))
+                .andExpect(jsonPath("$.address.number").value(23));
     }
 
     @Test
-    void updateData() {
+    void updateData() throws Exception {
+        //given
+        AddressEntity address = new AddressEntity(1L, "Kierownicza", 12,
+                "Kraków", "34-300");
+        CustomerEntity customerEntity = new CustomerEntity(1L, "Jan", "Kowalski", address);
+        CustomerEntity updatedCustomer = new CustomerEntity(1L, "Piotr", "Zawadzki", address);
+
+        //when
+        when(customerEntityService.getCustomer(customerEntity.getCustomerId())).thenReturn(customerEntity);
+        when(customerEntityService.updateCustomer(any())).thenReturn(updatedCustomer);
+
+        //then
+        mockMvc.perform(put("/customers/{customerId}/update-data", customerEntity.getCustomerId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(updatedCustomer)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Piotr"))
+                .andExpect(jsonPath("$.surname").value("Zawadzki"));
     }
 
     @Test
-    void getCustomers() {
+    void getCustomers() throws Exception {
+        //given
+        List<CustomerEntity> customerList = new ArrayList<>();
+        customerList.add(new CustomerEntity(1L, "John", "Summers", new AddressEntity()));
+        customerList.add(new CustomerEntity(2L, "Susan", "Summers", new AddressEntity()));
+        customerList.add(new CustomerEntity(3L, "Olivia", "Summers", new AddressEntity()));
+
+        //when
+        when(customerEntityService.getAllCustomers()).thenReturn(customerList);
+
+        //then
+        mockMvc.perform(get("/customers"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(customerList.size()))
+                .andExpect(jsonPath("$[0].name").value("John"))
+                .andExpect(jsonPath("$[0].surname").value("Summers"));
+    }
+
+    @Test
+    void deleteCustomer() throws Exception {
+        //given
+        AddressEntity address = new AddressEntity(1L, "Kierownicza", 12,
+                "Kraków", "34-300");
+        CustomerEntity existingCustomer = new CustomerEntity(1L, "Jan", "Kowalski", address);
+
+        //when
+        doNothing().when(customerEntityService).deleteCustomer(existingCustomer.getCustomerId());
+
+        //then
+        mockMvc.perform(delete("/customers/delete/{customerId}", existingCustomer.getCustomerId()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(existingCustomer.getCustomerId().toString()));
+        verify(customerEntityService, times(1)).deleteCustomer(existingCustomer.getCustomerId());
     }
 }

@@ -39,7 +39,7 @@ class CustomerEntityControllerTest {
         //when then
         mockMvc.perform(post("/customers/add", request)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(request)))
+                        .content(new ObjectMapper().writeValueAsString(customerEntity)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Jan"))
                 .andExpect(jsonPath("$.surname").value("Kowalski"));

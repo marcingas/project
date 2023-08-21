@@ -24,6 +24,12 @@ public class CupEntityController {
         return cupEntityService.addCup(cupEntity);
     }
 
+    @PutMapping("/{cupId}/update")
+    public CupEntity updateCup(@PathVariable Long cupId, @RequestBody CupEntity updatedCup) {
+        updatedCup.setCupId(cupId);
+        return cupEntityService.updateCup(updatedCup);
+    }
+
     @GetMapping
     public List<CupEntity> getCups() {
         return cupEntityService.getAllCups();
@@ -37,6 +43,12 @@ public class CupEntityController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @DeleteMapping("/{cupId}/delete")
+    public Long deleteCup(@PathVariable Long cupId) {
+        cupEntityService.deleteCup(cupId);
+        return cupId;
     }
 
     @GetMapping("/addcup")

@@ -6,9 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.marcin.project.database.PurchaseEntityRepository;
-import pl.marcin.project.entityService.PurchaseEntityService;
-
-import static org.junit.jupiter.api.Assertions.*;
+import pl.marcin.project.serviceentity.PurchaseEntityService;
 
 @ExtendWith(MockitoExtension.class)
 class PurchaseEntityControllerTest {

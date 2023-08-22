@@ -6,9 +6,9 @@ import pl.marcin.project.model.Purchase;
 import pl.marcin.project.repository.CupRepositoryListBased;
 import pl.marcin.project.repository.CustomerRepositoryListBased;
 import pl.marcin.project.repository.PurchaseRepositoryListBased;
-import pl.marcin.project.service.CupService;
-import pl.marcin.project.service.CustomerService;
-import pl.marcin.project.service.PurchaseService;
+import pl.marcin.project.servicedto.CupService;
+import pl.marcin.project.servicedto.CustomerService;
+import pl.marcin.project.servicedto.PurchaseService;
 
 import java.io.File;
 import java.math.BigDecimal;

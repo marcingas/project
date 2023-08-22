@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.marcin.project.entity.CupEntity;
-import pl.marcin.project.entityService.CupEntityService;
+import pl.marcin.project.serviceentity.CupEntityService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

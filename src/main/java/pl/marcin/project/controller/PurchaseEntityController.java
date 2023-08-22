@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import pl.marcin.project.entity.CupEntity;
 import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entity.PurchaseEntity;
-import pl.marcin.project.entityService.CupEntityService;
-import pl.marcin.project.entityService.CustomerEntityService;
-import pl.marcin.project.entityService.PurchaseEntityService;
+import pl.marcin.project.serviceentity.CupEntityService;
+import pl.marcin.project.serviceentity.CustomerEntityService;
+import pl.marcin.project.serviceentity.PurchaseEntityService;
 import pl.marcin.project.request.PurchaseRequest;
 
 import java.util.ArrayList;

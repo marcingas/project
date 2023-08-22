@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.marcin.project.entity.AddressEntity;
-import pl.marcin.project.entityService.AddressEntityService;
+import pl.marcin.project.serviceentity.AddressEntityService;
 
 import java.util.List;
 

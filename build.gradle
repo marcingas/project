@@ -24,6 +24,7 @@ dependencies {
 	testImplementation 'com.h2database:h2'
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:testcontainers'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

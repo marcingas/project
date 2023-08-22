@@ -23,11 +23,10 @@ CREATE TABLE customer (
 
 CREATE TABLE purchase (
     purchase_id int NOT NULL PRIMARY KEY,
+    customer_id int,
 	purchase_cost numeric(38, 2),
-	customer_id int,
 	FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
 );
-
 
 CREATE TABLE purchase_cups (
 	    purchase_id int NOT NULL,

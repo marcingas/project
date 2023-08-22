@@ -24,5 +24,4 @@ public class CustomerEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private AddressEntity address;
-
 }

@@ -68,7 +68,6 @@ class PurchaseEntityServiceTest {
         Long notExistingId = 7L;
         when(purchaseEntityRepository.findById(notExistingId)).thenReturn(Optional.empty());
         assertThrows(RuntimeException.class, () -> purchaseEntityService.getPurchase(notExistingId));
-
     }
 
     @Test
@@ -91,7 +90,6 @@ class PurchaseEntityServiceTest {
         //then
         assertEquals(mockList, result);
         verify(purchaseEntityRepository).findByCustomerCustomerId(existingCustomer.getCustomerId());
-
     }
 
     @Test
@@ -108,7 +106,6 @@ class PurchaseEntityServiceTest {
         //then
         assertEquals(purchaseEntity, result);
         verify(purchaseEntityRepository).save(purchaseEntity);
-
     }
 
     @Test
@@ -147,7 +144,31 @@ class PurchaseEntityServiceTest {
         //then
         verify(purchaseEntityRepository).findById(existingPurchase.getPurchaseId());
         verify(purchaseEntityRepository).delete(existingPurchase);
+    }
 
+    @Test
+    void getCustomerByPurchaseId() {
+        //given
+        List<CupEntity> cupList = new ArrayList<>();
+        CustomerEntity customer = new CustomerEntity();
+        customer.setCustomerId(1L);
+        customer.setName("John");
+        customer.setSurname("Dowe");
+        PurchaseEntity purchaseEntity = new PurchaseEntity(1L, customer,
+                BigDecimal.valueOf(2.13), cupList);
+        when(purchaseEntityRepository.save(any(PurchaseEntity.class))).thenReturn(purchaseEntity);
+        when(purchaseEntityRepository.findCustomerByPurchaseId(purchaseEntity.getPurchaseId())).
+                thenReturn(Optional.of(customer));
 
+        //when
+        PurchaseEntity savedPurchase = purchaseEntityRepository.save(purchaseEntity);
+        CustomerEntity resultCustomer = purchaseEntityService.getCustomerByPurchaseId(savedPurchase.getPurchaseId());
+
+        //then
+        assertNotNull(resultCustomer);
+        assertEquals(customer, resultCustomer);
+        verify(purchaseEntityRepository, times(1)).save(purchaseEntity);
+        verify(purchaseEntityRepository, times(1)).
+                findCustomerByPurchaseId(savedPurchase.getPurchaseId());
     }
 }

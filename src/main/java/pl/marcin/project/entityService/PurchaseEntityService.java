@@ -34,7 +34,6 @@ public class PurchaseEntityService {
     public List<PurchaseEntity> getPurchaseHistoryByCustomerId(Long customerId) {
         return purchaseEntityRepository.findByCustomerCustomerId(customerId)
                 .orElseThrow(() -> new RuntimeException("no such customer or no such history for customer"));
-
     }
 
     public PurchaseEntity addPurchase(PurchaseEntity purchaseEntity) {

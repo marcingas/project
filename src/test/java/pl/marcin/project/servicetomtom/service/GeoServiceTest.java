@@ -51,23 +51,12 @@ class GeoServiceTest {
         //given
         AddressData addressDataStart = new AddressData();
         AddressData addressDataEnd = new AddressData();
-        GeocodingAnswer positionsStart = new GeocodingAnswer();
-        GeocodingAnswer positionsEnd = new GeocodingAnswer();
-        List<Result> resulEndtList = new ArrayList<>();
-        resulEndtList.add(new Result(new Position(3456, 4567)));
-        positionsEnd.setResults(resulEndtList);
-        List<Result> resulStartList = new ArrayList<>();
-        resulStartList.add(new Result(new Position(123123, 234234)));
-        positionsStart.setResults(resulEndtList);
-        List<Route> routes = new ArrayList<>();
-        routes.add(new Route(new Summary(5000)));
-
-        RouteAnswer routeAnswer = new RouteAnswer();
-        routeAnswer.setRoutes(routes);
+        Position positionsStart = new Position(3456, 4567);
+        Position positionsEnd = new Position(123456, 23456);
 
         when(tomTomServiceFacade.getLocationsCoordinates(addressDataStart)).thenReturn(positionsStart);
         when(tomTomServiceFacade.getLocationsCoordinates(addressDataEnd)).thenReturn(positionsEnd);
-        when(tomTomServiceFacade.getRouteBetweenAddresses(any(RouteData.class))).thenReturn(routeAnswer);
+        when(tomTomServiceFacade.getRouteBetweenAddresses(any(RouteData.class))).thenReturn(5000);
 
         //when
         Integer distanceResult = geoService.countDistanceBetweenClients(addressDataStart, addressDataEnd);

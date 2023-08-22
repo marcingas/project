@@ -28,16 +28,14 @@ public class GeoService {
 
     public Integer countDistanceBetweenClients(AddressData addressDataStart,
                                                AddressData addressDataEnd) {
-        Position positionStart = tomTomServiceFacade.getLocationsCoordinates(addressDataStart)
-                .getResults().get(0).getPosition();
+        Position positionStart = tomTomServiceFacade.getLocationsCoordinates(addressDataStart);
 
-        Position positionEnd = tomTomServiceFacade.getLocationsCoordinates(addressDataEnd)
-                .getResults().get(0).getPosition();
+        Position positionEnd = tomTomServiceFacade.getLocationsCoordinates(addressDataEnd);
 
         String position = positionStart.getLat() + "," + positionStart.getLon() + ":"
                 + positionEnd.getLat() + "," + positionEnd.getLon();
 
         RouteData routeData1 = new RouteData(position);
-        return tomTomServiceFacade.getRouteBetweenAddresses(routeData1).getRoutes().get(0).getSummary().getLengthInMeters();
+        return tomTomServiceFacade.getRouteBetweenAddresses(routeData1);
     }
 }

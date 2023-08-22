@@ -7,6 +7,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import pl.marcin.project.servicetomtom.routingmodel.RouteAnswer;
 import pl.marcin.project.servicetomtom.routingmodel.RouteData;
 
+import java.util.NoSuchElementException;
+
 import static pl.marcin.project.servicetomtom.constants.RouteSearchConstants.FIND_ROUTE;
 import static pl.marcin.project.servicetomtom.constants.RouteSearchConstants.KEY;
 
@@ -19,7 +21,7 @@ public class TomTomRoutingService {
         this.webClient = webClient;
     }
 
-    public RouteAnswer getRoute(RouteData routeData) {
+    public Integer getRoute(RouteData routeData) {
         String uri = UriComponentsBuilder.fromUriString(FIND_ROUTE)
                 .buildAndExpand(routeData.getPositions(), routeData.getAlternativeRoutes(),
                         routeData.getRouteType(), routeData.isTraffic(), routeData.getTravelMode())
@@ -29,7 +31,11 @@ public class TomTomRoutingService {
         return webClient.get()
                 .uri(uri)
                 .retrieve()
-                .bodyToMono(RouteAnswer.class).block();
+                .bodyToMono(RouteAnswer.class)
+                .blockOptional()
+                .map(response -> response.getRoutes().get(0).getSummary().getLengthInMeters()
+                )
+                .orElseThrow(() -> new NoSuchElementException("No data from TomTomRoutingService"));
 
     }
 

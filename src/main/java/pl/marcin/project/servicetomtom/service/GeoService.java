@@ -15,13 +15,6 @@ import pl.marcin.project.servicetomtom.routingmodel.RouteData;
 public class GeoService {
 
     private final TomTomServiceFacade tomTomServiceFacade;
-    private GeocodingAnswer getLocationFromAddress(AddressData addressData) {
-        return tomTomServiceFacade.getLocationsCoordinates(addressData);
-    }
-
-    private RouteAnswer findRoute(RouteData routeData) {
-        return tomTomServiceFacade.getRouteBetweenAddresses(routeData);
-    }
 
     public AddressData generateAddressData(CustomerEntity customerToVisit) {
         AddressEntity address = customerToVisit.getAddress();
@@ -33,17 +26,18 @@ public class GeoService {
         return addressData;
     }
 
-
     public Integer countDistanceBetweenClients(AddressData addressDataStart,
                                                AddressData addressDataEnd) {
-        Position positionStart = getLocationFromAddress(addressDataStart).getResults().get(0).getPosition();
+        Position positionStart = tomTomServiceFacade.getLocationsCoordinates(addressDataStart)
+                .getResults().get(0).getPosition();
 
-        Position positionEnd = getLocationFromAddress(addressDataEnd).getResults().get(0).getPosition();
+        Position positionEnd = tomTomServiceFacade.getLocationsCoordinates(addressDataEnd)
+                .getResults().get(0).getPosition();
 
-        String position = positionStart.getLat() + "," + positionStart.getLon() + ":" + positionEnd.getLat() + "," + positionEnd.getLon();
+        String position = positionStart.getLat() + "," + positionStart.getLon() + ":"
+                + positionEnd.getLat() + "," + positionEnd.getLon();
 
         RouteData routeData1 = new RouteData(position);
-        return findRoute(routeData1).getRoutes().get(0).getSummary().getLengthInMeters();
-
+        return tomTomServiceFacade.getRouteBetweenAddresses(routeData1).getRoutes().get(0).getSummary().getLengthInMeters();
     }
 }

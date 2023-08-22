@@ -12,4 +12,7 @@ public class Summary {
     private Integer travelTimeInSeconds;
     private Integer trafficDelayInSeconds;
 
+    public Summary(Integer lengthInMeters) {
+        this.lengthInMeters = lengthInMeters;
+    }
 }

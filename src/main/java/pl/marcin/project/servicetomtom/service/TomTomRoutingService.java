@@ -3,9 +3,12 @@ package pl.marcin.project.servicetomtom.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.marcin.project.exceptions.RoutingBadRequestException;
 import pl.marcin.project.servicetomtom.routingmodel.RouteAnswer;
 import pl.marcin.project.servicetomtom.routingmodel.RouteData;
+import reactor.core.publisher.Mono;
 
 import java.util.NoSuchElementException;
 
@@ -32,12 +35,17 @@ public class TomTomRoutingService {
                 .uri(uri)
                 .retrieve()
                 .bodyToMono(RouteAnswer.class)
+                .onErrorResume(throwable -> {
+                    if (throwable instanceof WebClientResponseException) {
+                        WebClientResponseException exception = (WebClientResponseException) throwable;
+                        if (exception.getStatusCode().value() == 400) {
+                            throw new RoutingBadRequestException("Bad request");
+                        }
+                    }
+                    return Mono.error(throwable);
+                })
+                .map(response -> response.getRoutes().get(0).getSummary().getLengthInMeters())
                 .blockOptional()
-                .map(response -> response.getRoutes().get(0).getSummary().getLengthInMeters()
-                )
                 .orElseThrow(() -> new NoSuchElementException("No data from TomTomRoutingService"));
-
     }
-
-
 }

@@ -1,8 +1,8 @@
 package pl.marcin.project.servicetomtom.service;
 
-
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,9 @@ import pl.marcin.project.servicetomtom.geocodingmodel.AddressData;
 import pl.marcin.project.servicetomtom.geocodingmodel.Position;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TomTomGeocodingServiceTest {
@@ -37,9 +39,8 @@ class TomTomGeocodingServiceTest {
         mockWebServer.shutdown();
     }
 
-
     @Test
-    void getCoordinatesTestSuccessfulResponse() {
+    void getCoordinatesTestSuccessfulResponse() throws Exception {
         //given
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
@@ -56,8 +57,15 @@ class TomTomGeocodingServiceTest {
 
         //when
         Position result = tomTomGeocodingService.getCoordinates(addressData);
+        RecordedRequest request = mockWebServer.takeRequest();
+        String actualPath = request.getPath();
+        String decodedPath = URLDecoder.decode(actualPath, "UTF-8");
 
         //then
+        assertThat(request.getMethod()).isEqualTo("GET");
+        assertThat(decodedPath)
+                .isEqualTo("/search/2/geocode/34-300 Żywiec, Krasinskiego 1.json" +
+                        "?key=vctUnSj6acA5V6nLMaZMmSqXpoyPA5xq");
         assertEquals(123.456, result.getLat(), 0.0001);
         assertEquals(789.012, result.getLon(), 0.0001);
     }

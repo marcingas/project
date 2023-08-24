@@ -48,15 +48,18 @@ public class PurchaseEntityController {
     public PurchaseEntity updatePurchase(@PathVariable Long purchaseId, @RequestBody PurchaseRequest purchaseRequest) {
 
         CustomerEntity customerEntity = purchaseEntityService.getCustomerByPurchaseId(purchaseId);
-        PurchaseEntity purchaseEntity = new PurchaseEntity();
+        PurchaseEntity purchaseEntity = purchaseEntityService.getPurchase(purchaseId);
         purchaseEntity.setPurchaseCost(purchaseRequest.getCost());
         purchaseEntity.setCustomer(customerEntity);
         List<CupEntity> cups = new ArrayList<>();
-        for (var cupId : purchaseRequest.getCupIds()) {
-            cups.add(cupEntityService.getCupById(cupId));
+        List<Long> cupIds = purchaseRequest.getCupIds();
+        if (cupIds != null) {
+            for (var cupId : purchaseRequest.getCupIds()) {
+                cups.add(cupEntityService.getCupById(cupId));
+            }
         }
         purchaseEntity.setCups(cups);
-        return purchaseEntity;
+        return purchaseEntityService.updatePurchase(purchaseEntity);
     }
 
     @GetMapping("/{purchaseId}")
@@ -69,7 +72,7 @@ public class PurchaseEntityController {
         return purchaseEntityService.getAllPurchases();
     }
 
-    @GetMapping("/{customerId}")
+    @GetMapping("/history/{customerId}")
     public List<PurchaseEntity> getCustomerHistory(@PathVariable Long customerId) {
         return purchaseEntityService.getPurchaseHistoryByCustomerId(customerId);
     }

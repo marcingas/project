@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CupEntity;
 import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entity.PurchaseEntity;
@@ -19,12 +20,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PurchaseEntityController.class)
 class PurchaseEntityControllerTest {
@@ -66,19 +66,131 @@ class PurchaseEntityControllerTest {
     }
 
     @Test
-    void updatePurchase() {
+    void updatePurchase() throws Exception {
+        //given
+        Long purchaseId = 1L;
+        Long cupId = 1L;
+        String updateUrl = "/purchases/" + purchaseId + "/update";
+
+        List<CupEntity> cups = new ArrayList<>(List.of(new CupEntity(cupId, "Orange",
+                "circle", BigDecimal.valueOf(7.12))));
+        List<Long> cupIds = new ArrayList<>(List.of(cupId));
+        CustomerEntity customerEntity = new CustomerEntity(1L, "Jan", "Janek",
+                new AddressEntity());
+        PurchaseEntity purchaseEntity = new PurchaseEntity(purchaseId, customerEntity, BigDecimal.valueOf(5.0),
+                new ArrayList<CupEntity>());
+        PurchaseEntity updatedPurchaseEntity = new PurchaseEntity(purchaseId, customerEntity, BigDecimal.valueOf(7.12),
+                cups);
+        PurchaseRequest purchaseRequest = new PurchaseRequest(customerEntity.getCustomerId(), BigDecimal.valueOf(7.12),
+                cupIds);
+        when(purchaseEntityService.getCustomerByPurchaseId(purchaseId)).thenReturn(customerEntity);
+        when(cupEntityService.getCupById(cupId)).thenReturn(cups.get(0));
+        when(purchaseEntityService.getPurchase(purchaseId)).thenReturn(purchaseEntity);
+        when(purchaseEntityService.updatePurchase(any(PurchaseEntity.class))).thenReturn(updatedPurchaseEntity);
+        //when then
+        mockMvc.perform(put(updateUrl, purchaseId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(purchaseRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.purchaseId").value(1))
+                .andExpect(jsonPath("$.cups[0].color").value("Orange"))
+                .andExpect(jsonPath("$.purchaseCost").value(7.12));
+        verify(purchaseEntityService).getCustomerByPurchaseId(purchaseId);
+        verify(cupEntityService).getCupById(cupId);
+        verify(purchaseEntityService).getPurchase(purchaseId);
+        verify(purchaseEntityService).updatePurchase(purchaseEntity);
     }
 
     @Test
-    void getAllPurchases() {
+    void getAllPurchases() throws Exception {
+        //given
+        List<PurchaseEntity> purchases = new ArrayList<>();
+        CustomerEntity customer = new CustomerEntity(1L, "Bill", "Gates", new AddressEntity());
+        List<CupEntity> cups = new ArrayList<>(List.of(new CupEntity(1L, "Blue", "Circle",
+                BigDecimal.valueOf(1))));
+        purchases.add(new PurchaseEntity(1L, customer, BigDecimal.valueOf(1), cups));
+        purchases.add(new PurchaseEntity(2L, customer, BigDecimal.valueOf(3), cups));
+        when(purchaseEntityService.getAllPurchases()).thenReturn(purchases);
+
+        //when then
+        mockMvc.perform(get("/purchases"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(purchases.size()))
+                .andExpect(jsonPath("$[0].purchaseId").value(1))
+                .andExpect(jsonPath("$[1].purchaseId").value(2))
+                .andExpect(jsonPath("$[0].customer.name").value("Bill"));
+        verify(purchaseEntityService).getAllPurchases();
+
     }
 
     @Test
-    void getPurchase() {
+    void getPurchase() throws Exception {
+        //given
+        Long purchaseId = 1L;
+        String getUrl = "/purchases/" + purchaseId;
+
+        CustomerEntity customer = new CustomerEntity(1L, "Bill", "Gates", new AddressEntity());
+        List<CupEntity> cups = new ArrayList<>(List.of(new CupEntity(1L, "Blue", "Circle",
+                BigDecimal.valueOf(1))));
+        PurchaseEntity purchase = new PurchaseEntity(purchaseId, customer, BigDecimal.valueOf(1), cups);
+        when(purchaseEntityService.getPurchase(purchaseId)).thenReturn(purchase);
+
+        //when then
+        mockMvc.perform(get(getUrl, purchaseId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.purchaseId").value(1))
+                .andExpect(jsonPath("$.customer.name").value("Bill"));
+        verify(purchaseEntityService).getPurchase(purchaseId);
     }
 
     @Test
-    void deletePurchase() {
+    void getCustomersPurchaseHistory() throws Exception {
+        //given
+        Long customerId = 1L;
+        String getUrl = "/purchases/history/" + customerId;
+        List<PurchaseEntity> purchases = new ArrayList<>();
+        CustomerEntity customer = new CustomerEntity(1L, "Bill", "Gates", new AddressEntity());
+        List<CupEntity> cups = new ArrayList<>(List.of(new CupEntity(1L, "Blue", "Circle",
+                BigDecimal.valueOf(1))));
+        purchases.add(new PurchaseEntity(1L, customer, BigDecimal.valueOf(1), cups));
+        purchases.add(new PurchaseEntity(2L, customer, BigDecimal.valueOf(3), cups));
 
+        //when
+        when(purchaseEntityService.getPurchaseHistoryByCustomerId(customerId)).thenReturn(purchases);
+
+        //then
+        mockMvc.perform(get(getUrl, customerId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(purchases.size()))
+                .andExpect(jsonPath("$[0].purchaseId").value(1))
+                .andExpect(jsonPath("$[1].purchaseId").value(2))
+                .andExpect(jsonPath("$[0].customer.name").value("Bill"));
+        verify(purchaseEntityService).getPurchaseHistoryByCustomerId(customerId);
+    }
+
+    @Test
+    void deletePurchase() throws Exception {
+        //given
+        Long purchaseId = 1L;
+        String getUrl = "/purchases/" + purchaseId + "/delete";
+
+        CustomerEntity customer = new CustomerEntity(1L, "Bill", "Gates", new AddressEntity());
+        List<CupEntity> cups = new ArrayList<>(List.of(new CupEntity(1L, "Blue", "Circle",
+                BigDecimal.valueOf(1))));
+        PurchaseEntity existingPurchase = new PurchaseEntity(purchaseId, customer, BigDecimal.valueOf(1), cups);
+
+        //when
+        doNothing().when(purchaseEntityService).deletePurchase(purchaseId);
+
+        //then
+        mockMvc.perform(delete(getUrl, purchaseId))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(existingPurchase.getPurchaseId().toString()));
+        verify(purchaseEntityService).deletePurchase(purchaseId);
     }
 }

@@ -1,9 +1,10 @@
 package pl.marcin.project.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,4 +25,15 @@ public class CustomerEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private AddressEntity address;
+
+    public CustomerEntity(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+    }
+
+    public CustomerEntity(Long customerId, String name, String surname) {
+        this.customerId = customerId;
+        this.name = name;
+        this.surname = surname;
+    }
 }

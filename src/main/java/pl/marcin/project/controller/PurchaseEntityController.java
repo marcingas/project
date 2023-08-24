@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import pl.marcin.project.entity.CupEntity;
 import pl.marcin.project.entity.CustomerEntity;
 import pl.marcin.project.entity.PurchaseEntity;
+import pl.marcin.project.request.PurchaseRequest;
 import pl.marcin.project.serviceentity.CupEntityService;
 import pl.marcin.project.serviceentity.CustomerEntityService;
 import pl.marcin.project.serviceentity.PurchaseEntityService;
-import pl.marcin.project.request.PurchaseRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,18 +25,21 @@ public class PurchaseEntityController {
     @Autowired
     private final CupEntityService cupEntityService;
 
+
     @PostMapping("/add")
-    public PurchaseEntity addPurchase(@RequestBody PurchaseRequest purchase) {
+    public PurchaseEntity addPurchase(@RequestBody PurchaseRequest purchaseRequest) {
         PurchaseEntity purchaseEntity = new PurchaseEntity();
-        purchaseEntity.setPurchaseCost(purchase.getCost());
+        purchaseEntity.setPurchaseCost(purchaseRequest.getCost());
 
         List<CupEntity> cups = new ArrayList<>();
-
-        for (var purchaseID : purchase.getCupIds()) {
-            cups.add(cupEntityService.getCupById(purchaseID));
+        List<Long> cupIds = purchaseRequest.getCupIds();
+        if (cupIds != null) {
+            for (var purchaseID : cupIds) {
+                cups.add(cupEntityService.getCupById(purchaseID));
+            }
         }
         purchaseEntity.setCups(cups);
-        CustomerEntity customer = customerEntityService.getCustomer(purchase.getCustomerId());
+        CustomerEntity customer = customerEntityService.getCustomer(purchaseRequest.getCustomerId());
         purchaseEntity.setCustomer(customer);
         return purchaseEntityService.addPurchase(purchaseEntity);
     }

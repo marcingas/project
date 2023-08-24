@@ -9,8 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
-import pl.marcin.project.serviceentity.CustomerEntityService;
 import pl.marcin.project.request.CustomerRequest;
+import pl.marcin.project.serviceentity.AddressEntityService;
+import pl.marcin.project.serviceentity.CustomerEntityService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CustomerEntityControllerTest {
     @MockBean
     private CustomerEntityService customerEntityService;
+    @MockBean
+    private AddressEntityService addressEntityService;
     @Autowired
     private MockMvc mockMvc;
 
@@ -37,9 +40,9 @@ class CustomerEntityControllerTest {
         when(customerEntityService.addCustomer(any())).thenReturn(customerEntity);
 
         //when then
-        mockMvc.perform(post("/customers/add", request)
+        mockMvc.perform(post("/customers/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(customerEntity)))
+                        .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Jan"))
                 .andExpect(jsonPath("$.surname").value("Kowalski"));
@@ -50,22 +53,30 @@ class CustomerEntityControllerTest {
         //given
         AddressEntity addressEntity = new AddressEntity(1L, "Kierownicza", 12,
                 "Kraków", "34-300");
-        AddressEntity updatedAddress = new AddressEntity(1L, "Stolarska",
+        AddressEntity updatedAddress = new AddressEntity("Stolarska",
+                23, "Opole", "30-200");
+        AddressEntity updatedAddressWithId = new AddressEntity(1L, "Stolarska",
                 23, "Opole", "30-200");
         CustomerEntity customerEntity = new CustomerEntity(1L, "Jan", "Kowalski", addressEntity);
-        CustomerEntity updatedCustomer = new CustomerEntity(1L, "Jan", "Kowalski", updatedAddress);
+        CustomerEntity updatedCustomer = new CustomerEntity(1L, "Jan", "Kowalski",
+                updatedAddressWithId);
 
         //when
         when(customerEntityService.getCustomer(customerEntity.getCustomerId())).thenReturn(customerEntity);
+        when(addressEntityService.addAddress(updatedAddress)).thenReturn(updatedAddressWithId);
         when(customerEntityService.updateCustomer(any())).thenReturn(updatedCustomer);
+
 
         //then
         mockMvc.perform(put("/customers/{customerId}/update-address", customerEntity.getCustomerId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(updatedCustomer)))
+                        .content(new ObjectMapper().writeValueAsString(updatedAddress)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.address.street").value("Stolarska"))
                 .andExpect(jsonPath("$.address.number").value(23));
+        verify(customerEntityService, times(1)).getCustomer(customerEntity.getCustomerId());
+        verify(addressEntityService, times(1)).addAddress(updatedAddress);
+        verify(customerEntityService, times(1)).updateCustomer(any());
     }
 
     @Test
@@ -74,16 +85,17 @@ class CustomerEntityControllerTest {
         AddressEntity address = new AddressEntity(1L, "Kierownicza", 12,
                 "Kraków", "34-300");
         CustomerEntity customerEntity = new CustomerEntity(1L, "Jan", "Kowalski", address);
+        CustomerEntity updatedCustomerData = new CustomerEntity("Piotr", "Zawadzki");
         CustomerEntity updatedCustomer = new CustomerEntity(1L, "Piotr", "Zawadzki", address);
 
         //when
         when(customerEntityService.getCustomer(customerEntity.getCustomerId())).thenReturn(customerEntity);
-        when(customerEntityService.updateCustomer(any())).thenReturn(updatedCustomer);
+        when(customerEntityService.updateCustomer(updatedCustomer)).thenReturn(updatedCustomer);
 
         //then
         mockMvc.perform(put("/customers/{customerId}/update-data", customerEntity.getCustomerId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(updatedCustomer)))
+                        .content(new ObjectMapper().writeValueAsString(updatedCustomerData)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Piotr"))
                 .andExpect(jsonPath("$.surname").value("Zawadzki"));

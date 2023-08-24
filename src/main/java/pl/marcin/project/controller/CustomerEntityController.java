@@ -5,8 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.marcin.project.entity.AddressEntity;
 import pl.marcin.project.entity.CustomerEntity;
-import pl.marcin.project.serviceentity.CustomerEntityService;
 import pl.marcin.project.request.CustomerRequest;
+import pl.marcin.project.serviceentity.AddressEntityService;
+import pl.marcin.project.serviceentity.CustomerEntityService;
 
 import java.util.List;
 
@@ -16,6 +17,8 @@ import java.util.List;
 public class CustomerEntityController {
     @Autowired
     private final CustomerEntityService customerEntityService;
+    @Autowired
+    private final AddressEntityService addressEntityService;
 
 
     @PostMapping("/add")
@@ -35,8 +38,9 @@ public class CustomerEntityController {
 
     @PutMapping("/{customerId}/update-address")
     public CustomerEntity updateAddress(@PathVariable Long customerId, @RequestBody AddressEntity address) {
+        AddressEntity addressEntity = addressEntityService.addAddress(address);
         CustomerEntity customer = customerEntityService.getCustomer(customerId);
-        customer.setAddress(address);
+        customer.setAddress(addressEntity);
         return customerEntityService.updateCustomer(customer);
     }
 

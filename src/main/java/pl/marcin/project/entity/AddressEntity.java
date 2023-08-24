@@ -27,4 +27,10 @@ public class AddressEntity {
     @Column(name = "code")
     private String code;
 
+    public AddressEntity(String street, int number, String town, String code) {
+        this.street = street;
+        this.number = number;
+        this.town = town;
+        this.code = code;
+    }
 }

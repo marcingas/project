@@ -85,7 +85,5 @@ class TomTomRoutingServiceTest {
         assertNotNull(recordedRequest);
         String responseBody = exception.getMessage();
         assertEquals(errorMessage, responseBody);
-
     }
-
 }

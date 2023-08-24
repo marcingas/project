@@ -58,6 +58,4 @@ public class PurchaseEntityControllerIntegreationTest {
         //then
         assertNotNull(results);
     }
-
-
 }

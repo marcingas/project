@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import pl.marcin.project.entity.CupEntity;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(scripts = "classpath:test-data.sql")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class PurchaseEntityRepositoryTest {
     @Autowired
     PurchaseEntityRepository purchaseEntityRepository;
@@ -30,22 +32,19 @@ class PurchaseEntityRepositoryTest {
 
 
     @Test
-    void findByCustomerCustomerId() {
+    void findPurchaseHistoryByCustomerId() {
         //given
-        PurchaseEntity purchaseEntity = new PurchaseEntity();
-        purchaseEntity.setPurchaseCost(BigDecimal.valueOf(12.23));
-        CustomerEntity customer = customerEntityRepository.findById(1L).orElseThrow(() -> new RuntimeException("Not found"));
-        purchaseEntity.setCustomer(customer);
+        CustomerEntity customer = customerEntityRepository.findById(1L).get();
 
         //when
-        purchaseEntityRepository.save(purchaseEntity);
         List<PurchaseEntity> results = purchaseEntityRepository
                 .findByCustomerCustomerId(customer.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Nothing found"));
 
         //then
         assertNotNull(results);
-        assertEquals(purchaseEntity, results.get(0));
+        assertEquals(customer, results.get(0).getCustomer());
+
     }
 
     @Test

@@ -11,9 +11,9 @@ VALUES (1,'Red','Circle',9.99),
        (6,'Yellow','curly',8.00);
 
 INSERT INTO purchase (purchase_id,customer_id,purchase_cost)
-VALUES (1,1,32.12),
-       (2,1,25.45),
-       (3,2,8.00);
+VALUES (nextval('purchase_seq'),1,32.12),
+       (nextval('purchase_seq'),1,25.45),
+       (nextval('purchase_seq'),2,8.00);
 
 INSERT INTO purchase_cups(purchase_id, cup_id)
 VALUES (1,1),

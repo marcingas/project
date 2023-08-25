@@ -83,7 +83,7 @@ class PurchaseEntityControllerTest {
                 cups);
         PurchaseRequest purchaseRequest = new PurchaseRequest(customerEntity.getCustomerId(), BigDecimal.valueOf(7.12),
                 cupIds);
-        when(purchaseEntityService.getCustomerByPurchaseId(purchaseId)).thenReturn(customerEntity);
+        when(customerEntityService.getCustomer(purchaseRequest.getCustomerId())).thenReturn(customerEntity);
         when(cupEntityService.getCupById(cupId)).thenReturn(cups.get(0));
         when(purchaseEntityService.getPurchase(purchaseId)).thenReturn(purchaseEntity);
         when(purchaseEntityService.updatePurchase(any(PurchaseEntity.class))).thenReturn(updatedPurchaseEntity);
@@ -95,7 +95,7 @@ class PurchaseEntityControllerTest {
                 .andExpect(jsonPath("$.purchaseId").value(1))
                 .andExpect(jsonPath("$.cups[0].color").value("Orange"))
                 .andExpect(jsonPath("$.purchaseCost").value(7.12));
-        verify(purchaseEntityService).getCustomerByPurchaseId(purchaseId);
+        verify(customerEntityService).getCustomer(purchaseRequest.getCustomerId());
         verify(cupEntityService).getCupById(cupId);
         verify(purchaseEntityService).getPurchase(purchaseId);
         verify(purchaseEntityService).updatePurchase(purchaseEntity);

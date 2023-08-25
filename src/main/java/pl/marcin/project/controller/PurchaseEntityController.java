@@ -47,7 +47,7 @@ public class PurchaseEntityController {
     @PutMapping("/{purchaseId}/update")
     public PurchaseEntity updatePurchase(@PathVariable Long purchaseId, @RequestBody PurchaseRequest purchaseRequest) {
 
-        CustomerEntity customerEntity = purchaseEntityService.getCustomerByPurchaseId(purchaseId);
+        CustomerEntity customerEntity = customerEntityService.getCustomer(purchaseRequest.getCustomerId());
         PurchaseEntity purchaseEntity = purchaseEntityService.getPurchase(purchaseId);
         purchaseEntity.setPurchaseCost(purchaseRequest.getCost());
         purchaseEntity.setCustomer(customerEntity);
